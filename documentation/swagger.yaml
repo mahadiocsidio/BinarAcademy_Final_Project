@@ -1,0 +1,300 @@
+openapi: 3.0.3
+info:
+  title: Challenge Chapter 5 | Binar Academy
+  description: |-
+    lorem ipsum dolor is amet
+  contact:
+    email: muhtopik07@gmail.com
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000/api/v1
+tags:
+  - name: Start
+    description: all about creating account or login
+  - name: Account
+    description: all about accounts
+  - name: Transaction
+    description: all about Transaction
+  - name: Authentication
+    description: all about Authentication
+paths:
+  /register:
+    post:
+      tags:
+        - Start
+      operationId: create-new-user
+      summary: Create a new user
+      security:
+        - bearerAuth: []
+      requestBody:
+        $ref: '#/components/requestBodies/CreateUser'
+      responses:
+        '201':
+          description: Successfull operation
+          $ref: '#/components/responses/CreateUserResp'
+        '400':
+          description: Failed operation
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/BadRequestResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/UnauthorizedResponse'
+
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    UnauthorizedResponse:
+      title: UnauthorizedResponse
+      type: object
+      properties:
+        status:
+          type: boolean
+          example: false
+        message:
+          type: string
+          example: 'Unauthorized'
+        data:
+          example: null
+    BasicResponse:
+      title: BasicResponse
+      type: object
+      properties:
+        status:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: 'success'
+    BadRequestResponse:
+      title: BadRequestResponse
+      type: object
+      properties:
+        status:
+          type: boolean
+          example: false
+        message:
+          type: string
+          example: 'some error from user'
+        data:
+          example: null
+    DateModel:
+      title: DateModel
+      type: object
+      properties:
+        createdAt:
+          type: string
+          example: '2023-10-15T12:13:48.276Z'
+        updatedAt:
+          type: string
+          example: '2023-10-15T12:13:48.276Z'
+    UserModel:
+      title: User
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: 'bujang'
+        email:
+          type: string
+          example: 'bujang@mail.com'
+    AccountModel:
+      type: object
+      properties:
+        account_id:
+          type: integer
+          format: int64
+        nama:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        no_telp:
+          type: string
+        negara:
+          type: string
+        kota:
+          type: string
+        role:
+          type: string
+
+    KategoriModel:
+      type: object
+      properties:
+        kategori_id:
+          type: integer
+          format: int64
+        title:
+          type: string
+        deskripsi:
+          type: string
+
+    CourseModel:
+      type: object
+      properties:
+        course_id:
+          type: integer
+          format: int64
+        title:
+          type: string
+        deskripsi:
+          type: string
+        kategori_id:
+          type: integer
+          format: int64
+        premium:
+          type: boolean
+        level:
+          type: string
+        harga:
+          type: number
+        url_image_preview:
+          type: string
+        url_gc_tele:
+          type: string
+
+    MentorModel:
+      type: object
+      properties:
+        mentor_id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        job:
+          type: string
+
+    VideoModel:
+      type: object
+      properties:
+        video_id:
+          type: integer
+          format: int64
+        course_id:
+          type: integer
+          format: int64
+        title:
+          type: string
+        deskripsi:
+          type: string
+        url_video:
+          type: string
+        is_preview:
+          type: boolean
+
+    User_courseModel:
+      type: object
+      properties:
+        user_course_id:
+          type: integer
+          format: int64
+        account_id:
+          type: integer
+          format: int64
+        course_id:
+          type: integer
+          format: int64
+
+    Mentor_courseModel:
+      type: object
+      properties:
+        mentor_course_id:
+          type: integer
+          format: int64
+        mentor_id:
+          type: integer
+          format: int64
+        course_id:
+          type: integer
+          format: int64
+
+    Course_progressModel:
+      type: object
+      properties:
+        course_progres_id:
+          type: integer
+          format: int64
+        account_id:
+          type: integer
+          format: int64
+        course_id:
+          type: integer
+          format: int64
+        video_id:
+          type: integer
+          format: int64
+        is_done:
+          type: boolean
+        last_access:
+          type: string
+          format: date-time
+
+    RatingModel:
+      type: object
+      properties:
+        rating_id:
+          type: integer
+          format: int64
+        account_id:
+          type: integer
+          format: int64
+        course_id:
+          type: integer
+          format: int64
+        skor:
+          type: integer
+        comment:
+          type: string
+    PromoModel:
+      type: object
+      properties:
+        promo_id:
+          type: integer
+          format: int64
+        course_id:
+          type: integer
+          format: int64
+        deskripsi:
+          type: string
+        tanggal_mulai:
+          type: string
+          format: date-time
+        tanggal_selesai:
+          type: string
+          format: date-time
+        total_promo:
+          type: integer
+    Riwayat_TransaksiModel:
+      type: object
+      properties:
+        riwayat_transaksi_id:
+          type: integer
+          format: int64
+        account_id:
+          type: integer
+          format: int64
+        course_id:
+          type: integer
+          format: int64
+        metode_pembayaran:
+          type: string
+        tanggal_pembayaran:
+          type: string
+          format: date-time
+        status:
+          type: string
