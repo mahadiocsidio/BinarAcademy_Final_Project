@@ -3,13 +3,13 @@ const prisma = new PrismaClient();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const nodemailer = require('../libs/nodemailer');
-const { JWT_SECRET_KEY } = process.env;
+const otpGenerator = require('otp-generator');
 
 module.exports = {
     createUpdateotp: async (account_id, nama, email, res) => { // Menambahkan respon sebagai argumen
         try {
             //generate otp
-            const otpValue = generateNumericOTP(6);
+            const otpValue = otpGenerator.generate(6, { lowerCaseAlphabets: false, upperCaseAlphabets: false, specialChars: false });
             let existingOTP = null; // Deklarasi existingOTP
 
             existingOTP = await prisma.otp.findUnique({
@@ -73,6 +73,12 @@ module.exports = {
                 }
             }, 60000);
 
+            // // send otp to user email
+            // let html = await getHtml('otp-email.ejs', {
+            //     otp: otp, 
+            // });
+          
+
               // Kirim OTP ke email pengguna
               const html = `<p>Hi ${nama}, ini adalah OTP Anda: <strong>${otpValue}</strong></p>`;
               await nodemailer.sendEmail(email, 'One-Time Password (OTP)', html);
@@ -89,13 +95,3 @@ module.exports = {
         }
     }
 };
-
-// Memindahkan fungsi generateNumericOTP di luar fungsi createUpdateotp
-function generateNumericOTP(length) {
-    let otp = '';
-    const digits = '0123456789';
-    for (let i = 0; i < length; i++) {
-        otp += digits[Math.floor(Math.random() * 10)];
-    }
-    return otp;
-}
