@@ -15,15 +15,15 @@ datasource db {
 // Tabel Account
 model Account {
   account_id        Int                 @id @default(autoincrement())
-  nama              String
+  nama              String?
   email             String              @unique
   password          String
   otp               Otp?
-  no_telp           String
-  negara            String
-  kota              String
-  role              String
-  url_image         String
+  no_telp           String?
+  negara            String?
+  kota              String?
+  role              String?
+  url_image         String?
   is_verified       Boolean             @default(false)
   created_at        DateTime            @default(now())
   updated_at        DateTime            @updatedAt
@@ -55,7 +55,7 @@ model Mentor {
 // Tabel Kategori
 model Kategori {
   kategori_id Int      @id @default(autoincrement())
-  title       String
+  title       String?
   deskripsi   String?
   Course      Course[]
 }
@@ -63,7 +63,7 @@ model Kategori {
 // Tabel Course
 model Course {
   course_id         Int                 @id @default(autoincrement())
-  title             String
+  title             String?
   deskripsi         String?
   kategori_id       Int
   premium           Boolean             @default(false)
@@ -71,7 +71,7 @@ model Course {
   level             String
   harga             Float
   url_image_preview String?
-  url_gc_tele       String
+  url_gc_tele       String?
   created_at        DateTime            @default(now())
   updated_at        DateTime            @updatedAt
   Kategori          Kategori            @relation(fields: [kategori_id], references: [kategori_id])
@@ -99,7 +99,7 @@ model Video {
   video_id        Int               @id @default(autoincrement())
   chapter_id      Int
   title           String
-  deskripsi       String
+  deskripsi       String?
   url_video       String
   is_preview      Boolean           @default(false)
   Chapter         Chapter           @relation(fields: [chapter_id], references: [chapter_id])
@@ -142,7 +142,7 @@ model Rating {
   rating_id  Int     @id @default(autoincrement())
   account_id Int
   course_id  Int
-  skor       Int
+  skor       Int?
   comment    String?
   Account    Account @relation(fields: [account_id], references: [account_id])
   Course     Course  @relation(fields: [course_id], references: [course_id])
@@ -152,7 +152,7 @@ model Rating {
 model Promo {
   promo_id        Int      @id @default(autoincrement())
   course_id       Int
-  deskripsi       String
+  deskripsi       String?
   tanggal_mulai   DateTime
   tanggal_selesai DateTime
   total_promo     Int
@@ -166,7 +166,7 @@ model Riwayat_Transaksi {
   course_id            Int
   metode_pembayaran    String
   tanggal_pembayaran   DateTime
-  status               String
+  status               String?
   Account              Account  @relation(fields: [account_id], references: [account_id])
   Course               Course   @relation(fields: [course_id], references: [course_id])
 }
