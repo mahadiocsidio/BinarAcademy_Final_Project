@@ -53,9 +53,7 @@ module.exports = {
         });
       }
 
-      //generate password
       let encryptedPassword = await bcrypt.hash(password, 10);
-
       let user = await prisma.account.create({
         data: {
           nama,
@@ -109,8 +107,7 @@ module.exports = {
       let activationOtp = await prisma.Otp.findFirst({
         where: {
           account_id: account.account_id,
-          otp,
-          created_at: { gte: new Date(Date.now() - 60 * 1000) },
+          otp
         },
       });
 
@@ -277,7 +274,7 @@ module.exports = {
       let token = jwt.sign({ email: emailExist.email }, JWT_SECRET_KEY);
       var location = req.headers.origin; //get HOST & PORT
 
-      // let url = `${location}/api/v1/user/change-password?token=${token}`; //send token in link to get user
+      // let url = `${location}/auth/reset-password?token=${token}`; //send token in link to get user
       let url = `<p>Hi ${email}, ini adalah token Anda: <strong>${token}</strong></p>`; //send token in link to get user
       console.log('url reset pass : ', url);
       // const html = await nodemailer.getHtml('reset-password-valid.ejs', {

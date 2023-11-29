@@ -5,8 +5,8 @@ const { JWT_SECRET_KEY } = process.env;
 
 module.exports = {
     restrict: async (req, res, next) => {
-        // const authorization = req.query.token;
-        const authorization = req.headers.authorization;
+        const authorization = req.query.token;
+        // const authorization = req.headers.authorization;
         if (!authorization) {
           return res.status(401).json({
             status: false,
