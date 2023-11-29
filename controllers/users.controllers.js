@@ -53,8 +53,6 @@ module.exports = {
         });
       }
 
-      //generate password
-      let encryptedPassword = await bcrypt.hash(password, 10);
 
       let user = await prisma.account.create({
         data: {
