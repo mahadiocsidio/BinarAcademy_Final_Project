@@ -1,54 +1,71 @@
-### register
 POST http://localhost:3000/auth/register
 Content-Type: application/json
 
 {
-    "nama":"asep",
-    "email":"21104064@ittelkom-pwt.ac.id",
-    "no_telp":"085726331778",
-    "password":"asep1234"
+    "nama":"mengcoba",
+    "email":"test10@students.amikom.ac.id",
+    "password":"12345678",
+    "password_confirmation":"12345678"
 }
 
-### verify otp
-POST http://localhost:3000/auth/verify-otp
-Content-Type: application/json
-
-{
-    "email":"21104064@ittelkom-pwt.ac.id",
-    "otp":"597389"
-}
-
-#### resend otp
-POST http://localhost:3000/auth/resend-otp
-Content-Type: application/json
-
-{
-    "email":"21104064@ittelkom-pwt.ac.id"
-}
-
-### login
+###
 
 POST http://localhost:3000/auth/login
 Content-Type: application/json
 
 {
-    "email":"putriindriyanti190203@gmail.com",
-    "password":"123555555"
+    "email":"test10@students.amikom.ac.id",
+    "password":"12345678"
 }
 
-### getAllAccount
+###
 GET http://localhost:3000/profile
 
-### getAccountById
+###
 GET http://localhost:3000/profile/3
 
-### updateProfilebyId
+###
 PUT http://localhost:3000/profile/updateProfile
 Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwiZW1haWwiOiJ0ZXN0MTBAc3R1ZGVudHMuYW1pa29tLmFjLmlkIiwiaWF0IjoxNzAxMjY2Nzg3fQ.jvZ6vDcHYJrMot_-RX1XGgfDrpUDP-IMHwWoP48GkQQ
 
 {
-    "account_id":1,
     "no_telp":"012345678910",
     "negara": "Indo",
     "kota": "jogya"
 }
+
+###
+PUT http://localhost:3000/profile/changePassword
+Content-Type: application/json
+
+{
+    "account_id":4,
+    "password_lama":"123456789",
+    "password_baru":"123456789",
+    "password_confirm":"123456789"
+}
+
+###
+POST  http://localhost:3000/profile/logout
+
+
+###
+GET http://localhost:3000/course
+
+###
+POST http://localhost:3000/course/addCourse
+Content-Type: application/json
+
+{
+    "title":"UI/UX untuk pemula",
+    "mentor_id": 1,
+    "deskripsi":"Course UI/UX untuk kamu mau yang baru mau mulai",
+    "kategori_id":2,
+    "harga":0,
+    "premium":false,
+    "level":"Beginner"
+}
+
+###
+GET http://localhost:3000/course/filter?kategori_id=1&kategori_id=2
