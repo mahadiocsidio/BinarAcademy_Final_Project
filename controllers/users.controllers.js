@@ -8,140 +8,255 @@ const { createUpdateotp } = require('./otp.controllers');
 const { JWT_SECRET_KEY } = process.env;
 
 module.exports = {
-    // melakukan register
-    register : async (req, res, next) => {
-        try {
-            let {nama, email, password, password_confirmation, role} = req.body;
-            let userExist = await prisma.account.findUnique({where : {email}});
+  // melakukan register
+  register: async (req, res, next) => {
+    try {
+      let { nama, email, no_telp, password, role } = req.body;
+      let userExist = await prisma.account.findUnique({ where: { email } });
 
-            //validasi panjang nama maksimal 50 karakter
-            if (nama.length > 50){
-                return res.status(400).json({
-                status: false,
-                message: 'Bad Request',
-                error: 'Nama harus memiliki maksimal 50 karakter'
-                })
-            }
+      //validasi panjang nama maksimal 50 karakter
+      if (nama.length > 50) {
+        return res.status(400).json({
+          status: false,
+          message: 'Bad Request',
+          error: 'Nama harus memiliki maksimal 50 karakter',
+        });
+      }
 
-            //validasi panjang password minimal 8 karakter dan maksimal 15 karakter
-            if (password.length < 8 || password.length > 15) {
-                return res.status(400).json({
-                status : false,
-                message: 'Bad Request',
-                error: 'Password harus memiliki minimal 8 karakter dan maksimal 15 karakter'
-                })
-            }
+      //validasi panjang password minimal 8 karakter dan maksimal 15 karakter
+      if (password.length < 8 || password.length > 15) {
+        return res.status(400).json({
+          status: false,
+          message: 'Bad Request',
+          error:
+            'Password harus memiliki minimal 8 karakter dan maksimal 15 karakter',
+        });
+      }
 
-            // Validasi format email menggunakan regular expression
-            const emailRegex = /\S+@\S+\.\S+/;
-            if (!emailRegex.test(email)) {
-                return res.status(400).json({
-                status : false,
-                message: 'Bad Request',
-                error: 'Format email tidak valid'
-                })
-            }
-            
-            //email sudah pernah digunakan
-            if (userExist) {
-                return res.status(400).json({
-                    status : false,
-                    message: 'Bad Request',
-                    err: 'email sudah dipakai',
-                    data: null
-                })
-            }
+      // Validasi format email menggunakan regular expression
+      const emailRegex = /\S+@\S+\.\S+/;
+      if (!emailRegex.test(email)) {
+        return res.status(400).json({
+          status: false,
+          message: 'Bad Request',
+          error: 'Format email tidak valid',
+        });
+      }
 
-            //memastikan bahwa password dan konfirmasi password yang dimasukkan sama
-            if (password != password_confirmation) {
-                return res.status(400).json({
-                    status: false,
-                    message: 'Bad Request',
-                    err: 'Pastikan bahwa kata sandi yang Anda masukkan sama dengan konfirmasi kata sandi!',
-                    data: null
-                })
-            }
+      //email sudah pernah digunakan
+      if (userExist) {
+        return res.status(400).json({
+          status: false,
+          message: 'Bad Request',
+          err: 'email sudah dipakai',
+          data: null,
+        });
+      }
 
+      //generate password
+      let encryptedPassword = await bcrypt.hash(password, 10);
 
-            //generate password
-            let encryptedPassword = await bcrypt.hash(password, 10);
+      let user = await prisma.account.create({
+        data: {
+          nama,
+          email,
+          no_telp,
+          password: encryptedPassword,
+          role: 'user',
+        },
+      });
 
-            let user = await prisma.account.create({
-                data: {
-                    nama,
-                    email,
-                    password: encryptedPassword, 
-                    role : 'user'
-                }
-            });
+      //generate otp
+      await createUpdateotp(user.account_id, user.nama, user.email, res);
 
-            //generate otp
-            createUpdateotp(user.account_id, user.nama, user.email, res);
+      // Mengembalikan respon terlebih dahulu
+      res.status(201).json({
+        status: true,
+        message: 'Registrasi berhasil, silakan cek email untuk OTP.',
+        data: user
+      });
 
-            
-            // Mengembalikan respon terlebih dahulu
-            res.status(201).json({
-                status: true,
-                message: 'Registrasi berhasil, silakan cek email untuk OTP.',
-                data: user
-            });
-
-
-        } catch (err) {
-            next(err);
-        }
-    },
-
-
-    login : async (req, res, next) => {
-        try {
-            const {email, password, is_verified} = req.body;
-            const user = await prisma.account.findUnique({where : {email}});
-
-            if (!user) {
-                return res.status(400).json({
-                  status: false,
-                  message: "Bad Request",
-                  error: "Invalid Email or Password",
-                });
-              }
-
-            const isPasswordCorrect = await bcrypt.compare(password, user.password);
-            
-            if (!isPasswordCorrect) {
-                return res.status(400).json({
-                  status: false,
-                  message: "Bad Request",
-                  error: "Invalid Email or Password",
-                });
-              }
-
-            const userVerified = await prisma.account.findUnique({where : {email, is_verified : true}});
-
-            if (!userVerified) {
-                console.log('lakukan verifikasi terlebih dahulu');
-                //generate otp
-                createUpdateotp(user.account_id, user.nama, user.email, res);
-            } else {
-            
-            const token = jwt.sign({id: user.account_id, email : user.email}, JWT_SECRET_KEY);
-
-            res.cookie('token', token,{
-                httpOnly: true,
-                maxAge: 60 * 60 * 24 * 30 * 1000,
-            });
-            
-            // bisa redirect kalau sudah login ke sini 
-            //res.redirect(`/home);
-              return res.status(200).json({
-                status: true,
-                message: 'Berhasil login',
-                data: user
-            });
-            }
-
-        }catch(err) {
-            next(err)
-        }
+      //   res.redirect('/verify-otp'); // Redirect to verify otp page
+    } catch (err) {
+      next(err);
     }
-}
+  },
+
+  // verify otp
+  verifyOtp: async (req, res, next) => {
+    try {
+      const { email, otp } = req.body;
+
+      if (!email || !otp) {
+        return res.status(400).json({
+          status: false,
+          message: 'Bad Request',
+          error: 'Email and OTP are required',
+          data: null,
+        });
+      }
+
+      let account = await prisma.Account.findUnique({ where: { email } });
+      if (!account) {
+        return res.status(404).json({
+          status: false,
+          message: 'Not Found',
+          err: 'User not found',
+          data: null,
+        });
+      }
+
+      let activationOtp = await prisma.Otp.findFirst({
+        where: {
+          account_id: account.account_id,
+          otp,
+          created_at: { gte: new Date(Date.now() - 60 * 1000) },
+        },
+      });
+
+      if (!activationOtp) {
+        return res.status(400).json({
+          status: false,
+          message: 'Bad Request',
+          err: 'Invalid Activation Code or Code Expired',
+          data: null,
+        });
+      }
+
+      await prisma.otp.update({
+        where: {
+            account_id: account.account_id,
+        },
+        data: {
+            otp: null,
+        },
+    });
+
+      return res.status(200).json({
+        status: true,
+        message: 'Activation Code verified successfully',
+        err: null,
+        data: { email, otp },
+      });
+
+      //   res.redirect('/user/login'); // Redirect to login page
+    } catch (err) {
+      next(err);
+    }
+  },
+
+// resend otp
+resendOtp: async (req, res, next) => {
+  try {
+    const { email } = req.body;
+    const user = await prisma.account.findUnique({ where: { email } });
+
+    if (!user) {
+      return res.status(404).json({
+        status: false,
+        message: 'Not Found',
+        err: 'User not found',
+        data: null,
+      });
+    }
+
+    // Mengambil nilai OTP dari database
+    const existingOTP = await prisma.otp.findUnique({
+      where: { account_id: user.account_id },
+    });
+
+    if (!existingOTP) {
+      return res.status(400).json({
+        status: false,
+        message: 'Bad Request',
+        err: 'OTP not found for the user',
+        data: null,
+      });
+    }
+
+    // Memperbarui nilai OTP dalam model
+    const updateOtp = existingOTP.otp;
+
+    // create or update OTP in the Otp table
+    await prisma.otp.upsert({
+      where: { account_id: user.account_id },
+      create: {
+        account_id: user.account_id,
+        otp: updateOtp,
+        created_at: new Date(),
+      },
+      update: {
+        otp: updateOtp,
+        created_at: new Date(),
+      },
+    });
+
+    // send otp
+    await createUpdateotp(user.account_id, user.nama, user.email, res);
+
+    return res.status(200).json({
+      status: true,
+      message: 'OTP resent successfully',
+      err: null,
+      data: { email },
+    });
+  } catch (err) {
+    next(err);
+  }
+},
+
+  login: async (req, res, next) => {
+    try {
+      const { email, password, is_verified } = req.body;
+      const user = await prisma.account.findUnique({ where: { email } });
+
+      if (!user) {
+        return res.status(400).json({
+          status: false,
+          message: 'Bad Request',
+          error: 'Invalid Email or Password',
+        });
+      }
+
+      const isPasswordCorrect = await bcrypt.compare(password, user.password);
+
+      if (!isPasswordCorrect) {
+        return res.status(400).json({
+          status: false,
+          message: 'Bad Request',
+          error: 'Invalid Email or Password',
+        });
+      }
+
+      const userVerified = await prisma.account.findUnique({
+        where: { email, is_verified: true },
+      });
+
+      if (!userVerified) {
+        console.log('lakukan verifikasi terlebih dahulu');
+        //generate otp
+        createUpdateotp(user.account_id, user.nama, user.email, res);
+      } else {
+        const token = jwt.sign(
+          { id: user.account_id, email: user.email },
+          JWT_SECRET_KEY
+        );
+
+        res.cookie('token', token, {
+          httpOnly: true,
+          maxAge: 60 * 60 * 24 * 30 * 1000,
+        });
+
+        // bisa redirect kalau sudah login ke sini
+        //res.redirect(`/home);
+        return res.status(200).json({
+          status: true,
+          message: 'Berhasil login',
+          data: user,
+        });
+      }
+    } catch (err) {
+      next(err);
+    }
+  },
+};
