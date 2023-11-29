@@ -125,4 +125,22 @@ const getCoursesByCategory = async (req, res, next) => {
     }
 };
 
-module.exports ={getAllCourse,getCoursebyId,addCourse,getCoursesByCategory}
+const deleteCoursebyId = async(req,res,next)=>{
+    try {
+        let {course_id} = req.params
+        course_id = parseInt(course_id,10)
+        let course = await prisma.course.delete({
+            where:{
+                course_id: course_id
+            }
+        })
+        res.status(200).json({
+            success:true,
+            data:course
+        })
+    } catch (error) {
+        next(error)
+    }
+}
+
+module.exports ={getAllCourse,getCoursebyId,addCourse,getCoursesByCategory,deleteCoursebyId}
