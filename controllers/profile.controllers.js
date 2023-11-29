@@ -21,7 +21,7 @@ const getAllAccount = async(req,res,next)=>{
 
 }
 
-const getUserbyId = async(req,res,next)=>{
+const getAccountbyId = async(req,res,next)=>{
     try {
         let {account_id} = req.params
         //mengubah account_id menjadi tipe number/int
@@ -130,4 +130,4 @@ const logout = async(req,res,next)=>{
     }
 }
 
-module.exports = {getAllAccount,getUserbyId,updateProfile,resetPassword,getRiwayatPembayaran,logout}
+module.exports = {getAllAccount,getAccountbyId,updateProfile,resetPassword,getRiwayatPembayaran,logout}

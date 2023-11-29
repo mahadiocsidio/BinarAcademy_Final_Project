@@ -36,3 +36,19 @@ Content-Type: application/json
     "password":"123555555"
 }
 
+### getAllAccount
+GET http://localhost:3000/profile
+
+### getAccountById
+GET http://localhost:3000/profile/3
+
+### updateProfilebyId
+PUT http://localhost:3000/profile/updateProfile
+Content-Type: application/json
+
+{
+    "account_id":1,
+    "no_telp":"012345678910",
+    "negara": "Indo",
+    "kota": "jogya"
+}
