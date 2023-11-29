@@ -60,7 +60,6 @@ module.exports = {
           email,
           no_telp,
           password: encryptedPassword,
-          role: 'user',
         },
       });
 
@@ -107,7 +106,7 @@ module.exports = {
       let activationOtp = await prisma.Otp.findFirst({
         where: {
           account_id: account.account_id,
-          otp
+          otp,
         },
       });
 
@@ -128,12 +127,20 @@ module.exports = {
           otp: null,
         },
       });
+      let { is_verified } = await prisma.account.update({
+        where: {
+          email,
+        },
+        data: {
+          is_verified: true,
+        },
+      });
 
       return res.status(200).json({
         status: true,
         message: 'Activation Code verified successfully',
         err: null,
-        data: { email, otp },
+        data: { email, otp, is_verified },
       });
 
       //   res.redirect('/user/login'); // Redirect to login page
@@ -229,11 +236,17 @@ module.exports = {
         where: { email, is_verified: true },
       });
 
-      // if (!userVerified) {
-      //   console.log('lakukan verifikasi terlebih dahulu');
-      //   //generate otp
-      //   createUpdateotp(user.account_id, user.nama, user.email, res);
-      // } else {
+      if (!userVerified) {
+        console.log('lakukan verifikasi terlebih dahulu');
+        //generate otp
+        createUpdateotp(user.account_id, user.nama, user.email, res);
+        return res.status(400).json({
+          status: false,
+          err: 'lakukan verifikasi terlebih dahulu',
+          message: 'harap periksa email anda untuk mendapat otp',
+          data: { email: user.email, is_verified: user.is_verified },
+        });
+      } else {
         const token = jwt.sign(
           { id: user.account_id, email: user.email },
           JWT_SECRET_KEY
@@ -251,7 +264,7 @@ module.exports = {
           message: 'Berhasil login',
           data: user,
         });
-      // }
+      }
     } catch (err) {
       next(err);
     }
@@ -293,11 +306,11 @@ module.exports = {
       next(err);
     }
   },
-  changePassword: async (req,res,next)=>{
+  changePassword: async (req, res, next) => {
     try {
-      let {password,confirmationPassword} = req.body
-      let {token} = req.query
-      
+      let { password, confirmationPassword } = req.body;
+      let { token } = req.query;
+
       if (password != confirmationPassword) {
         return res.status(400).json({
           status: false,
@@ -316,25 +329,24 @@ module.exports = {
             data: null,
           });
         }
-      let encryptedPassword = await bcrypt.hash(password, 10);
-      let updated = await prisma.account.update({
-        where: { email: decoded.email },
-        data: { password: encryptedPassword },
+        let encryptedPassword = await bcrypt.hash(password, 10);
+        let updated = await prisma.account.update({
+          where: { email: decoded.email },
+          data: { password: encryptedPassword },
+        });
+
+        res.json({
+          status: true,
+          message: 'success',
+          err: null,
+          data: updated,
+        });
       });
-      
-      res.json({
-        status: true,
-        message: 'success',
-        err: null,
-        data: updated,
-      });
-      })
     } catch (err) {
-      next(err)
+      next(err);
     }
   },
   whoami: (req, res, next) => {
-
     return res.status(200).json({
       status: true,
       message: 'OK',

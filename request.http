@@ -15,7 +15,7 @@ Content-Type: application/json
 
 {
     "email":"200401141@student.umri.ac.id",
-    "otp":"765621"
+    "otp":"739987"
 }
 
 #### resend otp
@@ -23,7 +23,7 @@ POST http://localhost:3000/auth/resend-otp
 Content-Type: application/json
 
 {
-    "email":"21104064@ittelkom-pwt.ac.id"
+    "email":"200401141@student.umri.ac.id"
 }
 
 ### login
