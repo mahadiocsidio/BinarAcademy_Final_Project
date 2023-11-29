@@ -22,7 +22,7 @@ model Account {
   no_telp           String?
   negara            String?
   kota              String?
-  role              String?
+  role              String              @default("user")
   url_image         String?
   is_verified       Boolean             @default(false)
   created_at        DateTime            @default(now())
@@ -36,11 +36,11 @@ model Account {
 
 // Tabel OTP
 model Otp {
-  otp_id        Int       @id @default(autoincrement())
-  otp           String?
-  created_at    DateTime  @default(now())
-  account       Account   @relation(fields: [account_id], references: [account_id])
-  account_id    Int       @unique
+  otp_id     Int      @id @default(autoincrement())
+  otp        String?
+  created_at DateTime @default(now())
+  account    Account  @relation(fields: [account_id], references: [account_id])
+  account_id Int      @unique
 }
 
 // Tabel Mentor

@@ -3,10 +3,10 @@ POST http://localhost:3000/auth/register
 Content-Type: application/json
 
 {
-    "nama":"asep",
-    "email":"21104064@ittelkom-pwt.ac.id",
-    "no_telp":"085726331778",
-    "password":"asep1234"
+    "nama":"aldii",
+    "email":"200401141@student.umri.ac.id",
+    "no_telp":"081368094422",
+    "password":"password123"
 }
 
 ### verify otp
@@ -14,8 +14,8 @@ POST http://localhost:3000/auth/verify-otp
 Content-Type: application/json
 
 {
-    "email":"21104064@ittelkom-pwt.ac.id",
-    "otp":"597389"
+    "email":"200401141@student.umri.ac.id",
+    "otp":"495783"
 }
 
 #### resend otp
@@ -32,7 +32,26 @@ POST http://localhost:3000/auth/login
 Content-Type: application/json
 
 {
-    "email":"putriindriyanti190203@gmail.com",
-    "password":"123555555"
+    "email":"200401141@student.umri.ac.id",
+    "password":"aldi123"
 }
 
+### RESET PASSWORD
+POST http://localhost:3000/auth/reset-password
+Content-Type: application/json
+
+{
+    "email":"200401141@student.umri.ac.id"
+}
+
+### CHANGE PASSWORD
+PUT http://localhost:3000/auth/reset-password?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjIwMDQwMTE0MUBzdHVkZW50LnVtcmkuYWMuaWQiLCJpYXQiOjE3MDEyNTI0ODR9.BrIVwiESlqa2eiUzaHKvTqw_YYGQCAvOpkAX0yQUaus
+Content-Type: application/json
+
+{
+    "password":"aldi123",
+    "confirmationPassword":"aldi123"
+}
+### GET USER BY TOKEN
+GET http://localhost:3000/auth/whoami
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjIwMDQwMTE0MUBzdHVkZW50LnVtcmkuYWMuaWQiLCJpYXQiOjE3MDEyNTI0ODR9.BrIVwiESlqa2eiUzaHKvTqw_YYGQCAvOpkAX0yQUaus
