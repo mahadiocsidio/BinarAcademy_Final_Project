@@ -1,8 +1,9 @@
 const express = require('express')
 const router = express.Router()
-const {getUserbyId,updateProfile} = require('../controllers/profile.controllers')
+const {getAllAccount,getUserbyId,updateProfile} = require('../controllers/profile.controllers')
 
-router.get('/profile',getUserbyId)
-router.post('/updateProfile',updateProfile)
+router.get('/', getAllAccount)
+router.get('/:account_id',getUserbyId)
+router.put('/updateProfile',updateProfile)
 
 module.exports=router

@@ -9,7 +9,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 const userRouter = require('./routes/user.routes');
+const profileRouter = require('./routes/profile.routes')
 app.use('/auth', userRouter);
+app.use('/profile', profileRouter)
 
 
 app.listen(PORT, () => {

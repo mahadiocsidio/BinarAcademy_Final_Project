@@ -1,13 +1,39 @@
 const prisma = require('../libs/prisma')
 
-const getUserbyId = async(req,res,next)=>{
+const getAllAccount = async(req,res,next)=>{
     try {
-        const {account_id} = req.account.account_id
-        let account = await prisma.account.findUnique({
-            where:{
-                account_id: account_id
+        let account = await prisma.account.findMany({
+            select:{
+                account_id: true,
+                nama: true,
+                email: true,
+                role: true,
+                created_at:true
             }
         })
+        res.status(200).json({
+            success:true,
+            data:account
+        })
+    } catch (error) {
+        next(error)
+    }
+
+}
+
+const getUserbyId = async(req,res,next)=>{
+    try {
+        let {account_id} = req.params
+        //mengubah account_id menjadi tipe number/int
+        account_id = parseInt(account_id,10)
+        let account = await prisma.account.findUnique({ where: {account_id},select:{
+            account_id: true,
+            nama: true,
+            email: true,
+            no_telp: true,
+            negara: true,
+            kota: true,
+        }})
         if(!account) return res.json("Account isnt registered")
 
         res.status(200).json({
@@ -104,4 +130,4 @@ const logout = async(req,res,next)=>{
     }
 }
 
-module.exports = {getUserbyId,updateProfile,resetPassword,getRiwayatPembayaran,logout}
+module.exports = {getAllAccount,getUserbyId,updateProfile,resetPassword,getRiwayatPembayaran,logout}
