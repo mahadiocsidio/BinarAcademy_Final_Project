@@ -5,7 +5,8 @@ const { JWT_SECRET_KEY } = process.env;
 
 module.exports = {
     restrict: async (req, res, next) => {
-        const authorization = req.query.token;
+        
+        let { authorization } = req.headers;
     
         if (!authorization) {
           return res.status(401).json({
@@ -24,9 +25,9 @@ module.exports = {
                     data: null
                 });
             }
-
-            req.user = await prisma.user.findUnique({
-                where: {id: decoded.id}
+            console.log(decoded)
+            req.user = await prisma.account.findUnique({
+                where: {account_id: decoded.id}
               });
             next();
         });
