@@ -60,6 +60,7 @@ module.exports = {
           email,
           no_telp,
           password: encryptedPassword,
+          role,
         },
       });
 
@@ -309,8 +310,8 @@ module.exports = {
   changePassword: async (req, res, next) => {
     try {
       let { password, confirmationPassword } = req.body;
-      let { token } = req.query;
-
+      let token = req.headers.authorization;
+      console.log(token);
       if (password != confirmationPassword) {
         return res.status(400).json({
           status: false,

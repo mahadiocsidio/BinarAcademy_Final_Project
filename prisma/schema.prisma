@@ -57,6 +57,7 @@ model Kategori {
   kategori_id Int      @id @default(autoincrement())
   title       String?
   deskripsi   String?
+  url_img_preview String?
   Course      Course[]
 }
 
