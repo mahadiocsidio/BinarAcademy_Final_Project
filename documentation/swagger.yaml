@@ -7,7 +7,7 @@ info:
     email: muhtopik07@gmail.com
   version: 1.0.0
 servers:
-  - url: http://localhost:3000/api/v1
+  - url: http://localhost:3000
 tags:
   - name: Start
     description: all about creating account or login
@@ -18,34 +18,384 @@ tags:
   - name: Authentication
     description: all about Authentication
 paths:
-  /register:
+  /auth/register:
     post:
       tags:
         - Start
       operationId: create-new-user
       summary: Create a new user
-      security:
-        - bearerAuth: []
       requestBody:
-        $ref: '#/components/requestBodies/CreateUser'
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nama:
+                  type: string
+                  maxLength: 50
+                  example: "John Doe"
+                email:
+                  type: string
+                  format: email
+                  example: "user@example.com"
+                no_telp:
+                  type: string
+                  example: "123456789"
+                password:
+                  type: string
+                  minLength: 8
+                  maxLength: 15
+                  example: "password123"
       responses:
         '201':
-          description: Successfull operation
-          $ref: '#/components/responses/CreateUserResp'
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      account_id:
+                        type: integer
+                      nama:
+                        type: string
+                      email:
+                        type: string
+                      password:
+                        type: string
+                      no_telp:
+                        type: string
+                      negara:
+                        type: string
+                      kota:
+                        type: string
+                      role:
+                        type: string
+                      url_image:
+                        type: string
+                      is_verified:
+                        type: boolean
+                      created_at:
+                        type: string
+                        format: date-time
+                      updated_at:
+                        type: string
+                        format: date-time
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+              examples:
+                InvalidName:
+                  summary: Invalid Name
+                  value:
+                    status: false
+                    message: 'Nama harus memiliki maksimal 50 karakter'
+                InvalidPassword:
+                  summary: Invalid Password
+                  value:
+                    status: false
+                    message: 'Password harus memiliki minimal 8 karakter dan maksimal 15 karakter'
+                InvalidEmailFormat:
+                  summary: Invalid Email Format
+                  value:
+                    status: false
+                    message: 'Format email tidak valid'
+                EmailAlreadyUsed:
+                  summary: Email Already Used
+                  value:
+                    status: false
+                    message: 'Email sudah dipakai'
+
+
+  /auth/verify-otp:
+    post:
+      tags:
+        - Start
+      operationId: verify-otp
+      summary: Verify OTP
+      requestBody:
+        description: Verify OTP request
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: user@example.com
+                otp:
+                  type: string
+                  example: 123456
+      responses:
+        '200':
+          description: OTP verification successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: 'Activation Code verified successfully'
+                  err:
+                    type: string
+                    example: null
+                  data:
+                    type: object
+                    properties:
+                      email:
+                        type: string
+                        format: email
+                        example: user@example.com
+                      otp:
+                        type: string
+                        example: 123456
+                      is_verified:
+                        type: boolean
+                        example: true
+        '400':
+          description: Failed OTP verification
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Bad Request'
+                  error:
+                    type: string
+                    example: 'Invalid Email or OTP'
+                  data:
+                    example: null
+
+  /auth/resend-otp:
+    post:
+      tags:
+        - Start
+      operationId: resend-otp
+      summary: Resend OTP
+      requestBody:
+        description: Resend OTP request
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: user@example.com
+      responses:
+        '200':
+          description: OTP resent successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: 'OTP resent successfully'
+                  err:
+                    type: string
+                    example: null
+                  data:
+                    type: object
+                    properties:
+                      email:
+                        type: string
+                        format: email
+                        example: user@example.com
+        '400':
+          description: Failed to resend OTP
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Bad Request'
+                  err:
+                    type: string
+                    example: 'OTP not found for the user'
+                  data:
+                    example : null
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Not Found'
+                  err:
+                    type: string
+                    example: 'User not found'
+                  data: 
+                    example : null
+
+
+  /auth/login:
+    post:
+      tags:
+        - Start
+      operationId: user-login
+      summary: User login
+      requestBody:
+        description: User login credentials
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: user@example.com
+                password:
+                  type: string
+                  example: password123
+      responses:
+        '200':
+          description: Successful login
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Login successful
+                  data:
+                    type: object
+                    properties:
+                      token:
+                        type: string
+                        example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InB1dHJpaW5kcml5YW50aTE5MDIwM0BnbWFpbC5jb20iLCJpYXQiOjE3MDE0MDU5MDJ9.gTd_DuEmS1hfDaiDBOYFnQ9ITVw9qk_x0Yu09-04d-g"
+                      user:
+                        type: object
+                        properties:
+                          content:
+                            type: object
+                            properties:
+                              application/json:
+                                $ref: '#/components/schemas/AccountModel'
         '400':
           description: Failed operation
           content:
             application/json:
               schema:
-                allOf:
-                  - $ref: '#/components/schemas/BadRequestResponse'
-        '401':
-          description: Unauthorized
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Bad Request'
+                  error:
+                    type: string
+                    example: 'Invalid Email or Password or OTP verification required'
+                  details:
+                    type: string
+                    example: 'Please verify your email by entering the OTP sent to your registered email address.'
+
+  /auth/reset-password:
+    post:
+      tags:
+        - Start
+      operationId: reset-password
+      summary: Reset Password
+      requestBody:
+        description: Reset password request
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: user@example.com
+      responses:
+        '200':
+          description: Password reset email sent successfully
           content:
             application/json:
               schema:
-                allOf:
-                  - $ref: '#/components/schemas/UnauthorizedResponse'
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: 'Send'
+                  err:
+                    type: string
+                    example: null
+                  data:
+                    type: object
+                    properties:
+                      email:
+                        type: string
+                        format: email
+                        example: user@example.com
+        '400':
+          description: Email not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Email Not Found'
+                  err:
+                    type: string
+                    example: 'Enter Registered Email!'
+                  data:
+                    example: null
 
 
 components:
@@ -89,6 +439,7 @@ components:
           example: 'some error from user'
         data:
           example: null
+
     DateModel:
       title: DateModel
       type: object
@@ -99,74 +450,88 @@ components:
         updatedAt:
           type: string
           example: '2023-10-15T12:13:48.276Z'
-    UserModel:
-      title: User
-      type: object
-      properties:
-        id:
-          type: integer
-          example: 1
-        name:
-          type: string
-          example: 'bujang'
-        email:
-          type: string
-          example: 'bujang@mail.com'
+
     AccountModel:
       type: object
       properties:
         account_id:
           type: integer
           format: int64
+          example: 1
         nama:
           type: string
+          example: "John Doe"
         email:
           type: string
+          example: "john@example.com"
         password:
           type: string
+          example: "password123"
+        otp:
+          $ref: "#/components/schemas/OtpModel"
         no_telp:
           type: string
+          example: "123456789"
         negara:
           type: string
+          example: "Indonesia"
         kota:
           type: string
+          example: "Jakarta"
         role:
           type: string
-
-    KategoriModel:
-      type: object
-      properties:
-        kategori_id:
-          type: integer
-          format: int64
-        title:
+          example: "user"
+        url_image:
           type: string
-        deskripsi:
-          type: string
-
-    CourseModel:
-      type: object
-      properties:
-        course_id:
-          type: integer
-          format: int64
-        title:
-          type: string
-        deskripsi:
-          type: string
-        kategori_id:
-          type: integer
-          format: int64
-        premium:
+          example: "https://example.com/image.png"
+        is_verified:
           type: boolean
-        level:
+          example: false
+        created_at:
           type: string
-        harga:
-          type: number
-        url_image_preview:
+          format: date-time
+          example: "2023-10-15T12:13:48.276Z"
+        updated_at:
           type: string
-        url_gc_tele:
+          format: date-time
+          example: "2023-10-15T12:13:48.276Z"
+        User_course:
+          type: array
+          items:
+            $ref: "#/components/schemas/User_courseModel"
+        Course_progress:
+          type: array
+          items:
+            $ref: "#/components/schemas/Course_progressModel"
+        Rating:
+          type: array
+          items:
+            $ref: "#/components/schemas/RatingModel"
+        Riwayat_Transaksi:
+          type: array
+          items:
+            $ref: "#/components/schemas/Riwayat_TransaksiModel"
+        Notifikasi:
+          type: array
+          items:
+            $ref: "#/components/schemas/NotifikasiModel"
+
+    OtpModel:
+      type: object
+      properties:
+        otp_id:
+          type: integer
+          format: int64
+          example: 1
+        otp:
           type: string
+          example: "123456"
+        created_at:
+          type: string
+          format: date-time
+          example: "2023-10-15T12:13:48.276Z"
+        account:
+          $ref: "#/components/schemas/AccountModel"
 
     MentorModel:
       type: object
@@ -174,10 +539,140 @@ components:
         mentor_id:
           type: integer
           format: int64
+          example: 1
         name:
           type: string
+          example: "Mentor Name"
         job:
           type: string
+          example: "Job Title"
+        Mentor_course:
+          type: array
+          items:
+            $ref: "#/components/schemas/Mentor_courseModel"
+        Course:
+          type: array
+          items:
+            $ref: "#/components/schemas/CourseModel"
+
+    KategoriModel:
+      type: object
+      properties:
+        kategori_id:
+          type: integer
+          format: int64
+          example: 1
+        title:
+          type: string
+          example: "Category Title"
+        deskripsi:
+          type: string
+          example: "Category Description"
+        url_img_preview:
+          type: string
+          example: "https://example.com/image.png"
+        Course:
+          type: array
+          items:
+            $ref: "#/components/schemas/CourseModel"
+
+    CourseModel:
+      type: object
+      properties:
+        course_id:
+          type: integer
+          format: int64
+          example: 1
+        title:
+          type: string
+          example: "Course Title"
+        deskripsi:
+          type: string
+          example: "Course Description"
+        kategori_id:
+          type: integer
+          format: int64
+          example: 1
+        premium:
+          type: boolean
+          example: false
+        mentor_id:
+          type: integer
+          format: int64
+          example: 1
+        level:
+          type: string
+          example: "Beginner"
+        harga:
+          type: number
+          example: 99.99
+        url_image_preview:
+          type: string
+          example: "https://example.com/image.png"
+        url_gc_tele:
+          type: string
+          example: "https://t.me/course_channel"
+        created_at:
+          type: string
+          format: date-time
+          example: "2023-10-15T12:13:48.276Z"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2023-10-15T12:13:48.276Z"
+        Kategori:
+          $ref: "#/components/schemas/KategoriModel"
+        Mentor:
+          $ref: "#/components/schemas/MentorModel"
+        Chapter:
+          type: array
+          items:
+            $ref: "#/components/schemas/ChapterModel"
+        User_course:
+          type: array
+          items:
+            $ref: "#/components/schemas/User_courseModel"
+        Mentor_course:
+          type: array
+          items:
+            $ref: "#/components/schemas/Mentor_courseModel"
+        Course_progress:
+          type: array
+          items:
+            $ref: "#/components/schemas/Course_progressModel"
+        Rating:
+          type: array
+          items:
+            $ref: "#/components/schemas/RatingModel"
+        Promo:
+          type: array
+          items:
+            $ref: "#/components/schemas/PromoModel"
+        Riwayat_Transaksi:
+          type: array
+          items:
+            $ref: "#/components/schemas/Riwayat_TransaksiModel"
+
+    ChapterModel:
+      type: object
+      properties:
+        chapter_id:
+          type: integer
+          format: int64
+          example: 1
+        title:
+          type: string
+          example: "Chapter Title"
+        course_id:
+          type: integer
+          format: int64
+          example: 1
+        Course:
+          $ref: "#/components/schemas/CourseModel"
+        Video:
+          type: array
+          items:
+            $ref: "#/components/schemas/VideoModel"
 
     VideoModel:
       type: object
@@ -185,17 +680,29 @@ components:
         video_id:
           type: integer
           format: int64
-        course_id:
+          example: 1
+        chapter_id:
           type: integer
           format: int64
+          example: 1
         title:
           type: string
+          example: "Video Title"
         deskripsi:
           type: string
+          example: "Video Description"
         url_video:
           type: string
+          example: "https://example.com/video.mp4"
         is_preview:
           type: boolean
+          example: false
+        Chapter:
+          $ref: "#/components/schemas/ChapterModel"
+        Course_progress:
+          type: array
+          items:
+            $ref: "#/components/schemas/Course_progressModel"
 
     User_courseModel:
       type: object
@@ -203,12 +710,19 @@ components:
         user_course_id:
           type: integer
           format: int64
+          example: 1
         account_id:
           type: integer
           format: int64
+          example: 1
         course_id:
           type: integer
           format: int64
+          example: 1
+        Account:
+          $ref: "#/components/schemas/AccountModel"
+        Course:
+          $ref: "#/components/schemas/CourseModel"
 
     Mentor_courseModel:
       type: object
@@ -216,12 +730,19 @@ components:
         mentor_course_id:
           type: integer
           format: int64
+          example: 1
         mentor_id:
           type: integer
           format: int64
+          example: 1
         course_id:
           type: integer
           format: int64
+          example: 1
+        Mentor:
+          $ref: "#/components/schemas/MentorModel"
+        Course:
+          $ref: "#/components/schemas/CourseModel"
 
     Course_progressModel:
       type: object
@@ -229,20 +750,32 @@ components:
         course_progres_id:
           type: integer
           format: int64
+          example: 1
         account_id:
           type: integer
           format: int64
+          example: 1
         course_id:
           type: integer
           format: int64
+          example: 1
         video_id:
           type: integer
           format: int64
+          example: 1
         is_done:
           type: boolean
+          example: false
         last_access:
           type: string
           format: date-time
+          example: "2023-10-15T12:13:48.276Z"
+        Account:
+          $ref: "#/components/schemas/AccountModel"
+        Course:
+          $ref: "#/components/schemas/CourseModel"
+        Video:
+          $ref: "#/components/schemas/VideoModel"
 
     RatingModel:
       type: object
@@ -250,51 +783,103 @@ components:
         rating_id:
           type: integer
           format: int64
+          example: 1
         account_id:
           type: integer
           format: int64
+          example: 1
         course_id:
           type: integer
           format: int64
+          example: 1
         skor:
           type: integer
+          example: 5
         comment:
           type: string
+          example: "This course is great!"
+        Account:
+          $ref: "#/components/schemas/AccountModel"
+        Course:
+          $ref: "#/components/schemas/CourseModel"
+
     PromoModel:
       type: object
       properties:
         promo_id:
           type: integer
           format: int64
+          example: 1
         course_id:
           type: integer
           format: int64
+          example: 1
         deskripsi:
           type: string
+          example: "Promo Description"
         tanggal_mulai:
           type: string
           format: date-time
+          example: "2023-10-15T12:13:48.276Z"
         tanggal_selesai:
           type: string
           format: date-time
+          example: "2023-10-15T12:13:48.276Z"
         total_promo:
           type: integer
+          example: 100
+        Course:
+          $ref: "#/components/schemas/CourseModel"
+
     Riwayat_TransaksiModel:
       type: object
       properties:
         riwayat_transaksi_id:
           type: integer
           format: int64
+          example: 1
         account_id:
           type: integer
           format: int64
+          example: 1
         course_id:
           type: integer
           format: int64
+          example: 1
         metode_pembayaran:
           type: string
+          example: "Credit Card"
         tanggal_pembayaran:
           type: string
           format: date-time
+          example: "2023-10-15T12:13:48.276Z"
         status:
           type: string
+          example: "Success"
+        Account:
+          $ref: "#/components/schemas/AccountModel"
+        Course:
+          $ref: "#/components/schemas/CourseModel"
+
+    NotifikasiModel:
+      type: object
+      properties:
+        notifikasi_id:
+          type: integer
+          format: int64
+          example: 1
+        account_id:
+          type: integer
+          format: int64
+          example: 1
+        title:
+          type: string
+          example: "Notification Title"
+        deskripsi:
+          type: string
+          example: "Notification Description"
+        is_read:
+          type: boolean
+          example: false
+        Account:
+          $ref: "#/components/schemas/AccountModel"
