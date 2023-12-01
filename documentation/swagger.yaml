@@ -186,6 +186,77 @@ paths:
                     type: string
                     example: 'Please verify your email by entering the OTP sent to your registered email address.'
 
+  /auth/verify-otp:
+    post:
+      tags:
+        - Start
+      operationId: verify-otp
+      summary: Verify OTP
+      requestBody:
+        description: Verify OTP request
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: user@example.com
+                otp:
+                  type: string
+                  example: 123456
+      responses:
+        '200':
+          description: OTP verification successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: 'Activation Code verified successfully'
+                  err:
+                    type: string
+                    example: null
+                  data:
+                    type: object
+                    properties:
+                      email:
+                        type: string
+                        format: email
+                        example: user@example.com
+                      otp:
+                        type: string
+                        example: 123456
+                      is_verified:
+                        type: boolean
+                        example: true
+        '400':
+          description: Failed OTP verification
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Bad Request'
+                  error:
+                    type: string
+                    example: 'Invalid Email or OTP'
+                  data:
+                    example: null
+
+
 components:
   securitySchemes:
     bearerAuth:
