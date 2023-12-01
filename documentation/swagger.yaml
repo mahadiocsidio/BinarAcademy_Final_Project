@@ -24,28 +24,98 @@ paths:
         - Start
       operationId: create-new-user
       summary: Create a new user
-      security:
-        - bearerAuth: []
       requestBody:
-        $ref: '#/components/schemas/BadRequestResponse'
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nama:
+                  type: string
+                  maxLength: 50
+                  example: "John Doe"
+                email:
+                  type: string
+                  format: email
+                  example: "user@example.com"
+                no_telp:
+                  type: string
+                  example: "123456789"
+                password:
+                  type: string
+                  minLength: 8
+                  maxLength: 15
+                  example: "password123"
       responses:
         '201':
-          description: Successfull operation
-          $ref: '#/components/schemas/BadRequestResponse'
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      account_id:
+                        type: integer
+                      nama:
+                        type: string
+                      email:
+                        type: string
+                      password:
+                        type: string
+                      no_telp:
+                        type: string
+                      negara:
+                        type: string
+                      kota:
+                        type: string
+                      role:
+                        type: string
+                      url_image:
+                        type: string
+                      is_verified:
+                        type: boolean
+                      created_at:
+                        type: string
+                        format: date-time
+                      updated_at:
+                        type: string
+                        format: date-time
         '400':
-          description: Failed operation
+          description: Bad Request
           content:
             application/json:
               schema:
-                allOf:
-                  - $ref: '#/components/schemas/BadRequestResponse'
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: '#/components/schemas/UnauthorizedResponse'
+                $ref: '#/components/schemas/BadRequestResponse'
+              examples:
+                InvalidName:
+                  summary: Invalid Name
+                  value:
+                    status: false
+                    message: 'Nama harus memiliki maksimal 50 karakter'
+                InvalidPassword:
+                  summary: Invalid Password
+                  value:
+                    status: false
+                    message: 'Password harus memiliki minimal 8 karakter dan maksimal 15 karakter'
+                InvalidEmailFormat:
+                  summary: Invalid Email Format
+                  value:
+                    status: false
+                    message: 'Format email tidak valid'
+                EmailAlreadyUsed:
+                  summary: Email Already Used
+                  value:
+                    status: false
+                    message: 'Email sudah dipakai'
+
 
   /auth/login:
     post:
@@ -111,7 +181,10 @@ paths:
                     example: 'Bad Request'
                   error:
                     type: string
-                    example: 'Invalid Email or Password'
+                    example: 'Invalid Email or Password or OTP verification required'
+                  details:
+                    type: string
+                    example: 'Please verify your email by entering the OTP sent to your registered email address.'
 
 components:
   securitySchemes:
