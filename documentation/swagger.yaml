@@ -117,6 +117,156 @@ paths:
                     message: 'Email sudah dipakai'
 
 
+  /auth/verify-otp:
+    post:
+      tags:
+        - Start
+      operationId: verify-otp
+      summary: Verify OTP
+      requestBody:
+        description: Verify OTP request
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: user@example.com
+                otp:
+                  type: string
+                  example: 123456
+      responses:
+        '200':
+          description: OTP verification successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: 'Activation Code verified successfully'
+                  err:
+                    type: string
+                    example: null
+                  data:
+                    type: object
+                    properties:
+                      email:
+                        type: string
+                        format: email
+                        example: user@example.com
+                      otp:
+                        type: string
+                        example: 123456
+                      is_verified:
+                        type: boolean
+                        example: true
+        '400':
+          description: Failed OTP verification
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Bad Request'
+                  error:
+                    type: string
+                    example: 'Invalid Email or OTP'
+                  data:
+                    example: null
+
+  /auth/resend-otp:
+    post:
+      tags:
+        - Start
+      operationId: resend-otp
+      summary: Resend OTP
+      requestBody:
+        description: Resend OTP request
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: user@example.com
+      responses:
+        '200':
+          description: OTP resent successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: 'OTP resent successfully'
+                  err:
+                    type: string
+                    example: null
+                  data:
+                    type: object
+                    properties:
+                      email:
+                        type: string
+                        format: email
+                        example: user@example.com
+        '400':
+          description: Failed to resend OTP
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Bad Request'
+                  err:
+                    type: string
+                    example: 'OTP not found for the user'
+                  data:
+                    example : null
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Not Found'
+                  err:
+                    type: string
+                    example: 'User not found'
+                  data: 
+                    example : null
+
+
   /auth/login:
     post:
       tags:
@@ -186,14 +336,14 @@ paths:
                     type: string
                     example: 'Please verify your email by entering the OTP sent to your registered email address.'
 
-  /auth/verify-otp:
+  /auth/reset-password:
     post:
       tags:
         - Start
-      operationId: verify-otp
-      summary: Verify OTP
+      operationId: reset-password
+      summary: Reset Password
       requestBody:
-        description: Verify OTP request
+        description: Reset password request
         required: true
         content:
           application/json:
@@ -204,12 +354,9 @@ paths:
                   type: string
                   format: email
                   example: user@example.com
-                otp:
-                  type: string
-                  example: 123456
       responses:
         '200':
-          description: OTP verification successful
+          description: Password reset email sent successfully
           content:
             application/json:
               schema:
@@ -220,7 +367,7 @@ paths:
                     example: true
                   message:
                     type: string
-                    example: 'Activation Code verified successfully'
+                    example: 'Send'
                   err:
                     type: string
                     example: null
@@ -231,14 +378,8 @@ paths:
                         type: string
                         format: email
                         example: user@example.com
-                      otp:
-                        type: string
-                        example: 123456
-                      is_verified:
-                        type: boolean
-                        example: true
         '400':
-          description: Failed OTP verification
+          description: Email not found
           content:
             application/json:
               schema:
@@ -249,10 +390,10 @@ paths:
                     example: false
                   message:
                     type: string
-                    example: 'Bad Request'
-                  error:
+                    example: 'Email Not Found'
+                  err:
                     type: string
-                    example: 'Invalid Email or OTP'
+                    example: 'Enter Registered Email!'
                   data:
                     example: null
 
