@@ -23,7 +23,7 @@ const getAllAccount = async(req,res,next)=>{
 
 const getAccountbyId = async(req,res,next)=>{
     try {
-        let {account_id} = req.params
+        let account_id = req.user.account_id
         //mengubah account_id menjadi tipe number/int
         account_id = parseInt(account_id,10)
         let account = await prisma.account.findUnique({ where: {account_id},select:{
@@ -47,7 +47,7 @@ const getAccountbyId = async(req,res,next)=>{
 
 const updateProfile = async(req,res)=>{
     try {
-        let {account_id} = req.body
+        let account_id = req.user.account_id
         let {name,email,no_telp,negara,kota } = req.body
         let account = await prisma.account.update({
             where:{
@@ -69,7 +69,7 @@ const updateProfile = async(req,res)=>{
     }
 }
 
-const resetPassword = async (req,res,next)=>{
+const changePassword = async (req,res,next)=>{
     try {
         let {account_id, password_lama,password_baru} = req.body
         //mencari account di database
@@ -105,7 +105,7 @@ const resetPassword = async (req,res,next)=>{
 
 const getRiwayatPembayaran = async (req,res,next)=>{
     try {
-        let {account_id} = req.body
+        let account_id = req.user.account_id
         let riwayat = await prisma.riwayat_transaksi.findMany({
             where:{
                 account_id: account_id
@@ -130,4 +130,4 @@ const logout = async(req,res,next)=>{
     }
 }
 
-module.exports = {getAllAccount,getAccountbyId,updateProfile,resetPassword,getRiwayatPembayaran,logout}
+module.exports = {getAllAccount,getAccountbyId,updateProfile,changePassword,getRiwayatPembayaran,logout}

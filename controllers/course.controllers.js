@@ -125,6 +125,36 @@ const getCoursesByCategory = async (req, res, next) => {
     }
 };
 
+const getCoursebyTitle = async (req,res,next)=>{
+    try {
+        let {title} = req.params
+        let course = await prisma.course.findMany({
+            where:{
+                title: title
+            },
+            select:{
+                course_id: true,
+                title: true,
+                kategori_id: true,
+                harga: true,
+                Kategori:{
+                    select:{
+                        title: true,
+                },
+            }
+        }})
+        if(!course) return res.json("Course isnt registered")
+
+        res.status(200).json({
+        success:true,
+        data:course
+        })
+    } catch (error) {
+        next(error)
+    }
+
+}
+
 const deleteCoursebyId = async(req,res,next)=>{
     try {
         let {course_id} = req.params

@@ -1,3 +1,4 @@
+### register
 POST http://localhost:3000/auth/register
 Content-Type: application/json
 
@@ -59,16 +60,36 @@ Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjIwMDQwMTE0MUBz
 ### getAllAccount
 GET http://localhost:3000/profile
 
-###
+### getAccountById
 GET http://localhost:3000/profile/3
 
-###
+### updateProfilebyId
 PUT http://localhost:3000/profile/updateProfile
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwiZW1haWwiOiJ0ZXN0MTBAc3R1ZGVudHMuYW1pa29tLmFjLmlkIiwiaWF0IjoxNzAxMjY2Nzg3fQ.jvZ6vDcHYJrMot_-RX1XGgfDrpUDP-IMHwWoP48GkQQ
 
 {
+    "account_id":1,
     "no_telp":"012345678910",
     "negara": "Indo",
     "kota": "jogya"
 }
+
+### GetAllCourse
+GET http://localhost:3000/course
+
+### AddCourse
+POST http://localhost:3000/course/addCourse
+Content-Type: application/json
+
+{
+    "title":"UI/UX untuk pemula",
+    "mentor_id": 1,
+    "deskripsi":"Course UI/UX untuk kamu mau yang baru mau mulai",
+    "kategori_id":2,
+    "harga":0,
+    "premium":false,
+    "level":"Beginner"
+}
+
+### GetCourseByCategory
+GET http://localhost:3000/course/filter?kategori_id=1&kategori_id=3sort=created_at&order=asc
