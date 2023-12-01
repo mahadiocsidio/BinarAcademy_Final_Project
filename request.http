@@ -73,3 +73,23 @@ Content-Type: application/json
     "negara": "Indo",
     "kota": "jogya"
 }
+
+### GetAllCourse
+GET http://localhost:3000/course
+
+### AddCourse
+POST http://localhost:3000/course/addCourse
+Content-Type: application/json
+
+{
+    "title":"UI/UX untuk pemula",
+    "mentor_id": 1,
+    "deskripsi":"Course UI/UX untuk kamu mau yang baru mau mulai",
+    "kategori_id":2,
+    "harga":0,
+    "premium":false,
+    "level":"Beginner"
+}
+
+### GetCourseByCategory
+GET http://localhost:3000/course/filter?kategori_id=1&kategori_id=3sort=created_at&order=asc
