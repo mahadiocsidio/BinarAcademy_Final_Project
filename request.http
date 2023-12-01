@@ -2,23 +2,61 @@ POST http://localhost:3000/auth/register
 Content-Type: application/json
 
 {
-    "nama":"mengcoba",
-    "email":"test10@students.amikom.ac.id",
-    "password":"12345678",
-    "password_confirmation":"12345678"
+    "nama":"aldii",
+    "email":"200401141@student.umri.ac.id",
+    "no_telp":"081368094422",
+    "password":"password123"
 }
 
-###
+### verify otp
+POST http://localhost:3000/auth/verify-otp
+Content-Type: application/json
 
+{
+    "email":"200401141@student.umri.ac.id",
+    "otp":"343217"
+}
+
+#### resend otp
+POST http://localhost:3000/auth/resend-otp
+Content-Type: application/json
+
+{
+    "email":"200401141@student.umri.ac.id"
+}
+
+### login
 POST http://localhost:3000/auth/login
 Content-Type: application/json
 
 {
-    "email":"test10@students.amikom.ac.id",
-    "password":"12345678"
+    "email":"200401141@student.umri.ac.id",
+    "password":"aldi123"
 }
 
-###
+### RESET PASSWORD
+POST http://localhost:3000/auth/reset-password
+Content-Type: application/json
+
+{
+    "email":"200401141@student.umri.ac.id"
+}
+
+### CHANGE PASSWORD
+PUT http://localhost:3000/auth/reset-password
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjIwMDQwMTE0MUBzdHVkZW50LnVtcmkuYWMuaWQiLCJpYXQiOjE3MDEyNjg4Mzh9.UERpa6OT9e_GmA0qbsLveCmy8TAXSs0UOoCRG4OGJFM
+
+{
+    "password":"aldi123",
+    "confirmationPassword":"aldi123"
+}
+
+### GET USER BY TOKEN
+GET http://localhost:3000/auth/whoami
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjIwMDQwMTE0MUBzdHVkZW50LnVtcmkuYWMuaWQiLCJpYXQiOjE3MDEyNjg4Mzh9.UERpa6OT9e_GmA0qbsLveCmy8TAXSs0UOoCRG4OGJFM
+
+### getAllAccount
 GET http://localhost:3000/profile
 
 ###
@@ -34,38 +72,3 @@ Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwiZW1haWwiOiJ0ZXN0
     "negara": "Indo",
     "kota": "jogya"
 }
-
-###
-PUT http://localhost:3000/profile/changePassword
-Content-Type: application/json
-
-{
-    "account_id":4,
-    "password_lama":"123456789",
-    "password_baru":"123456789",
-    "password_confirm":"123456789"
-}
-
-###
-POST  http://localhost:3000/profile/logout
-
-
-###
-GET http://localhost:3000/course
-
-###
-POST http://localhost:3000/course/addCourse
-Content-Type: application/json
-
-{
-    "title":"UI/UX untuk pemula",
-    "mentor_id": 1,
-    "deskripsi":"Course UI/UX untuk kamu mau yang baru mau mulai",
-    "kategori_id":2,
-    "harga":0,
-    "premium":false,
-    "level":"Beginner"
-}
-
-###
-GET http://localhost:3000/course/filter?kategori_id=1&kategori_id=2

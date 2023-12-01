@@ -71,7 +71,7 @@ module.exports = {
                 } catch (err) {
                     console.error("Error while deleting OTP:", err);
                 }
-            }, 60000);
+            }, 300000);
 
             // // send otp to user email
             // let html = await getHtml('otp-email.ejs', {
