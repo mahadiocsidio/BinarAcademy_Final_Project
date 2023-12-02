@@ -10,6 +10,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
+const userRouter = require('./routes/user.routes');
+const profileRouter = require('./routes/profile.routes')
+const courseRouter = require('./routes/course.routes')
+app.use('/auth', userRouter);
+app.use('/profile', profileRouter)
+app.use('/course', courseRouter)
 app.use('/',(req,res)=>{
     try {
         const welcomeMessage = {
@@ -21,14 +27,6 @@ app.use('/',(req,res)=>{
         res.status(500).json({ error: 'Terjadi kesalahan internal server' });
       }
 })
-
-const userRouter = require('./routes/user.routes');
-const profileRouter = require('./routes/profile.routes')
-const courseRouter = require('./routes/course.routes')
-app.use('/auth', userRouter);
-app.use('/profile', profileRouter)
-app.use('/course', courseRouter)
-
 
 app.listen(PORT, () => {
     console.log(`server running at http://localhost:${PORT}`);

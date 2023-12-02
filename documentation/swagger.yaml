@@ -11,8 +11,8 @@ servers:
 tags:
   - name: Start
     description: all about creating account or login
-  - name: Account
-    description: all about accounts
+  - name: Profile
+    description: all about Profile
   - name: Transaction
     description: all about Transaction
   - name: Authentication
@@ -396,6 +396,92 @@ paths:
                     example: 'Enter Registered Email!'
                   data:
                     example: null
+  /profile:
+    get:
+      summary: Get all accounts
+      tags:
+        - "Profile"
+      description: Returns list of users that are registered on the system
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountResponse'
+
+  /profile/{account_id}:
+    get:
+      summary: Get user by ID
+      tags:
+        - "Profile"
+      description: Returns a single user
+      parameters:
+        - name: account_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountResponse'
+
+  /profile/update-profile:
+    put:
+      summary: Update user profile
+      tags:
+        - "Profile"
+      description: Change Profile Atribute on a single user
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountResponse'
+
+  /profile/change-password:
+    put:
+      summary: Change user password
+      tags:
+        - "Profile"
+      description: Change Password on a single user
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountWithMessageResponse'
+
+  # /api/accounts/riwayat-pembayaran:
+  #   get:
+  #     summary: Get payment history
+  #     responses:
+  #       '200':
+  #         description: Successful response
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: '#/components/schemas/RiwayatPembayaranResponse'
+
+  /profile/logout:
+    get:
+      summary: Logout user
+      tags:
+        - "Profile"
+      description: Logout user
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LogoutResponse'
 
 
 components:
@@ -439,6 +525,29 @@ components:
           example: 'some error from user'
         data:
           example: null
+    AccountResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          $ref: '#/components/schemas/AccountModel'
+
+    AccountWithMessageResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/AccountModel'
+
+    LogoutResponse:
+      type: object
+      properties:
+        message:
+          type: string
 
     DateModel:
       title: DateModel
