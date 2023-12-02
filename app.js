@@ -7,7 +7,9 @@ const morgan = require('morgan')
 const swaggerUi = require('swagger-ui-express');
 const yaml = require('yamljs');
 const path = require('path');
-const swaggerDocument = yaml.load(path.join(__dirname, 'documentation', 'swagger.yaml'));
+const fs = require('fs')
+const file  = fs.readFileSync('./documentation/swagger.yaml', 'utf8')
+const swaggerDocument = yaml.parse(file)
 
 // app.use(morgan('dev'));
 app.use(express.json());
