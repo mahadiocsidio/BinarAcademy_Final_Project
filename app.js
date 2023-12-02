@@ -11,7 +11,15 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
 app.use('/',(req,res)=>{
-    res.send('Welcome to our API')
+    try {
+        const welcomeMessage = {
+          message: 'Selamat datang di API kami!'
+        };
+        res.json(welcomeMessage);
+      } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ error: 'Terjadi kesalahan internal server' });
+      }
 })
 
 const userRouter = require('./routes/user.routes');
