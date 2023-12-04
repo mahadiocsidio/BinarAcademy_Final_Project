@@ -3,36 +3,35 @@ POST http://localhost:3000/auth/register
 Content-Type: application/json
 
 {
-    "nama":"aldii",
-    "email":"200401141@student.umri.ac.id",
-    "no_telp":"081368094422",
-    "password":"password123"
+    "nama":"wilson",
+    "email":"21104064@ittelkom-pwt.ac.id",
+    "no_telp":"08123456789",
+    "password":"password1234",
+    "password_confirmation":"password1234"
 }
 
 ### verify otp
 POST http://localhost:3000/auth/verify-otp
 Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjIxMTA0MDY0QGl0dGVsa29tLXB3dC5hYy5pZCIsImlhdCI6MTcwMTY5MDcwNH0.yjDtBxX0m8vQVUHWW2Pa5a-yffR6PXq6VrXxDMAN1Eo
 
 {
-    "email":"200401141@student.umri.ac.id",
-    "otp":"343217"
+    "otp":"498890"
 }
 
 #### resend otp
 POST http://localhost:3000/auth/resend-otp
 Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjIxMTA0MDY0QGl0dGVsa29tLXB3dC5hYy5pZCIsImlhdCI6MTcwMTY5MDcwNH0.yjDtBxX0m8vQVUHWW2Pa5a-yffR6PXq6VrXxDMAN1Eo
 
-{
-    "email":"200401141@student.umri.ac.id"
-}
 
 ### login
 POST http://localhost:3000/auth/login
 Content-Type: application/json
 
 {
-    "email":"200401141@student.umri.ac.id",
-    "password":"aldi123"
+    "email":"21104064@ittelkom-pwt.ac.id",
+    "password":"password1234"
 }
 
 ### RESET PASSWORD
