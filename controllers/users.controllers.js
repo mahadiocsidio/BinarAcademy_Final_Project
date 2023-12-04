@@ -11,15 +11,24 @@ module.exports = {
   // melakukan register
   register: async (req, res, next) => {
     try {
-      let { nama, email, no_telp, password, role } = req.body;
+      let { nama, email, no_telp, password,ConfirmationPassword, role } = req.body;
       let userExist = await prisma.account.findUnique({ where: { email } });
 
+      if(password != ConfirmationPassword){
+        return res.status(400).json({
+          status: false,
+          message: 'Bad Request',
+          error: 'Password & Password Confirmation must be same!',
+          data:null
+        });
+      }
       //validasi panjang nama maksimal 50 karakter
       if (nama.length > 50) {
         return res.status(400).json({
           status: false,
           message: 'Bad Request',
           error: 'Nama harus memiliki maksimal 50 karakter',
+          data:null
         });
       }
 
@@ -28,8 +37,8 @@ module.exports = {
         return res.status(400).json({
           status: false,
           message: 'Bad Request',
-          error:
-            'Password harus memiliki minimal 8 karakter dan maksimal 15 karakter',
+          error:'Password harus memiliki minimal 8 karakter dan maksimal 15 karakter',
+          data:null
         });
       }
 
@@ -40,6 +49,7 @@ module.exports = {
           status: false,
           message: 'Bad Request',
           error: 'Format email tidak valid',
+          data:null
         });
       }
 
@@ -52,6 +62,8 @@ module.exports = {
           data: null,
         });
       }
+      //set token for otp
+      let token = jwt.sign({ email }, JWT_SECRET_KEY);
 
       let encryptedPassword = await bcrypt.hash(password, 10);
       let user = await prisma.account.create({
@@ -71,7 +83,7 @@ module.exports = {
       res.status(201).json({
         status: true,
         message: 'Registrasi berhasil, silakan cek email untuk OTP.',
-        data: user,
+        data: {token,user},
       });
 
       //   res.redirect('/verify-otp'); // Redirect to verify otp page
@@ -83,66 +95,74 @@ module.exports = {
   // verify otp
   verifyOtp: async (req, res, next) => {
     try {
-      const { email, otp } = req.body;
+      const { otp } = req.body;
+      let token = req.headers.authorization;
 
-      if (!email || !otp) {
-        return res.status(400).json({
-          status: false,
-          message: 'Bad Request',
-          error: 'Email and OTP are required',
-          data: null,
+      jwt.verify(token, JWT_SECRET_KEY, async (err, decoded) => {
+        if (err) {
+          return res.status(400).json({
+            status: false,
+            message: 'Bad Request',
+            err: err.message,
+            data: null,
+          });
+        }
+        // if (!email || !otp) {
+        if (!otp) {
+          return res.status(400).json({
+            status: false,
+            message: 'Bad Request',
+            error: 'OTP are required',
+            data: null,
+          });
+        }
+        let activationOtp = await prisma.Otp.findFirst({
+          where: {
+            otp,
+          },
         });
-      }
-
-      let account = await prisma.Account.findUnique({ where: { email } });
-      if (!account) {
-        return res.status(404).json({
-          status: false,
-          message: 'Not Found',
-          err: 'User not found',
-          data: null,
+        if (!activationOtp) {
+          return res.status(400).json({
+            status: false,
+            message: 'Bad Request',
+            err: 'Invalid Activation Code or Code Expired',
+            data: null,
+          });
+        }
+        await prisma.otp.update({
+          where: {
+            account_id: activationOtp.account_id,
+          },
+          data: {
+            otp: null,
+          },
         });
-      }
-
-      let activationOtp = await prisma.Otp.findFirst({
-        where: {
-          account_id: account.account_id,
-          otp,
-        },
-      });
-
-      if (!activationOtp) {
-        return res.status(400).json({
-          status: false,
-          message: 'Bad Request',
-          err: 'Invalid Activation Code or Code Expired',
-          data: null,
+        let { is_verified } = await prisma.account.update({
+          where: {
+            email: decoded.email,
+          },
+          data: {
+            is_verified: true,
+          },
         });
-      }
+        return res.status(200).json({
+          status: true,
+          message: 'Activation Code verified successfully',
+          err: null,
+          data: { email:decoded.email, otp, is_verified },
+        });
 
-      await prisma.otp.update({
-        where: {
-          account_id: account.account_id,
-        },
-        data: {
-          otp: null,
-        },
-      });
-      let { is_verified } = await prisma.account.update({
-        where: {
-          email,
-        },
-        data: {
-          is_verified: true,
-        },
-      });
+      })
 
-      return res.status(200).json({
-        status: true,
-        message: 'Activation Code verified successfully',
-        err: null,
-        data: { email, otp, is_verified },
-      });
+      // let account = await prisma.Account.findUnique({ where: { email } });
+      // if (!account) {
+      //   return res.status(404).json({
+      //     status: false,
+      //     message: 'Not Found',
+      //     err: 'User not found',
+      //     data: null,
+      //   });
+      // }
 
       //   res.redirect('/user/login'); // Redirect to login page
     } catch (err) {
@@ -238,7 +258,7 @@ module.exports = {
       });
 
       if (!userVerified) {
-        console.log('lakukan verifikasi terlebih dahulu');
+        // console.log('lakukan verifikasi terlebih dahulu');
         //generate otp
         createUpdateotp(user.account_id, user.nama, user.email, res);
         return res.status(400).json({
