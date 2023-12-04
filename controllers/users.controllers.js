@@ -11,7 +11,7 @@ module.exports = {
   // melakukan register
   register: async (req, res, next) => {
     try {
-      let { nama, email, no_telp, password, role } = req.body;
+      let { nama, email, no_telp, password, password_confirmation , role } = req.body;
       let userExist = await prisma.account.findUnique({ where: { email } });
 
       //validasi panjang nama maksimal 50 karakter
@@ -32,6 +32,15 @@ module.exports = {
             'Password harus memiliki minimal 8 karakter dan maksimal 15 karakter',
         });
       }
+
+            // validasi password dan password confirmation
+            if (password !== password_confirmation) {
+              return res.status(400).json({
+                status: false,
+                message: 'Bad Request',
+                error: 'Password dan Password Confirmation harus sama!',
+              });
+            }
 
       // Validasi format email menggunakan regular expression
       const emailRegex = /\S+@\S+\.\S+/;
@@ -60,18 +69,31 @@ module.exports = {
           email,
           no_telp,
           password: encryptedPassword,
-          role,
+          role: 'user'
         },
       });
 
       //generate otp
       await createUpdateotp(user.account_id, user.nama, user.email, res);
 
+            // Create and send JWT token
+            const token = jwt.sign({ email: user.email }, JWT_SECRET_KEY);
+            // Set the email in response headers
+            res.set('userEmail', user.email);
+      res.cookie('userToken', token);
+      
       // Mengembalikan respon terlebih dahulu
       res.status(201).json({
         status: true,
         message: 'Registrasi berhasil, silakan cek email untuk OTP.',
-        data: user,
+        filter: {
+          nama,
+          email,
+          password,
+          no_telp,
+          role,
+          token,
+        },
       });
 
       //   res.redirect('/verify-otp'); // Redirect to verify otp page
@@ -83,18 +105,41 @@ module.exports = {
   // verify otp
   verifyOtp: async (req, res, next) => {
     try {
-      const { email, otp } = req.body;
+      let { otp } = req.body;
+      let token = req.headers.authorization
 
-      if (!email || !otp) {
-        return res.status(400).json({
+      if (!token) {
+        return res.status(401).json({
           status: false,
-          message: 'Bad Request',
-          error: 'Email and OTP are required',
+          message: 'Unauthorized',
+          err: 'Token is missing',
           data: null,
         });
       }
 
-      let account = await prisma.Account.findUnique({ where: { email } });
+      let decoded = jwt.verify(token, JWT_SECRET_KEY)
+
+      if (!decoded || !decoded.email) {
+        return res.status(401).json({
+          status: false,
+          message: 'Unauthorized',
+          err: 'Invalid token format or missing email',
+          data: null,
+        })
+      }
+
+      let userEmail = decoded.email
+
+      if (userEmail !== decoded.email) {
+        return res.status(401).json({
+          status: false,
+          message: 'Unauthorized',
+          err: 'Token email does not match the provided email',
+          data: null,
+        });
+      }
+
+      let account = await prisma.Account.findUnique({ where: { email: userEmail } });
       if (!account) {
         return res.status(404).json({
           status: false,
@@ -128,20 +173,21 @@ module.exports = {
           otp: null,
         },
       });
+      
       let { is_verified } = await prisma.account.update({
         where: {
-          email,
+          email: userEmail,
         },
         data: {
           is_verified: true,
         },
-      });
+      });      
 
       return res.status(200).json({
         status: true,
         message: 'Activation Code verified successfully',
         err: null,
-        data: { email, otp, is_verified },
+        data: { userEmail, otp, is_verified },
       });
 
       //   res.redirect('/user/login'); // Redirect to login page
@@ -153,8 +199,31 @@ module.exports = {
   // resend otp
   resendOtp: async (req, res, next) => {
     try {
-      const { email } = req.body;
-      const user = await prisma.account.findUnique({ where: { email } });
+      const userEmail = req.headers.authorization;
+
+      if (!userEmail) {
+        return res.status(400).json({
+          status: false,
+          message: 'Bad Request',
+          err: 'User email not provided in headers',
+          data: null,
+        });
+      }
+
+      const decoded = jwt.verify(userEmail, JWT_SECRET_KEY);
+
+      if (!decoded || !decoded.email) {
+        return res.status(401).json({
+          status: false,
+          message: 'Unauthorized',
+          err: 'Invalid token format or missing email',
+          data: null,
+        });
+      }
+
+      const decodEmail = decoded.email
+
+      const user = await prisma.account.findUnique({ where: { email: decodEmail } });
 
       if (!user) {
         return res.status(404).json({
@@ -203,7 +272,7 @@ module.exports = {
         status: true,
         message: 'OTP resent successfully',
         err: null,
-        data: { email },
+        data: { decodEmail },
       });
     } catch (err) {
       next(err);
