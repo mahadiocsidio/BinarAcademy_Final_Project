@@ -11,11 +11,7 @@ module.exports = {
   // melakukan register
   register: async (req, res, next) => {
     try {
-<<<<<<< HEAD
-      let { nama, email, no_telp, password, password_confirmation , role } = req.body;
-=======
       let { nama, email, no_telp, password,ConfirmationPassword, role } = req.body;
->>>>>>> db3131785f1cad8a6e9d7fa042de364cda8e79cd
       let userExist = await prisma.account.findUnique({ where: { email } });
 
       if(password != ConfirmationPassword){
@@ -102,18 +98,7 @@ module.exports = {
       res.status(201).json({
         status: true,
         message: 'Registrasi berhasil, silakan cek email untuk OTP.',
-<<<<<<< HEAD
-        filter: {
-          nama,
-          email,
-          password,
-          no_telp,
-          role,
-          token,
-        },
-=======
         data: {token,user},
->>>>>>> db3131785f1cad8a6e9d7fa042de364cda8e79cd
       });
 
       //   res.redirect('/verify-otp'); // Redirect to verify otp page
@@ -125,49 +110,6 @@ module.exports = {
   // verify otp
   verifyOtp: async (req, res, next) => {
     try {
-<<<<<<< HEAD
-      let { otp } = req.body;
-      let token = req.headers.authorization
-
-      if (!token) {
-        return res.status(401).json({
-          status: false,
-          message: 'Unauthorized',
-          err: 'Token is missing',
-          data: null,
-        });
-      }
-
-      let decoded = jwt.verify(token, JWT_SECRET_KEY)
-
-      if (!decoded || !decoded.email) {
-        return res.status(401).json({
-          status: false,
-          message: 'Unauthorized',
-          err: 'Invalid token format or missing email',
-          data: null,
-        })
-      }
-
-      let userEmail = decoded.email
-
-      if (userEmail !== decoded.email) {
-        return res.status(401).json({
-          status: false,
-          message: 'Unauthorized',
-          err: 'Token email does not match the provided email',
-          data: null,
-        });
-      }
-
-      let account = await prisma.Account.findUnique({ where: { email: userEmail } });
-      if (!account) {
-        return res.status(404).json({
-          status: false,
-          message: 'Not Found',
-          err: 'User not found',
-          data: null,
-=======
       const { otp } = req.body;
       let token = req.headers.authorization;
 
@@ -209,7 +151,6 @@ module.exports = {
           data: {
             otp: null,
           },
->>>>>>> db3131785f1cad8a6e9d7fa042de364cda8e79cd
         });
         let { is_verified } = await prisma.account.update({
           where: {
@@ -226,32 +167,6 @@ module.exports = {
           data: { email:decoded.email, otp, is_verified },
         });
 
-<<<<<<< HEAD
-      await prisma.otp.update({
-        where: {
-          account_id: account.account_id,
-        },
-        data: {
-          otp: null,
-        },
-      });
-      
-      let { is_verified } = await prisma.account.update({
-        where: {
-          email: userEmail,
-        },
-        data: {
-          is_verified: true,
-        },
-      });      
-
-      return res.status(200).json({
-        status: true,
-        message: 'Activation Code verified successfully',
-        err: null,
-        data: { userEmail, otp, is_verified },
-      });
-=======
       })
 
       // let account = await prisma.Account.findUnique({ where: { email } });
@@ -263,7 +178,6 @@ module.exports = {
       //     data: null,
       //   });
       // }
->>>>>>> db3131785f1cad8a6e9d7fa042de364cda8e79cd
 
       //   res.redirect('/user/login'); // Redirect to login page
     } catch (err) {
