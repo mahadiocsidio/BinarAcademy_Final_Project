@@ -23,22 +23,25 @@ const getAllAccount = async(req,res,next)=>{
 
 const getAccountbyId = async(req,res,next)=>{
     try {
-        let account_id = req.user.account_id
-        //mengubah account_id menjadi tipe number/int
-        account_id = parseInt(account_id,10)
-        let account = await prisma.account.findUnique({ where: {account_id},select:{
-            account_id: true,
-            nama: true,
-            email: true,
-            no_telp: true,
-            negara: true,
-            kota: true,
-        }})
+        let account = req.user
+        let getAccount = await prisma.account.findUnique({ 
+            where: {
+                account_id:account.account_id
+            },
+            select:{
+                account_id: true,
+                nama: true,
+                email: true,
+                no_telp: true,
+                negara: true,
+                kota: true,
+            }
+        })
         if(!account) return res.json("Account isnt registered")
 
         res.status(200).json({
         success:true,
-        data:account
+        data:getAccount
         })
     } catch (error) {
         next(error)
