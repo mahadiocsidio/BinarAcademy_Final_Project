@@ -3,10 +3,10 @@ POST http://localhost:3000/auth/register
 Content-Type: application/json
 
 {
-    "nama":"aldii",
-    "email":"200401141@student.umri.ac.id",
+    "nama":"mahadi",
+    "email":"mahadiocsidio@students.amikom.ac.id",
     "no_telp":"081368094422",
-    "password":"password123"
+    "password":"mahadi21"
 }
 
 ### verify otp
@@ -14,8 +14,8 @@ POST http://localhost:3000/auth/verify-otp
 Content-Type: application/json
 
 {
-    "email":"200401141@student.umri.ac.id",
-    "otp":"343217"
+    "email":"mahadiocsidio@students.amikom.ac.id",
+    "otp":"357377"
 }
 
 #### resend otp
@@ -27,12 +27,12 @@ Content-Type: application/json
 }
 
 ### login
-POST http://localhost:3000/auth/login
+POST https://binar-academy-final-project.vercel.app/auth/login
 Content-Type: application/json
 
 {
-    "email":"200401141@student.umri.ac.id",
-    "password":"aldi123"
+    "email":"zanmad500@gmail.com",
+    "password":"fauzan123"
 }
 
 ### RESET PASSWORD
@@ -92,4 +92,11 @@ Content-Type: application/json
 }
 
 ### GetCourseByCategory
-GET http://localhost:3000/course/filter?kategori_id=1&kategori_id=3sort=created_at&order=asc
+GET http://localhost:3000/course/filter?title=UI/UX untuk pemula
+
+###
+GET http://localhost:3000/course/search?title=ui
+
+
+###
+GET https://binar-academy-final-project.vercel.app

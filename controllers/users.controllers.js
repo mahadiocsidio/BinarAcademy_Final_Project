@@ -263,7 +263,16 @@ module.exports = {
         return res.status(200).json({
           status: true,
           message: 'Berhasil login',
-          data: user,
+          data: {
+            user: {
+              id: user.account_id,
+              nama: user.nama,
+              email: user.email,
+              role: user.role,
+              created_at: user.created_at,
+            },
+            token,
+          },
         });
       }
     } catch (err) {
