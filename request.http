@@ -32,8 +32,8 @@ POST http://localhost:3000/auth/login
 Content-Type: application/json
 
 {
-    "email":"200401141@student.umri.ac.id",
-    "password":"password123"
+    "email":"aa",
+    "password":"aldi123"
 }
 
 ### RESET PASSWORD
@@ -56,27 +56,37 @@ Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjIwMDQwMTE0MUBz
 
 ### GET USER BY TOKEN
 GET http://localhost:3000/auth/whoami
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjIwMDQwMTE0MUBzdHVkZW50LnVtcmkuYWMuaWQiLCJpYXQiOjE3MDE2ODM5NzJ9.Dl86HBmlg2O_hKK8SFnfODQwv-du5WP96-5KczPmR5A
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTEsImVtYWlsIjoiYWEiLCJpYXQiOjE3MDE3NTI0MzZ9.NrhPTkc7m4Y-pxLZrlKgFf9fJwtp3C2TY4KaIubFxCU
 
 ### getAllAccount
 GET http://localhost:3000/profile
 
 ### getAccountById
-GET http://localhost:3000/profile/3
+GET http://localhost:3000/profile/14
 
 ### updateProfilebyId
-PUT http://localhost:3000/profile/updateProfile
+PUT http://localhost:3000/profile/14
 Content-Type: application/json
 
 {
-    "account_id":1,
     "no_telp":"012345678910",
     "negara": "Indo",
     "kota": "jogya"
 }
 
+### Change Password By Login
+PUT http://localhost:3000/profile/changePassword
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTEsImVtYWlsIjoiYWEiLCJpYXQiOjE3MDE3NTI0MzZ9.NrhPTkc7m4Y-pxLZrlKgFf9fJwtp3C2TY4KaIubFxCU
+
+{
+    "password_lama": "password123",
+    "password_baru": "aldi123",
+    "Confirmationpassword_baru": "aldi123"
+}
+
 ### GetAllCourse
-GET http://localhost:3000/course
+GET http://localhost:3000/course/
 
 ### AddCourse
 POST http://localhost:3000/course/addCourse

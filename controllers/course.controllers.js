@@ -1,18 +1,33 @@
 const prisma = require('../libs/prisma')
+const { getPagination } = require('../helper/index');
 
 const getAllCourse = async(req,res,next)=>{
     try {
+        let { limit = 10, page = 1 } = req.query;
+            limit = Number(limit);
+            page = Number(page);
+
         let course = await prisma.course.findMany({
+            skip: (page - 1) * limit,
+            take: limit,
             select:{
                 course_id: true,
                 title: true,
                 kategori_id: true,
+                premium: true,
                 harga: true,
             }
         })
+
+        const { _count } = await prisma.course.aggregate({
+            _count: { course_id: true }
+        });
+
+        let pagination = getPagination(req, _count.course_id, page, limit);
+
         res.status(200).json({
             success:true,
-            data:course
+            data:{ pagination, course}
         })
     } catch (error) {
         next(error)
