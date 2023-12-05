@@ -1,6 +1,6 @@
 const prisma = require('../libs/prisma')
 
-const getAllAccount = async(req,res,next)=>{
+const getAllAccountProfile = async(req,res,next)=>{
     try {
         let account = await prisma.account.findMany({
             select:{
@@ -51,22 +51,23 @@ const getAccountbyId = async(req,res,next)=>{
 
 const updateProfile = async(req,res)=>{
     try {
-        let account_id = req.user.account_id
+        let account= req.user
         let {name,email,no_telp,negara,kota } = req.body
-        let account = await prisma.account.update({
+        let updateAccount = await prisma.account.update({
             where:{
-                account_id: account_id
+                account_id: account.account_id
             },
             data:{
                 name,
-                email,no_telp,
+                email,
+                no_telp,
                 negara,
                 kota
             }
         })
         res.status(200).json({
             success:true,
-            data:account
+            data:updateAccount
         })
     } catch (error) {
         next(error)
@@ -83,8 +84,10 @@ const changePassword = async (req,res,next)=>{
                 account_id: account.account_id
             }
         })
+
+        if(!isExist) return res.status(404).json("Account isnt registered")
         //cek apakah password baru dan ulangi password sinkron
-        if(password_baru!= ulangi_password) return res.json("New Password and Confirm Password didnt match")
+        if(password_baru!= ulangi_password) return res.status(400).json("New Password and Confirm Password didnt match")
 
         //cek apakah password_lama sesuai dengan password dengan password di database
         let isPasswordCorrect = await bcrypt.compare(password_lama, isExist.password);
@@ -104,12 +107,11 @@ const changePassword = async (req,res,next)=>{
         })
         res.status(200).json({
             success:true,
-            data:updatedAccount
+            message:`Successfully changed your password`,
         })
     } catch (error) {
         next(error)
     }
-
 }
 
 const getRiwayatPembayaran = async (req,res,next)=>{
@@ -139,4 +141,4 @@ const logout = async(req,res,next)=>{
     }
 }
 
-module.exports = {getAllAccount,getAccountbyId,updateProfile,changePassword,getRiwayatPembayaran,logout}
+module.exports = {getAllAccountProfile,getAccountbyId,updateProfile,changePassword,getRiwayatPembayaran,logout}

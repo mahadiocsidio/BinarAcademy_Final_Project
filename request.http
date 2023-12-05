@@ -6,33 +6,32 @@ Content-Type: application/json
     "nama":"mahadi",
     "email":"mahadiocsidio@students.amikom.ac.id",
     "no_telp":"081368094422",
-    "password":"mahadi21"
+    "password":"password123",
+    "ConfirmationPassword":"password123"
 }
 
 ### verify otp
 POST http://localhost:3000/auth/verify-otp
 Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjIwMDQwMTE0MUBzdHVkZW50LnVtcmkuYWMuaWQiLCJpYXQiOjE3MDE2ODg5NjF9.CGHfRdw9w9pXakUQkm91mp-2wRZazC5da6AgUa4qc8c
 
 {
-    "email":"mahadiocsidio@students.amikom.ac.id",
-    "otp":"357377"
+    "otp":"428960"
 }
 
 #### resend otp
 POST http://localhost:3000/auth/resend-otp
 Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjIxMTA0MDY0QGl0dGVsa29tLXB3dC5hYy5pZCIsImlhdCI6MTcwMTY5MDcwNH0.yjDtBxX0m8vQVUHWW2Pa5a-yffR6PXq6VrXxDMAN1Eo
 
-{
-    "email":"200401141@student.umri.ac.id"
-}
 
 ### login
 POST https://binar-academy-final-project.vercel.app/auth/login
 Content-Type: application/json
 
 {
-    "email":"zanmad500@gmail.com",
-    "password":"fauzan123"
+    "email":"200401141@student.umri.ac.id",
+    "password":"password123"
 }
 
 ### RESET PASSWORD
@@ -55,7 +54,7 @@ Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjIwMDQwMTE0MUBz
 
 ### GET USER BY TOKEN
 GET http://localhost:3000/auth/whoami
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjIwMDQwMTE0MUBzdHVkZW50LnVtcmkuYWMuaWQiLCJpYXQiOjE3MDEyNjg4Mzh9.UERpa6OT9e_GmA0qbsLveCmy8TAXSs0UOoCRG4OGJFM
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjIwMDQwMTE0MUBzdHVkZW50LnVtcmkuYWMuaWQiLCJpYXQiOjE3MDE2ODM5NzJ9.Dl86HBmlg2O_hKK8SFnfODQwv-du5WP96-5KczPmR5A
 
 ### getAllAccount
 GET http://localhost:3000/profile
