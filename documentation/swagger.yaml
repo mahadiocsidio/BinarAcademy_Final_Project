@@ -1,13 +1,13 @@
 openapi: 3.0.3
 info:
-  title: Challenge Chapter 5 | Binar Academy
+  title: Learn Wise API App
   description: |-
     lorem ipsum dolor is amet
   contact:
-    email: muhtopik07@gmail.com
+    email: mahadiocsidio@students.amikom.ac.id
   version: 1.0.0
 servers:
-  - url: http://localhost:3000
+  - url: https://binar-academy-final-project.vercel.app
 tags:
   - name: Start
     description: all about creating account or login
@@ -410,18 +410,14 @@ paths:
               schema:
                 $ref: '#/components/schemas/AccountResponse'
 
-  /profile/{account_id}:
+  /profile/account:
     get:
-      summary: Get user by ID
+      summary: Get user by ID that have login
+      security:
+        - bearerAuth: []
       tags:
         - "Profile"
       description: Returns a single user
-      parameters:
-        - name: account_id
-          in: path
-          required: true
-          schema:
-            type: integer
       responses:
         '200':
           description: Successful response

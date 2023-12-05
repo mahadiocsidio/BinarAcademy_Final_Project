@@ -61,7 +61,8 @@ Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjIwMDQwMTE0MUBz
 GET http://localhost:3000/profile
 
 ### getAccountById
-GET http://localhost:3000/profile/3
+GET https://binar-academy-final-project.vercel.app/profile/account
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwiZW1haWwiOiJ6YW5tYWQ1MDBAZ21haWwuY29tIiwiaWF0IjoxNzAxNzkxOTM2fQ.ZnbCV19Oelx6Sh2g-WHxnzSR_yAc3LBCvWaAtRacC_U
 
 ### updateProfilebyId
 PUT http://localhost:3000/profile/updateProfile
