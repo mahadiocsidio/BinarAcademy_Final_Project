@@ -3,20 +3,20 @@ POST http://localhost:3000/auth/register
 Content-Type: application/json
 
 {
-    "nama":"wilson",
-    "email":"21104064@ittelkom-pwt.ac.id",
-    "no_telp":"08123456789",
-    "password":"password1234",
-    "password_confirmation":"password1234"
+    "nama":"aldii",
+    "email":"200401141@student.umri.ac.id",
+    "no_telp":"081368094422",
+    "password":"password123",
+    "ConfirmationPassword":"password123"
 }
 
 ### verify otp
 POST http://localhost:3000/auth/verify-otp
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjIxMTA0MDY0QGl0dGVsa29tLXB3dC5hYy5pZCIsImlhdCI6MTcwMTY5MDcwNH0.yjDtBxX0m8vQVUHWW2Pa5a-yffR6PXq6VrXxDMAN1Eo
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjIwMDQwMTE0MUBzdHVkZW50LnVtcmkuYWMuaWQiLCJpYXQiOjE3MDE2ODg5NjF9.CGHfRdw9w9pXakUQkm91mp-2wRZazC5da6AgUa4qc8c
 
 {
-    "otp":"498890"
+    "otp":"428960"
 }
 
 #### resend otp
@@ -30,8 +30,8 @@ POST http://localhost:3000/auth/login
 Content-Type: application/json
 
 {
-    "email":"21104064@ittelkom-pwt.ac.id",
-    "password":"password1234"
+    "email":"200401141@student.umri.ac.id",
+    "password":"password123"
 }
 
 ### RESET PASSWORD
@@ -54,7 +54,7 @@ Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjIwMDQwMTE0MUBz
 
 ### GET USER BY TOKEN
 GET http://localhost:3000/auth/whoami
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjIwMDQwMTE0MUBzdHVkZW50LnVtcmkuYWMuaWQiLCJpYXQiOjE3MDEyNjg4Mzh9.UERpa6OT9e_GmA0qbsLveCmy8TAXSs0UOoCRG4OGJFM
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjIwMDQwMTE0MUBzdHVkZW50LnVtcmkuYWMuaWQiLCJpYXQiOjE3MDE2ODM5NzJ9.Dl86HBmlg2O_hKK8SFnfODQwv-du5WP96-5KczPmR5A
 
 ### getAllAccount
 GET http://localhost:3000/profile

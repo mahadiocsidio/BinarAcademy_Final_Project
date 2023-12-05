@@ -12,7 +12,7 @@ tags:
   - name: Start
     description: all about creating account or login
   - name: Account
-    description: all about accounts
+    description: all about accounts profile
   - name: Transaction
     description: all about Transaction
   - name: Authentication
@@ -397,6 +397,147 @@ paths:
                   data:
                     example: null
 
+  /profile:
+    get:
+      tags:
+        - Account
+      summary: Get all accounts profile
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                success: true
+                data:
+                  - account_id: 1
+                    nama: John Doe
+                    email: john@example.com
+                    role: user
+                    created_at: '2023-01-01T12:00:00Z'
+                  - account_id: 2
+                    nama: Jane Doe
+                    email: jane@example.com
+                    role: admin
+                    created_at: '2023-01-02T14:30:00Z'
+        '500':
+          description: Internal Server Error
+
+  /profile/account:
+    get:
+      tags:
+        - Account
+      summary: Get the current user's profile account
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                success: true
+                data:
+                  account_id: 1
+                  nama: John Doe
+                  email: john@example.com
+                  no_telp: '+1234567890'
+                  negara: 'Indonesia'
+                  kota: 'Jakarta'
+                  url_image: 'https://example.com/image.jpg'
+        '404':
+          description: Account not found
+          content:
+            application/json:
+              example:
+                success: false
+                message: 'Account not found'
+        '500':
+          description: Internal Server Error
+
+  /profile/updateProfile:
+    put:
+      tags:
+        - Account
+      summary: Update user profile
+      security:
+        - bearerAuth: []
+      requestBody:
+        $ref: "#/components/requestBodies/updateProfile"
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                success: true
+                data:
+                  account_id: 1
+                  nama: John Doe
+                  email: john@example.com
+                  no_telp: '+1234567890'
+                  negara: 'Indonesia'
+                  kota: 'Jakarta'
+                  url_image: 'https://example.com/image.jpg'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              example:
+                success: false
+                message: 'Invalid request payload'
+        '404':
+          description: Account not found
+          content:
+            application/json:
+              example:
+                success: false
+                message: 'Account not found'
+        '500':
+          description: Internal Server Error
+
+  /profile/change-password:
+    post:
+      tags:
+        - Account
+      summary: Change user password
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        $ref: "#/components/requestBodies/changePassword"
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                success: true
+                message: 'Successfully changed your password'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              example:
+                success: false
+                message: 'Invalid request payload'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              example:
+                success: false
+                message: 'Invalid current password'
+        '404':
+          description: Account isnt registered
+          content:
+            application/json:
+              example:
+                success: false
+                message: 'Account isnt registered'
+        '500':
+          description: Internal Server Error
+
 
 components:
   securitySchemes:
@@ -439,7 +580,6 @@ components:
           example: 'some error from user'
         data:
           example: null
-
     DateModel:
       title: DateModel
       type: object
@@ -883,3 +1023,49 @@ components:
           example: false
         Account:
           $ref: "#/components/schemas/AccountModel"
+
+  requestBodies:
+    updateProfile:
+      content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: New name for the user
+                email:
+                  type: string
+                  format: email
+                  description: New email for the user
+                no_telp:
+                  type: string
+                  description: New phone number for the user
+                negara:
+                  type: string
+                  description: New country for the user
+                kota:
+                  type: string
+                  description: New city for the user
+              required:
+                - name  
+    
+    changePassword:
+      content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                password_lama:
+                  type: string
+                  description: Current password of the user
+                password_baru:
+                  type: string
+                  description: New password for the user
+                ulangi_password:
+                  type: string
+                  description: Confirm the new password
+              required:
+                - password_lama
+                - password_baru
+                - ulangi_password
