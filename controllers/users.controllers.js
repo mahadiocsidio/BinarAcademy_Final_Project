@@ -11,15 +11,27 @@ module.exports = {
   // melakukan register
   register: async (req, res, next) => {
     try {
-      let { nama, email, no_telp, password,ConfirmationPassword, role } = req.body;
+      let { nama, email, no_telp, password, ConfirmationPassword, role } = req.body;
+
       let userExist = await prisma.account.findUnique({ where: { email } });
 
-      if(password != ConfirmationPassword){
+      //email sudah pernah digunakan
+      if (userExist) {
+        return res.status(400).json({
+          status: false,
+          message: 'Bad Request',
+          err: 'akun anda sudah terdaftar',
+          data: null,
+        });
+      }
+
+      //validasi password & confirmation password
+      if (password != ConfirmationPassword) {
         return res.status(400).json({
           status: false,
           message: 'Bad Request',
           error: 'Password & Password Confirmation must be same!',
-          data:null
+          data: null,
         });
       }
       //validasi panjang nama maksimal 50 karakter
@@ -28,7 +40,7 @@ module.exports = {
           status: false,
           message: 'Bad Request',
           error: 'Nama harus memiliki maksimal 50 karakter',
-          data:null
+          data: null,
         });
       }
 
@@ -37,8 +49,8 @@ module.exports = {
         return res.status(400).json({
           status: false,
           message: 'Bad Request',
-          error:'Password harus memiliki minimal 8 karakter dan maksimal 15 karakter',
-          data:null
+          error: 'Password harus memiliki minimal 8 karakter dan maksimal 15 karakter',
+          data: null,
         });
       }
 
@@ -49,21 +61,9 @@ module.exports = {
           status: false,
           message: 'Bad Request',
           error: 'Format email tidak valid',
-          data:null
-        });
-      }
-
-      //email sudah pernah digunakan
-      if (userExist) {
-        return res.status(400).json({
-          status: false,
-          message: 'Bad Request',
-          err: 'email sudah dipakai',
           data: null,
         });
       }
-      //set token for otp
-      let token = jwt.sign({ email }, JWT_SECRET_KEY);
 
       let encryptedPassword = await bcrypt.hash(password, 10);
       let user = await prisma.account.create({
@@ -73,17 +73,36 @@ module.exports = {
           no_telp,
           password: encryptedPassword,
           role,
+          role,
         },
       });
+
+      //set token for otp
+      let token = jwt.sign(
+        { account_id: user.account_id, email: user.email },
+        JWT_SECRET_KEY
+      );
 
       //generate otp
       await createUpdateotp(user.account_id, user.nama, user.email, res);
 
+      // Set the email in response headers
+      res.set('userEmail', user.email);
+      res.cookie('userToken', token);
+
       // Mengembalikan respon terlebih dahulu
       res.status(201).json({
         status: true,
-        message: 'Registrasi berhasil, silakan cek email untuk OTP.',
-        data: {token,user},
+        message: 'Registrasi berhasil, silakan cek email untuk mendapatkan OTP.',
+        data: {
+          token,
+          user: {
+            nama: user.nama,
+            email: user.email,
+            role: user.role,
+            is_verified: user.is_verified,
+          },
+        },
       });
 
       //   res.redirect('/verify-otp'); // Redirect to verify otp page
@@ -149,20 +168,9 @@ module.exports = {
           status: true,
           message: 'Activation Code verified successfully',
           err: null,
-          data: { email:decoded.email, otp, is_verified },
+          data: { email: decoded.email, otp, is_verified },
         });
-
-      })
-
-      // let account = await prisma.Account.findUnique({ where: { email } });
-      // if (!account) {
-      //   return res.status(404).json({
-      //     status: false,
-      //     message: 'Not Found',
-      //     err: 'User not found',
-      //     data: null,
-      //   });
-      // }
+      });
 
       //   res.redirect('/user/login'); // Redirect to login page
     } catch (err) {
@@ -173,57 +181,68 @@ module.exports = {
   // resend otp
   resendOtp: async (req, res, next) => {
     try {
-      const { email } = req.body;
-      const user = await prisma.account.findUnique({ where: { email } });
+      const token = req.headers.authorization;
 
-      if (!user) {
-        return res.status(404).json({
-          status: false,
-          message: 'Not Found',
-          err: 'User not found',
-          data: null,
+      jwt.verify(token, JWT_SECRET_KEY, async (err, decoded) => {
+        if (err) {
+          return res.status(400).json({
+            status: false,
+            message: 'Bad Request',
+            err: err.message,
+            data: null,
+          });
+        }
+
+        const user = await prisma.account.findUnique({
+          where: { email: decoded.email },
         });
-      }
 
-      // Mengambil nilai OTP dari database
-      const existingOTP = await prisma.otp.findUnique({
-        where: { account_id: user.account_id },
-      });
-
-      if (!existingOTP) {
-        return res.status(400).json({
-          status: false,
-          message: 'Bad Request',
-          err: 'OTP not found for the user',
-          data: null,
+        if (!user) {
+          return res.status(404).json({
+            status: false,
+            message: 'Not Found',
+            err: 'User not found',
+            data: null,
+          });
+        }
+        // Mengambil nilai OTP dari database
+        const existingOTP = await prisma.otp.findUnique({
+          where: { account_id: user.account_id },
         });
-      }
 
-      // Memperbarui nilai OTP dalam model
-      const updateOtp = existingOTP.otp;
+        if (!existingOTP) {
+          return res.status(400).json({
+            status: false,
+            message: 'Bad Request',
+            err: 'OTP not found for the user',
+            data: null,
+          });
+        }
 
-      // create or update OTP in the Otp table
-      await prisma.otp.upsert({
-        where: { account_id: user.account_id },
-        create: {
-          account_id: user.account_id,
-          otp: updateOtp,
-          created_at: new Date(),
-        },
-        update: {
-          otp: updateOtp,
-          created_at: new Date(),
-        },
-      });
+        // Memperbarui nilai OTP dalam model
+        const updateOtp = existingOTP.otp;
+        // create or update OTP in the Otp table
+        await prisma.otp.upsert({
+          where: { account_id: user.account_id },
+          create: {
+            account_id: user.account_id,
+            otp: updateOtp,
+            created_at: new Date(),
+          },
+          update: {
+            otp: updateOtp,
+            created_at: new Date(),
+          },
+        });
 
-      // send otp
-      await createUpdateotp(user.account_id, user.nama, user.email, res);
-
-      return res.status(200).json({
-        status: true,
-        message: 'OTP resent successfully',
-        err: null,
-        data: { email },
+        // send otp
+        await createUpdateotp(user.account_id, user.nama, user.email, res);
+        return res.status(200).json({
+          status: true,
+          message: 'OTP resent successfully',
+          err: null,
+          data: { email: user.email },
+        });
       });
     } catch (err) {
       next(err);
@@ -232,7 +251,7 @@ module.exports = {
 
   login: async (req, res, next) => {
     try {
-      const { email, password, is_verified } = req.body;
+      const { email, password, role } = req.body;
       const user = await prisma.account.findUnique({ where: { email } });
 
       if (!user) {
@@ -258,7 +277,6 @@ module.exports = {
       });
 
       if (!userVerified) {
-        // console.log('lakukan verifikasi terlebih dahulu');
         //generate otp
         createUpdateotp(user.account_id, user.nama, user.email, res);
         return res.status(400).json({
@@ -283,7 +301,7 @@ module.exports = {
         return res.status(200).json({
           status: true,
           message: 'Berhasil login',
-          data: user,
+          data: { user,token },
         });
       }
     } catch (err) {
@@ -310,7 +328,6 @@ module.exports = {
 
       // let url = `${location}/auth/reset-password?token=${token}`; //send token in link to get user
       let url = `<p>Hi ${email}, ini adalah token Anda: <strong>${token}</strong></p>`; //send token in link to get user
-      console.log('url reset pass : ', url);
       // const html = await nodemailer.getHtml('reset-password-valid.ejs', {
       //   email,
       //   url,
@@ -330,7 +347,8 @@ module.exports = {
   changePassword: async (req, res, next) => {
     try {
       let { password, confirmationPassword } = req.body;
-      let token = req.headers.authorization;
+      let {token} = req.query
+      // let token = req.headers.authorization;
       console.log(token);
       if (password != confirmationPassword) {
         return res.status(400).json({
@@ -360,7 +378,13 @@ module.exports = {
           status: true,
           message: 'success',
           err: null,
-          data: updated,
+          data: {
+            user: {
+              nama: updated.nama,
+              email: updated.email,
+              role: updated.role,
+            },
+          },
         });
       });
     } catch (err) {
