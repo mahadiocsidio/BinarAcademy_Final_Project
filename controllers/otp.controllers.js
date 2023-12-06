@@ -11,10 +11,9 @@ module.exports = {
             //generate otp
             const otpValue = otpGenerator.generate(6, { lowerCaseAlphabets: false, upperCaseAlphabets: false, specialChars: false });
             let existingOTP = null; // Deklarasi existingOTP
-
             existingOTP = await prisma.otp.findUnique({
                 where: {
-                    account_id: account_id // Cari entri OTP berdasarkan account_id
+                    account_id // Cari entri OTP berdasarkan account_id
                 }
             });
 
@@ -28,31 +27,31 @@ module.exports = {
                         otp: otpValue // Update nilai OTP yang baru
                     }
                 });
-            } else {
-                // Jika entri OTP belum ada, buat entri baru
-                existingOTP = await prisma.otp.create({
-                    data: {
-                        otp: otpValue,
-                        account: {
-                            connect: {
-                                account_id: account_id // Hubungkan dengan account yang baru saja dibuat
-                            }
+            }else{
+            // Jika entri OTP belum ada, buat entri baru
+            existingOTP = await prisma.otp.create({
+                data: {
+                    otp: otpValue,
+                    account: {
+                        connect: {
+                            account_id: account_id // Hubungkan dengan account yang baru saja dibuat
                         }
                     }
-                });
+                }
+            });
             }
+            
 
-            //menghapus otp setelah 60 detik dan belum diverifikasi
-            setTimeout(async () => {
+            //menghapus otp setelah 5 menit dan belum diverifikasi
+            setTimeout(async (req, res, next) => {
                 try {
-                    //mencari otp yang sesuai dengan id account dan belum diverifikasi
+            //         //mencari otp yang sesuai dengan id account dan belum diverifikasi
                     const otpEntry = await prisma.account.findUnique({
                         where: {
                             account_id: account_id,
                             is_verified: false
                         }
                     });
-
                     if (otpEntry) {
                         //hapus otp jika ditemukan
                         await prisma.otp.update({
@@ -69,15 +68,9 @@ module.exports = {
                         console.log(`No unverified OTP entry found for user ${account_id}.`);
                     }
                 } catch (err) {
-                    console.error("Error while deleting OTP:", err);
+                    console.error("Error while deleting OTP : ", err.message);
                 }
             }, 300000);
-
-            // // send otp to user email
-            // let html = await getHtml('otp-email.ejs', {
-            //     otp: otp, 
-            // });
-          
 
               // Kirim OTP ke email pengguna
               const html = `<p>Hi ${nama}, ini adalah OTP Anda: <strong>${otpValue}</strong></p>`;
@@ -90,8 +83,7 @@ module.exports = {
             //     data: existingOTP
             // });
         } catch (err) {
-            console.error(err);
-            throw err;
+            console.error('error anda pada otp',err.message);
         }
     }
 };
