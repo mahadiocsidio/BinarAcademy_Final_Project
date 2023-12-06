@@ -210,4 +210,29 @@ const deleteCoursebyId = async(req,res,next)=>{
     }
 }
 
-module.exports ={getAllCourse,getCoursebyId,addCourse,getCoursesByCategory,getCoursebyTitle,deleteCoursebyId}
+const beliCourse = async(req,res,next)=>{
+    try {
+        let {course_id} = req.body
+        let account = req.user
+        course_id = parseInt(course_id,10)
+        let course = await prisma.course.findUnique({where:{course_id}})
+        if(!course) return res.status(404).json("Course isnt registered")
+
+        let riwayat = await prisma.riwayat_transaksi.create({
+            data:{
+                account_id: account.account_id,
+                course_id,
+                status: "Menunggu Pembayaran"
+            }
+        })
+        res.status(200).json({
+            success:true,
+            data:riwayat
+        })
+    } catch (error) {
+        next(error)
+    }
+
+}
+
+module.exports ={getAllCourse,getCoursebyId,addCourse,getCoursesByCategory,getCoursebyTitle,deleteCoursebyId,beliCourse}

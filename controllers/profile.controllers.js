@@ -68,7 +68,7 @@ const getAccountbyLogin = async (req, res, next) => {
     let account = req.user
     let getAccount = await prisma.account.findUnique({ 
         where: {
-            account_id:account.account_id
+            account_id: account.account_id
         },
         select:{
             account_id: true,
