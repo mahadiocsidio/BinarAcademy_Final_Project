@@ -4,22 +4,25 @@ const { restrict } = require('../middlewares/auth.middlewares');
 const {
   getAllAccountProfile,
   getAccountbyId,
+  getAccountbyLogin,
   updateProfilebyId,
+  updateProfilebyLogin,
   changePasswordbyLogin,
-  logout,getAccountbyLogin,updateProfileByLogin,getRiwayatPembayaran
+  logout,
+  getRiwayatPembayaran,
 } = require('../controllers/profile.controllers');
 
-router.get('/', getAllAccountProfile); //DONE
+router.get('/', getAllAccountProfile);
 
 //BY LOGIN
-router.get('/account', restrict, getAccountbyLogin); //DONE
-router.put('/updateProfile', restrict, updateProfileByLogin); //DONE
-router.put('/changePassword', restrict, changePasswordbyLogin); //DONE
-router.get('/paymentHistory',restrict,getRiwayatPembayaran) //DONE
+router.get('/account', restrict, getAccountbyLogin);
+router.put('/updateProfile', restrict, updateProfilebyLogin);
+router.put('/changePassword', restrict, changePasswordbyLogin);
+router.get('/paymentHistory', restrict, getRiwayatPembayaran);
 
 //BY ID
-router.get('/:account_id', getAccountbyId); //DONE
-router.put('/:account_id', updateProfilebyId); //DONE
-router.post('/logout', logout); //DONE
+router.get('/:account_id', getAccountbyId);
+router.put('/:account_id', updateProfilebyId);
+router.post('/logout', logout);
 
 module.exports = router;

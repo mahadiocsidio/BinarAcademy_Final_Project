@@ -1,13 +1,13 @@
 openapi: 3.0.3
 info:
-  title: Challenge Chapter 5 | Binar Academy
+  title: Learn Wise API App
   description: |-
     lorem ipsum dolor is amet
   contact:
-    email: muhtopik07@gmail.com
+    email: mahadiocsidio@students.amikom.ac.id
   version: 1.0.0
 servers:
-  - url: http://localhost:3000
+  - url: https://binar-academy-final-project.vercel.app
 tags:
   - name: Start
     description: all about creating account or login
@@ -537,6 +537,58 @@ paths:
                 message: 'Account isnt registered'
         '500':
           description: Internal Server Error
+        
+  /profile/riwayat:
+    get:
+      summary: Get Account's Transaction History
+      security:
+        - bearerAuth: []
+      description: Get Account's Transaction History that have login
+      tags:
+        - Account
+      parameters:
+        - name: Authorization
+          in: header
+          description: JWT Bearer token
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              example:
+                success: true
+                data:
+                  - status: "Berhasil"
+                    Course:
+                      title: "Pengembangan Web 101"
+                      harga: 29.99
+                      level: "Pemula"
+                      Kategori:
+                        title: "Pemrograman Web"
+                  - status: "Berhasil"
+                    Course:
+                      title: "JavaScript Lanjutan"
+                      harga: 49.99
+                      level: "Lanjutan"
+                      Kategori:
+                        title: "Pemrograman Web"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              example:
+                success: false
+                message: "Unauthorized: Token tidak valid atau tidak ada"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              example:
+                success: false
+                message: "Terjadi kesalahan server"
 
 
 components:
@@ -580,6 +632,30 @@ components:
           example: 'some error from user'
         data:
           example: null
+    AccountResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          $ref: '#/components/schemas/AccountModel'
+
+    AccountWithMessageResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/AccountModel'
+
+    LogoutResponse:
+      type: object
+      properties:
+        message:
+          type: string
+
     DateModel:
       title: DateModel
       type: object

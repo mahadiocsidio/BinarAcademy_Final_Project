@@ -116,15 +116,13 @@ const updateProfilebyId = async (req, res, next) => {
 
 const changePasswordbyLogin = async (req, res, next) => {
   try {
-    let account_id = req.user.account_id;
-    // let { account_id } = req.params;
+    let {account_id} = req.user;
     let { password_lama, password_baru, Confirmationpassword_baru } = req.body;
-    account_id = Number(account_id);
 
     //mencari account di database
     let isExist = await prisma.account.findUnique({
       where: {
-        account_id: account_id,
+        account_id,
       },
     });
     //validasi akun
@@ -201,9 +199,6 @@ const getRiwayatPembayaran = async (req, res, next) => {
       where:{
         account_id
       },
-      // include:{
-      //   Course:true,
-      // }
       select:{
         status:true,
         Course:{
@@ -271,7 +266,7 @@ const getAccountbyLogin = async (req,res,next) => {
   }
 }
 
-const updateProfileByLogin = async (req,res,next) =>{
+const updateProfilebyLogin = async (req,res,next) =>{
   try {
     let {account_id} = req.user
     let { nama, no_telp, negara, kota } = req.body;
@@ -307,5 +302,5 @@ module.exports = {
   getRiwayatPembayaran,
   changePasswordbyLogin,
   getAccountbyLogin,
-  updateProfileByLogin
+  updateProfilebyLogin
 };
