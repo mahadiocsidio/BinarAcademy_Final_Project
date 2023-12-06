@@ -1,14 +1,15 @@
 const express = require('express')
 const router = express.Router()
 const {restrict} = require('../middlewares/auth.middlewares')
-const {getAllAccountProfile,getAccountbyId,updateProfile,changePassword,logout} = require('../controllers/profile.controllers')
+const {getAllAccountProfile,getAccountbyId,getAccountbyLogin,updateProfile,updateProfilebyLogin,changePasswordbyLogin,logout,getRiwayatPembayaran} = require('../controllers/profile.controllers')
 
 router.get('/', getAllAccountProfile) //DONE
 
 //BY LOGIN
-router.get('/account',restrict, getAccountbyId)
-router.put('/updateProfile',restrict, updateProfile)
-router.put('/changePassword',restrict,changePassword) //DONE
+router.get('/account',restrict, getAccountbyLogin)
+router.put('/updateProfile',restrict, updateProfilebyLogin)
+router.put('/changePassword',restrict,changePasswordbyLogin)
+router.get('/riwayat', restrict,getRiwayatPembayaran) //DONE
 
 //BY ID
 router.get('/:account_id',getAccountbyId) //DONE

@@ -3,8 +3,8 @@ POST http://localhost:3000/auth/register
 Content-Type: application/json
 
 {
-    "nama":"aldii",
-    "email":"200401141@student.umri.ac.id",
+    "nama":"mahadi",
+    "email":"mahadiocsidio@students.amikom.ac.id",
     "no_telp":"081368094422",
     "password":"password123",
     "ConfirmationPassword":"password123"
@@ -27,7 +27,7 @@ Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjo0NSwiZW1h
 
 
 ### login
-POST http://localhost:3000/auth/login
+POST https://binar-academy-final-project.vercel.app/auth/login
 Content-Type: application/json
 
 {
@@ -101,4 +101,11 @@ Content-Type: application/json
 }
 
 ### GetCourseByCategory
-GET http://localhost:3000/course/filter?kategori_id=1&kategori_id=3sort=created_at&order=asc
+GET http://localhost:3000/course/filter?title=UI/UX untuk pemula
+
+###
+GET http://localhost:3000/course/search?title=ui
+
+
+###
+GET https://binar-academy-final-project.vercel.app
