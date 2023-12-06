@@ -92,7 +92,7 @@ Content-Type: application/json
 Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDUsImVtYWlsIjoiMjAwNDAxMTQxQHN0dWRlbnQudW1yaS5hYy5pZCIsImlhdCI6MTcwMTg3MDExNn0.K2oKsRJ_7kv-jwOSrMTQCDQ-rSiQh3l39amKWq7LsGM
 
 {
-    "nama":"ahmad moraldi",
+    "nama":"ahmad mmoraldi",
     "no_telp":"012345678910",
     "negara": "Indojaya",
     "kota": "jogyas"

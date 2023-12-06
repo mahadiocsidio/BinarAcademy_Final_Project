@@ -200,7 +200,25 @@ const getRiwayatPembayaran = async (req, res, next) => {
       take: limit,
       where:{
         account_id
-      }
+      },
+      // include:{
+      //   Course:true,
+      // }
+      select:{
+        status:true,
+        Course:{
+            select:{
+                title: true,
+                harga: true,
+                level: true,
+                Kategori:{
+                    select:{
+                        title: true,
+                    }
+                }
+            }
+        }
+      },
     })
 
     const { _count } = await prisma.riwayat_Transaksi.aggregate({
@@ -222,7 +240,6 @@ const getRiwayatPembayaran = async (req, res, next) => {
 };
 
 const logout = async (req, res, next) => {
-  //belum testing
   try {
     res.json({ message: 'Logout successful' });
   } catch (error) {
@@ -255,36 +272,40 @@ const getAccountbyLogin = async (req,res,next) => {
 }
 
 const updateProfileByLogin = async (req,res,next) =>{
-  let {account_id} = req.user
-  let { nama, no_telp, negara, kota } = req.body;
+  try {
+    let {account_id} = req.user
+    let { nama, no_telp, negara, kota } = req.body;
 
-  // err pencarian account di handle oleh restrict
+    // err pencarian account di handle oleh restrict
 
-  let accountUpdated = await prisma.account.update({
-    where: {
-      account_id,
-    },
-    data: {
-      nama,
-      no_telp,
-      negara,
-      kota,
-    },
-  });
-  return res.status(200).json({
-    success: true,
-    message:"account success updated!",
-    data: { user : accountUpdated },
-  });
-
+    let accountUpdated = await prisma.account.update({
+      where: {
+        account_id,
+      },
+      data: {
+        nama,
+        no_telp,
+        negara,
+        kota,
+      },
+    });
+    return res.status(200).json({
+      success: true,
+      message:"account success updated!",
+      data: { user : accountUpdated },
+    });
+    
+  } catch (err) {
+    next(err)
+  }
 }
 module.exports = {
   getAllAccountProfile,
   getAccountbyId,
   updateProfilebyId,
-  changePasswordbyLogin,
-  getRiwayatPembayaran,
   logout,
+  getRiwayatPembayaran,
+  changePasswordbyLogin,
   getAccountbyLogin,
   updateProfileByLogin
 };

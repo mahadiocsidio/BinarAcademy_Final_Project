@@ -20,6 +20,6 @@ router.get('/paymentHistory',restrict,getRiwayatPembayaran) //DONE
 //BY ID
 router.get('/:account_id', getAccountbyId); //DONE
 router.put('/:account_id', updateProfilebyId); //DONE
-router.post('/logout', logout);
+router.post('/logout', logout); //DONE
 
 module.exports = router;
