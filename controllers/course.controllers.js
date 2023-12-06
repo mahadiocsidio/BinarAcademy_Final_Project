@@ -80,24 +80,32 @@ const addCourse = async(req,res,next)=>{
 
 const getCoursesByCategory = async (req, res, next) => {
     try {
-        const { kategori_id , sort, order} = req.query;
+        const { title, kategori_id, sort, order } = req.query;
 
-        // Menangani beberapa nilai kategori_id
+        // Handle multiple kategori_id values
         const kategoriIds = Array.isArray(kategori_id) ? kategori_id.map(id => parseInt(id, 10)) : [parseInt(kategori_id, 10)];
 
-        // Membuat objek yang akan digunakan untuk menyusun kondisi dalam query
+        // Create an object to be used for conditions in the query
         const condition = {};
 
-        const orderBy = sort && order ? { [sort]: order } : undefined;
-
-        // Menambahkan kondisi jika ada nilai kategori_id dalam query parameter
-        if (kategoriIds && kategoriIds.length > 0) {
-            condition.kategori_id = {
-                in: kategoriIds,
+        // Add conditions for title if it exists in the query parameters
+        if (title) {
+            condition.title = {
+                contains: title,
+                mode: 'insensitive', // Case-insensitive search for title
             };
         }
 
-        // Menggunakan query Prisma dengan kondisi
+        // Add conditions for kategori_id if it exists in the query parameters
+        if (kategoriIds && kategoriIds.length > 0) {
+            condition.kategori_id = {
+                in: kategoriIds.filter(id => !isNaN(id)), // Filter out NaN values
+            };
+        }
+
+        const orderBy = sort && order ? { [sort]: order } : undefined;
+
+        // Use Prisma query with conditions
         const courses = await prisma.course.findMany({
             where: condition,
             orderBy: orderBy,
@@ -107,7 +115,7 @@ const getCoursesByCategory = async (req, res, next) => {
                 kategori_id: true,
                 harga: true,
                 level: true,
-                // Jika perlu, tambahkan informasi kategori
+                // If needed, add category information
                 Kategori: {
                     select: {
                         title: true,
@@ -127,32 +135,45 @@ const getCoursesByCategory = async (req, res, next) => {
 
 const getCoursebyTitle = async (req,res,next)=>{
     try {
-        let {title} = req.params
-        let course = await prisma.course.findMany({
-            where:{
-                title: title
+        let { title } = req.query;
+
+        // Make the title case-insensitive by converting it to lowercase
+        title = title.toLowerCase();
+
+        let course = await prisma.course.findFirst({
+            where: {
+                title: {
+                    contains: title,
+                    mode: 'insensitive', // Case-insensitive search
+                },
             },
-            select:{
+            select: {
                 course_id: true,
                 title: true,
                 kategori_id: true,
                 harga: true,
-                Kategori:{
-                    select:{
+                Kategori: {
+                    select: {
                         title: true,
+                    },
                 },
-            }
-        }})
-        if(!course) return res.json("Course isnt registered")
+            },
+        });
+
+        if (!course) {
+            return res.status(404).json({
+                success: false,
+                message: "Course not found",
+            });
+        }
 
         res.status(200).json({
-        success:true,
-        data:course
-        })
+            success: true,
+            data: course,
+        });
     } catch (error) {
-        next(error)
+        next(error);
     }
-
 }
 
 const deleteCoursebyId = async(req,res,next)=>{
@@ -173,4 +194,4 @@ const deleteCoursebyId = async(req,res,next)=>{
     }
 }
 
-module.exports ={getAllCourse,getCoursebyId,addCourse,getCoursesByCategory,deleteCoursebyId}
+module.exports ={getAllCourse,getCoursebyId,addCourse,getCoursesByCategory,getCoursebyTitle,deleteCoursebyId}
