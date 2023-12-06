@@ -63,6 +63,34 @@ const getAccountbyId = async (req, res, next) => {
   }
 };
 
+const getAccountbyLogin = async (req, res, next) => {
+  try {
+    let account = req.user
+    let getAccount = await prisma.account.findUnique({ 
+        where: {
+            account_id:account.account_id
+        },
+        select:{
+            account_id: true,
+            nama: true,
+            email: true,
+            no_telp: true,
+            negara: true,
+            kota: true,
+            url_image:true
+        }
+    })
+    if(!getAccount) return res.json("Account isnt registered")
+
+    res.status(200).json({
+    success:true,
+    data:getAccount
+    })
+} catch (error) {
+    next(error)
+}
+};
+
 const updateProfile = async (req, res, next) => {
   try {
     let { account_id } = req.params;
@@ -88,17 +116,41 @@ const updateProfile = async (req, res, next) => {
   }
 };
 
-const changePassword = async (req, res, next) => {
+const updateProfilebyLogin = async (req, res, next) => {
   try {
-    let account_id = req.user.account_id;
+    let account= req.user
+    let {name,email,no_telp,negara,kota } = req.body
+    let updateAccount = await prisma.account.update({
+        where:{
+            account_id: account.account_id
+        },
+        data:{
+            name,
+            email,
+            no_telp,
+            negara,
+            kota
+        }
+    })
+    res.status(200).json({
+        success:true,
+        data:updateAccount
+    })
+} catch (error) {
+    next(error)
+}
+};
+
+const changePasswordbyLogin = async (req, res, next) => {
+  try {
+    let account = req.user;
     // let { account_id } = req.params;
     let { password_lama, password_baru, Confirmationpassword_baru } = req.body;
-    account_id = Number(account_id);
 
     //mencari account di database
     let isExist = await prisma.account.findUnique({
       where: {
-        account_id: account_id,
+        account_id: account.account_id,
       },
     });
     //validasi akun
@@ -169,8 +221,20 @@ const getRiwayatPembayaran = async (req, res, next) => {
       where: {
         account_id: account_id,
       },
-      include: {
-        course: true,
+      select:{
+        status:true,
+        Course:{
+            select:{
+                title: true,
+                harga: true,
+                level: true,
+                Kategori:{
+                    select:{
+                        title: true,
+                    }
+                }
+            }
+        }
       },
     });
     res.status(200).json({
@@ -194,8 +258,10 @@ const logout = async (req, res, next) => {
 module.exports = {
   getAllAccountProfile,
   getAccountbyId,
+  getAccountbyLogin,
   updateProfile,
-  changePassword,
+  updateProfilebyLogin,
+  changePasswordbyLogin,
   getRiwayatPembayaran,
   logout,
 };

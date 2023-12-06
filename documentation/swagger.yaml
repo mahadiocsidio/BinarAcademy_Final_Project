@@ -537,6 +537,58 @@ paths:
                 message: 'Account isnt registered'
         '500':
           description: Internal Server Error
+        
+  /profile/riwayat:
+    get:
+      summary: Get Account's Transaction History
+      security:
+        - bearerAuth: []
+      description: Get Account's Transaction History that have login
+      tags:
+        - Account
+      parameters:
+        - name: Authorization
+          in: header
+          description: JWT Bearer token
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              example:
+                success: true
+                data:
+                  - status: "Berhasil"
+                    Course:
+                      title: "Pengembangan Web 101"
+                      harga: 29.99
+                      level: "Pemula"
+                      Kategori:
+                        title: "Pemrograman Web"
+                  - status: "Berhasil"
+                    Course:
+                      title: "JavaScript Lanjutan"
+                      harga: 49.99
+                      level: "Lanjutan"
+                      Kategori:
+                        title: "Pemrograman Web"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              example:
+                success: false
+                message: "Unauthorized: Token tidak valid atau tidak ada"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              example:
+                success: false
+                message: "Terjadi kesalahan server"
 
 
 components:
