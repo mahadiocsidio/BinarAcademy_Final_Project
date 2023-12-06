@@ -2,7 +2,7 @@ const prisma = require('../libs/prisma');
 const { getPagination } = require('../helper/index');
 let bcrypt = require('bcrypt');
 
-const getAllAccount = async (req, res, next) => {
+const getAllAccountProfile = async (req, res, next) => {
   try {
     let { limit = 10, page = 1 } = req.query;
     limit = Number(limit);
@@ -66,7 +66,7 @@ const getAccountbyId = async (req, res, next) => {
 const updateProfile = async (req, res, next) => {
   try {
     let { account_id } = req.params;
-    
+
     account_id = Number(account_id);
     let { name, email, no_telp, negara, kota } = req.body;
     let account = await prisma.account.update({
@@ -90,7 +90,7 @@ const updateProfile = async (req, res, next) => {
 
 const changePassword = async (req, res, next) => {
   try {
-    let account_id = req.user.account_id
+    let account_id = req.user.account_id;
     // let { account_id } = req.params;
     let { password_lama, password_baru, Confirmationpassword_baru } = req.body;
     account_id = Number(account_id);
@@ -126,14 +126,14 @@ const changePassword = async (req, res, next) => {
       });
     }
 
-    if (!isPasswordCorrect){
-        return res.status(400).json({
-          status: false,
-          message: 'bad request',
-          error: 'Password isn\'t match',
-          data: null,
-        });
-      }
+    if (!isPasswordCorrect) {
+      return res.status(400).json({
+        status: false,
+        message: 'bad request',
+        error: "Password isn't match",
+        data: null,
+      });
+    }
 
     let hashedPassword = await bcrypt.hash(password_baru, 10);
 
@@ -147,14 +147,22 @@ const changePassword = async (req, res, next) => {
     });
     res.status(200).json({
       success: true,
-      data: updatedAccount,
+      message: `Successfully changed your password`,
+      data: {
+        user: {
+          name: updatedAccount.nama,
+          email: updatedAccount.email,
+          role: updatedAccount.role,
+        },
+      },
     });
   } catch (error) {
     next(error);
   }
 };
 
-const getRiwayatPembayaran = async (req, res, next) => { //belum testing
+const getRiwayatPembayaran = async (req, res, next) => {
+  //belum testing
   try {
     let account_id = req.user.account_id;
     let riwayat = await prisma.riwayat_transaksi.findMany({
@@ -174,7 +182,8 @@ const getRiwayatPembayaran = async (req, res, next) => { //belum testing
   }
 };
 
-const logout = async (req, res, next) => { //belum testing
+const logout = async (req, res, next) => {
+  //belum testing
   try {
     res.json({ message: 'Logout successful' });
   } catch (error) {
@@ -183,7 +192,7 @@ const logout = async (req, res, next) => { //belum testing
 };
 
 module.exports = {
-  getAllAccount,
+  getAllAccountProfile,
   getAccountbyId,
   updateProfile,
   changePassword,

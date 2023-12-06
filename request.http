@@ -32,7 +32,7 @@ Content-Type: application/json
 
 {
     "email":"200401141@student.umri.ac.id",
-    "password":"password123"
+    "password":"aldi123"
 }
 
 ### RESET PASSWORD
@@ -43,10 +43,9 @@ Content-Type: application/json
     "email":"200401141@student.umri.ac.id"
 }
 
-### CHANGE PASSWORD
-PUT http://localhost:3000/auth/reset-password
+### CHANGE PASSWORD BY TOKEN (TANPA LOGIN)
+PUT http://localhost:3000/auth/reset-password?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjIwMDQwMTE0MUBzdHVkZW50LnVtcmkuYWMuaWQiLCJpYXQiOjE3MDE4Njc5ODJ9.9ihBKXVU0qdX3F8OE6CFfq0AojkatEulqRZ86NTFzNE
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjIwMDQwMTE0MUBzdHVkZW50LnVtcmkuYWMuaWQiLCJpYXQiOjE3MDE4NjMwMDZ9.NFLU-Mp2Z8dT-w5wz_T-UYMfFBvfi0Xer53wcL9r6y8
 
 {
     "password":"aldi123",
@@ -55,7 +54,7 @@ Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjIwMDQwMTE0MUBz
 
 ### GET USER BY TOKEN
 GET http://localhost:3000/auth/whoami
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTEsImVtYWlsIjoiYWEiLCJpYXQiOjE3MDE3NTI0MzZ9.NrhPTkc7m4Y-pxLZrlKgFf9fJwtp3C2TY4KaIubFxCU
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjIwMDQwMTE0MUBzdHVkZW50LnVtcmkuYWMuaWQiLCJpYXQiOjE3MDE4Njc5ODJ9.9ihBKXVU0qdX3F8OE6CFfq0AojkatEulqRZ86NTFzNE
 
 ### getAllAccount
 GET http://localhost:3000/profile

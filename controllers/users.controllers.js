@@ -73,6 +73,7 @@ module.exports = {
           no_telp,
           password: encryptedPassword,
           role,
+          role,
         },
       });
 
@@ -300,7 +301,7 @@ module.exports = {
         return res.status(200).json({
           status: true,
           message: 'Berhasil login',
-          data: { user },
+          data: { user,token },
         });
       }
     } catch (err) {
@@ -346,8 +347,8 @@ module.exports = {
   changePassword: async (req, res, next) => {
     try {
       let { password, confirmationPassword } = req.body;
-      // let {token} = req.query
-      let token = req.headers.authorization;
+      let {token} = req.query
+      // let token = req.headers.authorization;
       console.log(token);
       if (password != confirmationPassword) {
         return res.status(400).json({
