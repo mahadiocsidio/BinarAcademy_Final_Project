@@ -48,12 +48,13 @@ const getCoursebyId = async(req,res,next)=>{
 
 const addCourse = async(req,res,next)=>{
     try {
-        let {title,deskripsi,kategori_id,harga,premium,mentor_id,level} = req.body
+        let {title,deskripsi,kode_kelas,kategori_id,harga,premium,mentor_id,level} = req.body
         let course = await prisma.course.create({
             data:{
                 title,
                 mentor_id,
                 deskripsi,
+                kode_kelas,
                 kategori_id,
                 harga,
                 premium,
