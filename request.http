@@ -24,15 +24,13 @@ POST http://localhost:3000/auth/resend-otp
 Content-Type: application/json
 Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjo0NSwiZW1haWwiOiIyMDA0MDExNDFAc3R1ZGVudC51bXJpLmFjLmlkIiwiaWF0IjoxNzAxODYyNTQ0fQ.JljK-AO405MyHBbokt8TFXKP64QSpd3HMYno-T8F1ic
 
-
-
 ### login
-POST https://binar-academy-final-project.vercel.app/auth/login
+POST http://localhost:3000/auth/login
 Content-Type: application/json
 
 {
-    "email":"200401141@student.umri.ac.id",
-    "password":"aldi123"
+    "email":"bbbb",
+    "password":"password123"
 }
 
 ### RESET PASSWORD
@@ -60,28 +58,52 @@ Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjIwMDQwMTE0MUBz
 GET http://localhost:3000/profile
 
 ### getAccountById
-GET http://localhost:3000/profile/14
+GET http://localhost:3000/profile/36
 
 ### updateProfilebyId
-PUT http://localhost:3000/profile/14
+PUT http://localhost:3000/profile/36
 Content-Type: application/json
 
 {
+    "nama":"ahmad",
     "no_telp":"012345678910",
-    "negara": "Indo",
+    "negara": "Indojaya",
     "kota": "jogya"
 }
+
+### Logout
+POST http://localhost:3000/profile/logout
 
 ### Change Password By Login
 PUT http://localhost:3000/profile/changePassword
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTEsImVtYWlsIjoiYWEiLCJpYXQiOjE3MDE3NTI0MzZ9.NrhPTkc7m4Y-pxLZrlKgFf9fJwtp3C2TY4KaIubFxCU
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDUsImVtYWlsIjoiMjAwNDAxMTQxQHN0dWRlbnQudW1yaS5hYy5pZCIsImlhdCI6MTcwMTg4NTAzMX0.RNs5ArZibeYnG0oHUVikf_-S8fsQB4qOpm0S70iz3fk
 
 {
     "password_lama": "password123",
     "password_baru": "aldi123",
     "Confirmationpassword_baru": "aldi123"
 }
+
+### GetAccountByLogin
+GET http://localhost:3000/profile/account
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDUsImVtYWlsIjoiMjAwNDAxMTQxQHN0dWRlbnQudW1yaS5hYy5pZCIsImlhdCI6MTcwMTg4NTAzMX0.RNs5ArZibeYnG0oHUVikf_-S8fsQB4qOpm0S70iz3fk
+
+### updateProfilebyLogin
+PUT http://localhost:3000/profile/updateProfile
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDUsImVtYWlsIjoiMjAwNDAxMTQxQHN0dWRlbnQudW1yaS5hYy5pZCIsImlhdCI6MTcwMTg4NTAzMX0.RNs5ArZibeYnG0oHUVikf_-S8fsQB4qOpm0S70iz3fk
+
+{
+    "nama":"ahmad mmoraldi",
+    "no_telp":"012345678910",
+    "negara": "Indojaya",
+    "kota": "jogyas"
+}
+
+### GetRiwayatPembayaranByLogin
+GET http://localhost:3000/profile/paymentHistory
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDMsImVtYWlsIjoiYmJiYiIsImlhdCI6MTcwMTg4NTM3OX0.cVDmLAUets2yZHr09DNyn4tIvqrzrjuedwTXvK481D8
 
 ### GetAllCourse
 GET http://localhost:3000/course/

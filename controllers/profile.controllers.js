@@ -40,6 +40,7 @@ const getAccountbyId = async (req, res, next) => {
     let { account_id } = req.params;
     //mengubah account_id menjadi tipe number/int
     account_id = Number(account_id);
+
     let account = await prisma.account.findUnique({
       where: { account_id },
       select: {
@@ -52,63 +53,60 @@ const getAccountbyId = async (req, res, next) => {
         kota: true,
       },
     });
-    if (!account) return res.json('Account isnt registered');
+    //validasi akun te registrasi atau tidak
+    if (!account){
+      return res.status(400).json({
+        status:false,
+        message: 'bad request!',
+        err: 'Account isnt registered',
+        data: null
+      })
+    }
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
+      message: 'success!',
       data: account,
     });
   } catch (error) {
-    next(error);
+    next(error.message);
   }
 };
 
-const getAccountbyLogin = async (req, res, next) => {
-  try {
-    let account = req.user
-    let getAccount = await prisma.account.findUnique({ 
-        where: {
-            account_id: account.account_id
-        },
-        select:{
-            account_id: true,
-            nama: true,
-            email: true,
-            no_telp: true,
-            negara: true,
-            kota: true,
-            url_image:true
-        }
-    })
-    if(!getAccount) return res.json("Account isnt registered")
-
-    res.status(200).json({
-    success:true,
-    data:getAccount
-    })
-} catch (error) {
-    next(error)
-}
-};
-
-const updateProfile = async (req, res, next) => {
+const updateProfilebyId = async (req, res, next) => {
   try {
     let { account_id } = req.params;
-
+    let { nama, no_telp, negara, kota } = req.body;
     account_id = Number(account_id);
-    let { name, email, no_telp, negara, kota } = req.body;
+
+    let accountExist = await prisma.account.findUnique({
+      where: { account_id },
+    });
+
+    //validasi akun te ada atau tidak
+    if (!accountExist){
+      return res.status(400).json({
+        status:false,
+        message: 'bad request!',
+        err: 'Account Not Found!',
+        data: null
+      })
+    }
+
     let account = await prisma.account.update({
       where: {
         account_id,
       },
       data: {
+        nama,
         no_telp,
         negara,
         kota,
       },
     });
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
+      message:"account success updated!",
       data: account,
     });
   } catch (error) {
@@ -116,41 +114,15 @@ const updateProfile = async (req, res, next) => {
   }
 };
 
-const updateProfilebyLogin = async (req, res, next) => {
-  try {
-    let account= req.user
-    let {name,email,no_telp,negara,kota } = req.body
-    let updateAccount = await prisma.account.update({
-        where:{
-            account_id: account.account_id
-        },
-        data:{
-            name,
-            email,
-            no_telp,
-            negara,
-            kota
-        }
-    })
-    res.status(200).json({
-        success:true,
-        data:updateAccount
-    })
-} catch (error) {
-    next(error)
-}
-};
-
 const changePasswordbyLogin = async (req, res, next) => {
   try {
-    let account = req.user;
-    // let { account_id } = req.params;
+    let {account_id} = req.user;
     let { password_lama, password_baru, Confirmationpassword_baru } = req.body;
 
     //mencari account di database
     let isExist = await prisma.account.findUnique({
       where: {
-        account_id: account.account_id,
+        account_id,
       },
     });
     //validasi akun
@@ -214,12 +186,18 @@ const changePasswordbyLogin = async (req, res, next) => {
 };
 
 const getRiwayatPembayaran = async (req, res, next) => {
-  //belum testing
   try {
-    let account_id = req.user.account_id;
-    let riwayat = await prisma.riwayat_transaksi.findMany({
-      where: {
-        account_id: account_id,
+    let { limit = 10, page = 1 } = req.query;
+    limit = Number(limit);
+    page = Number(page);
+
+    let {account_id} = req.user
+    
+    let riwayat = await prisma.riwayat_Transaksi.findMany({
+      skip: (page - 1) * limit,
+      take: limit,
+      where:{
+        account_id
       },
       select:{
         status:true,
@@ -236,10 +214,20 @@ const getRiwayatPembayaran = async (req, res, next) => {
             }
         }
       },
+    })
+
+    const { _count } = await prisma.riwayat_Transaksi.aggregate({
+      where:{account_id},
+      _count: { account_id: true },
     });
-    res.status(200).json({
-      success: true,
-      data: riwayat,
+
+    let pagination = getPagination(req, _count.account_id, page, limit);
+    
+    return res.status(200).json({
+      status: true,
+      message:"success!",
+      err:null,
+      data: { pagination, riwayat },
     });
   } catch (error) {
     next(error);
@@ -247,7 +235,6 @@ const getRiwayatPembayaran = async (req, res, next) => {
 };
 
 const logout = async (req, res, next) => {
-  //belum testing
   try {
     res.json({ message: 'Logout successful' });
   } catch (error) {
@@ -255,13 +242,65 @@ const logout = async (req, res, next) => {
   }
 };
 
+const getAccountbyLogin = async (req,res,next) => {
+  try {
+  let {account_id} = req.user
+
+  //mencari account di database
+  let isExist = await prisma.account.findUnique({
+    where: {
+      account_id,
+    },
+  });
+  // err pencarian account di handle oleh restrict
+
+  return res.status(200).json({
+    status: true,
+    message: 'success!',
+    err: null,
+    data: {user:isExist},
+  });
+  
+  } catch (err) {
+    next(err.message)
+  }
+}
+
+const updateProfilebyLogin = async (req,res,next) =>{
+  try {
+    let {account_id} = req.user
+    let { nama, no_telp, negara, kota } = req.body;
+
+    // err pencarian account di handle oleh restrict
+
+    let accountUpdated = await prisma.account.update({
+      where: {
+        account_id,
+      },
+      data: {
+        nama,
+        no_telp,
+        negara,
+        kota,
+      },
+    });
+    return res.status(200).json({
+      success: true,
+      message:"account success updated!",
+      data: { user : accountUpdated },
+    });
+    
+  } catch (err) {
+    next(err)
+  }
+}
 module.exports = {
   getAllAccountProfile,
   getAccountbyId,
-  getAccountbyLogin,
-  updateProfile,
-  updateProfilebyLogin,
-  changePasswordbyLogin,
-  getRiwayatPembayaran,
+  updateProfilebyId,
   logout,
+  getRiwayatPembayaran,
+  changePasswordbyLogin,
+  getAccountbyLogin,
+  updateProfilebyLogin
 };
