@@ -32,7 +32,7 @@ module.exports ={
             next(error)
         }
     },
-    getUserCoursebyAccountId: async(req,res,next)=>{
+    getUserCoursebyLogin: async(req,res,next)=>{
         try {
             let account  = req.user
 
@@ -72,4 +72,7 @@ module.exports ={
             next(error)
         }
     },
+    createUserCourse: (req,res,next)=>{},
+
+    getUserCoursebyAccountId: (req,res,next)=>{},
 }

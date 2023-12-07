@@ -1,10 +1,11 @@
+# ------------------------------------ AUTH ------------------------------------
 ### register
 POST http://localhost:3000/auth/register
 Content-Type: application/json
 
 {
-    "nama":"mahadi",
-    "email":"aa@gmail.com",
+    "nama":"aldi",
+    "email":"200401141@student.umri.ac.id",
     "no_telp":"081368094422",
     "password":"password123",
     "ConfirmationPassword":"password123"
@@ -13,10 +14,10 @@ Content-Type: application/json
 ### verify otp
 POST http://localhost:3000/auth/verify-otp
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDUsImVtYWlsIjoiMjAwNDAxMTQxQHN0dWRlbnQudW1yaS5hYy5pZCIsImlhdCI6MTcwMTk2MDgxNn0.LnvzU3r09Pew4ruKqUstdgNbiqVBpUIdbYM9yfYJ5eU
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjo0OCwiZW1haWwiOiJmaWZhYXphaHJvQGdtYWlsLmNvbSIsImlhdCI6MTcwMTk2Mzk0M30.L97zpg3gNmotRPnX3U0b08dPhn4Dndxp5ARdmjLQ0Xw
 
 {
-    "otp":"914643"
+    "otp":"494387"
 }
 
 #### resend otp
@@ -29,8 +30,8 @@ POST http://localhost:3000/auth/login
 Content-Type: application/json
 
 {
-    "email":"b",
-    "password":"password123"
+    "email":"a@gmail.com",
+    "password":"aldi123"
 }
 
 ### RESET PASSWORD
@@ -38,11 +39,11 @@ POST http://localhost:3000/auth/reset-password
 Content-Type: application/json
 
 {
-    "email":"200401141@student.umri.ac.id"
+    "email":"fifaazahro@gmail.com"
 }
 
 ### CHANGE PASSWORD BY TOKEN (TANPA LOGIN)
-PUT http://localhost:3000/auth/reset-password?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjIwMDQwMTE0MUBzdHVkZW50LnVtcmkuYWMuaWQiLCJpYXQiOjE3MDE4Njc5ODJ9.9ihBKXVU0qdX3F8OE6CFfq0AojkatEulqRZ86NTFzNE
+PUT http://localhost:3000/auth/reset-password?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImZpZmFhemFocm9AZ21haWwuY29tIiwiaWF0IjoxNzAxOTY0MTM0fQ.SdrpwH6AfCoMgWMhILjGPIM1Ukno9ABTXTnJrxyANy8
 Content-Type: application/json
 
 {
@@ -53,6 +54,8 @@ Content-Type: application/json
 ### GET USER BY TOKEN
 GET http://localhost:3000/auth/whoami
 Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjo0NSwiZW1haWwiOiIyMDA0MDExNDFAc3R1ZGVudC51bXJpLmFjLmlkIiwiaWF0IjoxNzAxODYyNTQ0fQ.JljK-AO405MyHBbokt8TFXKP64QSpd3HMYno-T8F1ic
+
+# ------------------------------------ PROFIL ------------------------------------
 
 ### getAllAccount
 GET http://localhost:3000/profile

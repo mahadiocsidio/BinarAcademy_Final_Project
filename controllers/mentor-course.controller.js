@@ -4,9 +4,9 @@ const jwt = require('jsonwebtoken');
 const { getPagination } = require('../helper/index');
 
 module.exports = {
-  getAllChapter: async (req, res, next) => {},
+  getAllMentorCourse: async (req, res, next) => {},
 
-  createChapter: async (req, res, next) => {},
+  createMentorCourse: async (req, res, next) => {},
 
-  getChapterById: async (req, res, next) => {},
+  getMentorCourseById: async (req, res, next) => {},
 };
