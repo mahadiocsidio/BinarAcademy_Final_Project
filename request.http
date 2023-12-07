@@ -4,7 +4,7 @@ Content-Type: application/json
 
 {
     "nama":"mahadi",
-    "email":"mahadiocsidio@students.amikom.ac.id",
+    "email":"aa@gmail.com",
     "no_telp":"081368094422",
     "password":"password123",
     "ConfirmationPassword":"password123"
@@ -13,23 +13,23 @@ Content-Type: application/json
 ### verify otp
 POST http://localhost:3000/auth/verify-otp
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjo0NSwiZW1haWwiOiIyMDA0MDExNDFAc3R1ZGVudC51bXJpLmFjLmlkIiwiaWF0IjoxNzAxODYyNTQ0fQ.JljK-AO405MyHBbokt8TFXKP64QSpd3HMYno-T8F1ic
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDUsImVtYWlsIjoiMjAwNDAxMTQxQHN0dWRlbnQudW1yaS5hYy5pZCIsImlhdCI6MTcwMTk2MDgxNn0.LnvzU3r09Pew4ruKqUstdgNbiqVBpUIdbYM9yfYJ5eU
 
 {
-    "otp":"140464"
+    "otp":"914643"
 }
 
 #### resend otp
 POST http://localhost:3000/auth/resend-otp
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjo0NSwiZW1haWwiOiIyMDA0MDExNDFAc3R1ZGVudC51bXJpLmFjLmlkIiwiaWF0IjoxNzAxODYyNTQ0fQ.JljK-AO405MyHBbokt8TFXKP64QSpd3HMYno-T8F1ic
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDAsImVtYWlsIjoiYiIsImlhdCI6MTcwMTk2MTIwOH0._GJxdj6WMMq3cwXRfR3LVwkSAu74rnPyMdvwhmo2wUU
 
 ### login
 POST http://localhost:3000/auth/login
 Content-Type: application/json
 
 {
-    "email":"bbbb",
+    "email":"b",
     "password":"password123"
 }
 
@@ -52,7 +52,7 @@ Content-Type: application/json
 
 ### GET USER BY TOKEN
 GET http://localhost:3000/auth/whoami
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjIwMDQwMTE0MUBzdHVkZW50LnVtcmkuYWMuaWQiLCJpYXQiOjE3MDE4Njc5ODJ9.9ihBKXVU0qdX3F8OE6CFfq0AojkatEulqRZ86NTFzNE
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjo0NSwiZW1haWwiOiIyMDA0MDExNDFAc3R1ZGVudC51bXJpLmFjLmlkIiwiaWF0IjoxNzAxODYyNTQ0fQ.JljK-AO405MyHBbokt8TFXKP64QSpd3HMYno-T8F1ic
 
 ### getAllAccount
 GET http://localhost:3000/profile
