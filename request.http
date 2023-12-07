@@ -131,3 +131,11 @@ GET http://localhost:3000/course/search?title=ui
 
 ###
 GET https://binar-academy-final-project.vercel.app
+
+
+### Get All User Course
+GET http://localhost:3000/class
+
+### Get User Course By login
+GET http://localhost:3000/class/myclass
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NywiZW1haWwiOiJtYWhhZGlvY3NpZGlvQHN0dWRlbnRzLmFtaWtvbS5hYy5pZCIsImlhdCI6MTcwMTk1MTU5Nn0.EOEStpZULcR0KUeKfYpFje071MfwYB4HVFc0JB1Bwco
