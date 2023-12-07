@@ -4,9 +4,9 @@ const jwt = require('jsonwebtoken');
 const { getPagination } = require('../helper/index');
 
 module.exports = {
-  getAllChapter: async (req, res, next) => {},
+  getAllVideo: async (req, res, next) => {},
 
-  createChapter: async (req, res, next) => {},
+  createVideo: async (req, res, next) => {},
 
-  getChapterById: async (req, res, next) => {},
+  getVideobyId: async (req, res, next) => {},
 };

@@ -4,9 +4,11 @@ const jwt = require('jsonwebtoken');
 const { getPagination } = require('../helper/index');
 
 module.exports = {
-  getAllChapter: async (req, res, next) => {},
+  getAllNotif: async (req, res, next) => {},
 
-  createChapter: async (req, res, next) => {},
+  createNotif: async (req, res, next) => {},
 
-  getChapterById: async (req, res, next) => {},
+  getNotifbyAccountId: async (req, res, next) => {},
+
+  getNotifById: async (req, res, next) => {},
 };
