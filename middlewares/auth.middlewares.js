@@ -13,9 +13,10 @@ module.exports = {
             error: "Token not found",
           });
         }
-
-        jwt.verify(authorization, JWT_SECRET_KEY, async (err, decoded) => {
-            if (err) {
+ 
+        let token = authorization.split(" ")[1]
+        jwt.verify(token || authorization, JWT_SECRET_KEY, async (err, decoded) => {  
+          if (err) {
                 return res.status(401).json({
                     status: false,
                     message: 'Unauthorized',

@@ -11,7 +11,8 @@ module.exports = {
   // melakukan register
   register: async (req, res, next) => {
     try {
-      let { nama, email, no_telp, password, ConfirmationPassword, role } = req.body;
+      let { nama, email, no_telp, password, ConfirmationPassword, role } =
+        req.body;
 
       let userExist = await prisma.account.findUnique({ where: { email } });
 
@@ -49,7 +50,8 @@ module.exports = {
         return res.status(400).json({
           status: false,
           message: 'Bad Request',
-          error: 'Password harus memiliki minimal 8 karakter dan maksimal 15 karakter',
+          error:
+            'Password harus memiliki minimal 8 karakter dan maksimal 15 karakter',
           data: null,
         });
       }
@@ -93,7 +95,8 @@ module.exports = {
       // Mengembalikan respon terlebih dahulu
       res.status(201).json({
         status: true,
-        message: 'Registrasi berhasil, silakan cek email untuk mendapatkan OTP.',
+        message:
+          'Registrasi berhasil, silakan cek email untuk mendapatkan OTP.',
         data: {
           token,
           user: {
@@ -115,62 +118,54 @@ module.exports = {
   verifyOtp: async (req, res, next) => {
     try {
       const { otp } = req.body;
-      let token = req.headers.authorization;
+      let { email } = req.user;
 
-      jwt.verify(token, JWT_SECRET_KEY, async (err, decoded) => {
-        if (err) {
-          return res.status(400).json({
-            status: false,
-            message: 'Bad Request',
-            err: err.message,
-            data: null,
-          });
-        }
-        // if (!email || !otp) {
-        if (!otp) {
-          return res.status(400).json({
-            status: false,
-            message: 'Bad Request',
-            error: 'OTP are required',
-            data: null,
-          });
-        }
-        let activationOtp = await prisma.Otp.findFirst({
-          where: {
-            otp,
-          },
+      //err find user dihandle oleh restrict
+
+      if (!otp) {
+        return res.status(400).json({
+          status: false,
+          message: 'Bad Request',
+          error: 'OTP are required',
+          data: null,
         });
-        if (!activationOtp) {
-          return res.status(400).json({
-            status: false,
-            message: 'Bad Request',
-            err: 'Invalid Activation Code or Code Expired',
-            data: null,
-          });
-        }
-        await prisma.otp.update({
-          where: {
-            account_id: activationOtp.account_id,
-          },
-          data: {
-            otp: null,
-          },
-        });
-        let { is_verified } = await prisma.account.update({
-          where: {
-            email: decoded.email,
-          },
-          data: {
-            is_verified: true,
-          },
-        });
-        return res.status(200).json({
-          status: true,
-          message: 'Activation Code verified successfully',
-          err: null,
-          data: { email: decoded.email, otp, is_verified },
-        });
+      }
+      let activationOtp = await prisma.Otp.findFirst({
+        where: {
+          otp,
+        },
       });
+      if (!activationOtp) {
+        return res.status(400).json({
+          status: false,
+          message: 'Bad Request',
+          err: 'Invalid Activation Code or Code Expired',
+          data: null,
+        });
+      }
+      await prisma.otp.update({
+        where: {
+          account_id: activationOtp.account_id,
+        },
+        data: {
+          otp: null,
+        },
+      });
+      let { is_verified } = await prisma.account.update({
+        where: {
+          email,
+        },
+        data: {
+          is_verified: true,
+        },
+      });
+      return res.status(200).json({
+        status: true,
+        message: 'Activation Code verified successfully',
+        err: null,
+        data: { email, otp, is_verified },
+      });
+      // });
 
       //   res.redirect('/user/login'); // Redirect to login page
     } catch (err) {
@@ -181,69 +176,61 @@ module.exports = {
   // resend otp
   resendOtp: async (req, res, next) => {
     try {
-      const token = req.headers.authorization;
+      let { email } = req.user;
 
-      jwt.verify(token, JWT_SECRET_KEY, async (err, decoded) => {
-        if (err) {
-          return res.status(400).json({
-            status: false,
-            message: 'Bad Request',
-            err: err.message,
-            data: null,
-          });
-        }
+      //err find user dihandle oleh restrict
 
-        const user = await prisma.account.findUnique({
-          where: { email: decoded.email },
-        });
-
-        if (!user) {
-          return res.status(404).json({
-            status: false,
-            message: 'Not Found',
-            err: 'User not found',
-            data: null,
-          });
-        }
-        // Mengambil nilai OTP dari database
-        const existingOTP = await prisma.otp.findUnique({
-          where: { account_id: user.account_id },
-        });
-
-        if (!existingOTP) {
-          return res.status(400).json({
-            status: false,
-            message: 'Bad Request',
-            err: 'OTP not found for the user',
-            data: null,
-          });
-        }
-
-        // Memperbarui nilai OTP dalam model
-        const updateOtp = existingOTP.otp;
-        // create or update OTP in the Otp table
-        await prisma.otp.upsert({
-          where: { account_id: user.account_id },
-          create: {
-            account_id: user.account_id,
-            otp: updateOtp,
-            created_at: new Date(),
-          },
-          update: {
-            otp: updateOtp,
-            created_at: new Date(),
-          },
-        });
-
-        // send otp
-        await createUpdateotp(user.account_id, user.nama, user.email, res);
-        return res.status(200).json({
-          status: true,
-          message: 'OTP resent successfully',
-          err: null,
-          data: { email: user.email },
-        });
+      const user = await prisma.account.findUnique({
+        where: { email },
       });
+
+      if (!user) {
+        return res.status(404).json({
+          status: false,
+          message: 'Not Found',
+          err: 'User not found',
+          data: null,
+        });
+      }
+      // Mengambil nilai OTP dari database
+      const existingOTP = await prisma.otp.findUnique({
+        where: { account_id: user.account_id },
+      });
+
+      if (!existingOTP) {
+        return res.status(400).json({
+          status: false,
+          message: 'Bad Request',
+          err: 'OTP not found for the user',
+          data: null,
+        });
+      }
+
+      // Memperbarui nilai OTP dalam model
+      const updateOtp = existingOTP.otp;
+      // create or update OTP in the Otp table
+      await prisma.otp.upsert({
+        where: { account_id: user.account_id },
+        create: {
+          account_id: user.account_id,
+          otp: updateOtp,
+          created_at: new Date(),
+        },
+        update: {
+          otp: updateOtp,
+          created_at: new Date(),
+        },
+      });
+
+      // send otp
+      await createUpdateotp(user.account_id, user.nama, user.email, res);
+      return res.status(200).json({
+        status: true,
+        message: 'OTP resent successfully',
+        err: null,
+        data: { email: user.email },
+      });
+      // });
     } catch (err) {
       next(err);
     }
@@ -301,7 +288,7 @@ module.exports = {
         return res.status(200).json({
           status: true,
           message: 'Berhasil login',
-          data: { user,token },
+          data: { user, token },
         });
       }
     } catch (err) {
@@ -347,9 +334,7 @@ module.exports = {
   changePassword: async (req, res, next) => {
     try {
       let { password, confirmationPassword } = req.body;
-      let {token} = req.query
-      // let token = req.headers.authorization;
-      console.log(token);
+      let { token } = req.query;
       if (password != confirmationPassword) {
         return res.status(400).json({
           status: false,
