@@ -13,9 +13,11 @@ app.use(cors());
 const userRouter = require('./routes/user.routes');
 const profileRouter = require('./routes/profile.routes')
 const courseRouter = require('./routes/course.routes')
+const classes = require('./routes/user_course.routes')
 app.use('/auth', userRouter);
 app.use('/profile', profileRouter)
 app.use('/course', courseRouter)
+app.use('/class', classes)
 app.use('/',(req,res)=>{
     try {
         const welcomeMessage = {
