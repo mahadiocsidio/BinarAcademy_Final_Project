@@ -17,6 +17,8 @@ tags:
     description: all about Transaction
   - name: Authentication
     description: all about Authentication
+  - name: User Course
+    description: all about Course that user have
 paths:
   /auth/register:
     post:
@@ -496,7 +498,7 @@ paths:
         '500':
           description: Internal Server Error
 
-  /profile/change-password:
+  /profile/changePassword:
     post:
       tags:
         - Account
@@ -538,7 +540,7 @@ paths:
         '500':
           description: Internal Server Error
         
-  /profile/riwayat:
+  /profile/paymentHistory:
     get:
       summary: Get Account's Transaction History
       security:
@@ -589,6 +591,90 @@ paths:
               example:
                 success: false
                 message: "Terjadi kesalahan server"
+
+  /class:
+    get:
+      summary: Get all user courses
+      tags:
+        - User Course
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                success: true
+                data:
+                  - user_course_id: 1
+                    account_id: 2
+                    course_id: 1
+                    Course:
+                      title: 'Pengembangan Web 101'
+                      harga: 0
+                      Kategori:
+                        title: 'Web Development'
+                  - user_course_id: 2
+                    user_id: 102
+                    course_id: 2
+                    Course:
+                      title: 'Dasar Ilmu Data'
+                      harga: 19900
+                      Kategori:
+                        title: 'Data Science'
+        '404':
+          description: No user courses found
+          content:
+            application/json:
+              example:
+                success: false
+                message: 'No user courses found'
+        '500':
+          description: Internal Server Error
+  
+  /class/myclass:
+    get:
+      summary: Get user courses by account ID
+      security:
+        - bearerAuth: []
+      tags:
+        - User Course
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                success: true
+                data:
+                  - user_course_id: 1
+                    account_id: 101
+                    course_id: 201
+                    Course:
+                      title: 'Introduction to Web Development'
+                      harga: 29.99
+                      Kategori:
+                        title: 'Programming'
+                      Riwayat_Transaksi:
+                        status: 'completed'
+                  - user_course_id: 2
+                    account_id: 101
+                    course_id: 202
+                    Course:
+                      title: 'Data Science Fundamentals'
+                      harga: 19.99
+                      Kategori:
+                        title: 'Data Science'
+                      Riwayat_Transaksi:
+                        status: 'in-progress'
+        '404':
+          description: No user courses found for the account
+          content:
+            application/json:
+              example:
+                success: false
+                message: 'No user courses found for the account'
+        '500':
+          description: Internal Server Error
 
 
 components:
