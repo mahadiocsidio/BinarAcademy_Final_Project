@@ -108,8 +108,26 @@ Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDUsImVtYWlsIjoiMjAw
 GET http://localhost:3000/profile/paymentHistory
 Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDMsImVtYWlsIjoiYmJiYiIsImlhdCI6MTcwMTg4NTM3OX0.cVDmLAUets2yZHr09DNyn4tIvqrzrjuedwTXvK481D8
 
+# ------------------------------------ CATEGORY ------------------------------------
+### GET ALL CATEGORY
+GET http://localhost:3000/category
+
+### CREATE CATEGORY
+POST http://localhost:3000/category
+Content-Type: application/json
+
+{
+    "title" : "Web Development",
+    "deskripsi" : "Belajar membangun website yang dinamis seperti toko online dengan teknologi web development terbaru"
+}
+
+### GET CATEGORY BY ID
+GET http://localhost:3000/category/2
+
+# ------------------------------------ COURSE ------------------------------------
+
 ### GetAllCourse
-GET http://localhost:3000/course/
+GET http://localhost:3000/course?page1&limit=1
 
 ### AddCourse
 POST http://localhost:3000/course/addCourse

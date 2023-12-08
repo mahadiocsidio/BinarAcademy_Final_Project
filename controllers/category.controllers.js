@@ -4,9 +4,95 @@ const jwt = require('jsonwebtoken');
 const { getPagination } = require('../helper/index');
 
 module.exports = {
-  getAllCategory: async (req, res, next) => {},
+  getAllCategory: async (req, res, next) => {
+    try {
+      let { limit = 10, page = 1 } = req.query;
+      limit = Number(limit);
+      page = Number(page);
 
-  createCategory: async (req, res, next) => {},
+      let category = await prisma.kategori.findMany({
+        skip: (page - 1) * limit,
+        take: limit,
+      });
+      const { _count } = await prisma.kategori.aggregate({
+        _count: { kategori_id: true },
+      });
 
-  getCategoryById: async (req, res, next) => {},
+      let pagination = getPagination(req, _count.kategori_id, page, limit);
+
+      res.status(200).json({
+        stauts: true,
+        message: 'success',
+        data: { pagination, category },
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  createCategory: async (req, res, next) => {
+    try {
+      let { title, deskripsi, url_img_preview } = req.body;
+
+      let isExist = await prisma.kategori.findFirst({ where: { title } });
+
+      // validasi title sudah digunakan atau belum
+      if (isExist) {
+        return res.status(400).json({
+          status: false,
+          message: 'bad request!',
+          err: 'title is already used',
+          data: null,
+        });
+      }
+
+      let category = await prisma.kategori.create({
+        data: {
+          title,
+          deskripsi,
+          url_img_preview,
+        },
+      });
+
+      return res.status(201).json({
+        status: true,
+        message: 'success!',
+        err: null,
+        data: category,
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  getCategoryById: async (req, res, next) => {
+    try {
+      let { kategori_id } = req.params;
+      kategori_id = Number(kategori_id)
+
+      let isExist = await prisma.kategori.findUnique({
+        where: {
+          kategori_id,
+        },
+      });
+
+      if (!isExist) {
+        return res.status(400).json({
+          status: false,
+          message: 'bad request!',
+          err: 'category not found!',
+          data: null,
+        });
+      }
+
+      return res.status(200).json({
+        status: true,
+        message: 'success!',
+        err: null,
+        data: { category: isExist },
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
 };

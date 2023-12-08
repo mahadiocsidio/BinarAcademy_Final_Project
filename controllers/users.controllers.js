@@ -75,7 +75,6 @@ module.exports = {
           no_telp,
           password: encryptedPassword,
           role,
-          role,
         },
       });
 
