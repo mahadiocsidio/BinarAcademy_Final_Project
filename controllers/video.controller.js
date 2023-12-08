@@ -4,9 +4,199 @@ const jwt = require('jsonwebtoken');
 const { getPagination } = require('../helper/index');
 
 module.exports = {
-  getAllVideo: async (req, res, next) => {},
+  getAllVideo: async (req, res, next) => {
+    try {
+      let { limit = 10, page = 1 } = req.query;
+      limit = Number(limit);
+      page = Number(page);
 
-  createVideo: async (req, res, next) => {},
+      let video = await prisma.video.findMany({
+        skip: (page - 1) * limit,
+        take: limit,
+      });
+      const { _count } = await prisma.video.aggregate({
+        _count: { video_id: true },
+      });
 
-  getVideobyId: async (req, res, next) => {},
+      let pagination = getPagination(req, _count.video_id, page, limit);
+
+      res.status(200).json({
+        stauts: true,
+        message: 'success',
+        data: { pagination, video },
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  createVideo: async (req, res, next) => {
+    try {
+      let { chapter_id, title, deskripsi, url_video, is_preview } = req.body;
+
+      let isChapterExist = await prisma.chapter.findUnique({
+        where: { chapter_id },
+      });
+      if (!isChapterExist) {
+        return res.status(400).json({
+          status: false,
+          message: 'bad request',
+          err: "chapter doesn't exist!, please create one or choose another chapter!",
+          data: null,
+        });
+      }
+
+      let video = await prisma.video.create({
+        data: {
+          chapter_id,
+          title,
+          deskripsi,
+          url_video,
+          is_preview,
+        },
+      });
+
+      return res.status(200).json({
+        status: true,
+        message: 'success',
+        err: null,
+        data: { video },
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  getVideobyId: async (req, res, next) => {
+    try {
+      let { video_id } = req.params;
+      video_id = Number(video_id);
+
+      let isExist = await prisma.video.findUnique({ where: { video_id } });
+
+      //validasi id ditemukan apa tidak
+      if (!isExist) {
+        return res.status(400).json({
+          status: false,
+          message: 'bad request!',
+          err: 'id not found!',
+          data: null,
+        });
+      }
+
+      return res.status(200).json({
+        status: true,
+        message: 'success!',
+        err: null,
+        data: { video: isExist },
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
+  updateVideobyId: async (req, res, next) => {
+    try {
+      let { video_id } = req.params;
+      let { chapter_id, title, deskripsi, url_video, is_preview } = req.body;
+      video_id = Number(video_id);
+
+      let isExist = await prisma.video.findUnique({ where: { video_id } });
+
+      //validasi id ditemukan apa tidak
+      if (!isExist) {
+        return res.status(400).json({
+          status: false,
+          message: 'bad request!',
+          err: 'id not found!',
+          data: null,
+        });
+      }
+
+      let newVideo = await prisma.video.update({
+        where: { video_id },
+        data: {
+          chapter_id,
+          title,
+          deskripsi,
+          url_video,
+          is_preview,
+        },
+      });
+
+      return res.status(200).json({
+        status: true,
+        message: 'success update video!',
+        err: null,
+        data: { video: newVideo },
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
+  deleteVideobyId: async (req, res, next) => {
+    try {
+      let { video_id } = req.params;
+      video_id = Number(video_id);
+
+      let isExist = await prisma.video.findUnique({ where: { video_id } });
+
+      //validasi id ditemukan apa tidak
+      if (!isExist) {
+        return res.status(400).json({
+          status: false,
+          message: 'bad request!',
+          err: 'id not found!',
+          data: null,
+        });
+      }
+
+      let deleteVideo = await prisma.video.delete({ where: { video_id } });
+
+      return res.status(200).json({
+        status: true,
+        message: 'success!',
+        err: null,
+        data: { deletedVideo: deleteVideo },
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
+  getVideobyChapter: async (req, res, next) => {
+    try {
+      let { chapter_id } = req.params;
+      chapter_id = Number(chapter_id);
+
+      let isExist = await prisma.chapter.findMany({
+        where: { chapter_id },
+        select: {
+          chapter_id: true,
+          title: true,
+          Course: {
+            select: {
+              title: true,
+            },
+          },
+          Video: {
+            select: {
+              title: true,
+              deskripsi: true,
+              url_video: true,
+              is_preview: true,
+            },
+          },
+        },
+      });
+
+      console.log(chapter_id);
+      res.status(200).json({
+        status: true,
+        message: 'success!',
+        err: null,
+        data: { detail: isExist },
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
 };
