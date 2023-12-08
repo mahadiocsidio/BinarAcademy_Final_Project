@@ -54,13 +54,13 @@ const getAccountbyId = async (req, res, next) => {
       },
     });
     //validasi akun te registrasi atau tidak
-    if (!account){
+    if (!account) {
       return res.status(400).json({
-        status:false,
+        status: false,
         message: 'bad request!',
         err: 'Account isnt registered',
-        data: null
-      })
+        data: null,
+      });
     }
 
     return res.status(200).json({
@@ -84,13 +84,13 @@ const updateProfilebyId = async (req, res, next) => {
     });
 
     //validasi akun te ada atau tidak
-    if (!accountExist){
+    if (!accountExist) {
       return res.status(400).json({
-        status:false,
+        status: false,
         message: 'bad request!',
         err: 'Account Not Found!',
-        data: null
-      })
+        data: null,
+      });
     }
 
     let account = await prisma.account.update({
@@ -106,7 +106,7 @@ const updateProfilebyId = async (req, res, next) => {
     });
     return res.status(200).json({
       success: true,
-      message:"account success updated!",
+      message: 'account success updated!',
       data: account,
     });
   } catch (error) {
@@ -116,7 +116,7 @@ const updateProfilebyId = async (req, res, next) => {
 
 const changePasswordbyLogin = async (req, res, next) => {
   try {
-    let {account_id} = req.user;
+    let { account_id } = req.user;
     let { password_lama, password_baru, Confirmationpassword_baru } = req.body;
 
     //mencari account di database
@@ -191,42 +191,42 @@ const getRiwayatPembayaran = async (req, res, next) => {
     limit = Number(limit);
     page = Number(page);
 
-    let {account_id} = req.user
-    
+    let { account_id } = req.user;
+
     let riwayat = await prisma.riwayat_Transaksi.findMany({
       skip: (page - 1) * limit,
       take: limit,
-      where:{
-        account_id
+      where: {
+        account_id,
       },
-      select:{
-        status:true,
-        Course:{
-            select:{
+      select: {
+        status: true,
+        Course: {
+          select: {
+            title: true,
+            harga: true,
+            level: true,
+            Kategori: {
+              select: {
                 title: true,
-                harga: true,
-                level: true,
-                Kategori:{
-                    select:{
-                        title: true,
-                    }
-                }
-            }
-        }
+              },
+            },
+          },
+        },
       },
-    })
+    });
 
     const { _count } = await prisma.riwayat_Transaksi.aggregate({
-      where:{account_id},
+      where: { account_id },
       _count: { account_id: true },
     });
 
     let pagination = getPagination(req, _count.account_id, page, limit);
-    
+
     return res.status(200).json({
       status: true,
-      message:"success!",
-      err:null,
+      message: 'success!',
+      err: null,
       data: { pagination, riwayat },
     });
   } catch (error) {
@@ -242,33 +242,32 @@ const logout = async (req, res, next) => {
   }
 };
 
-const getAccountbyLogin = async (req,res,next) => {
+const getAccountbyLogin = async (req, res, next) => {
   try {
-  let {account_id} = req.user
+    let { account_id } = req.user;
 
-  //mencari account di database
-  let isExist = await prisma.account.findUnique({
-    where: {
-      account_id,
-    },
-  });
-  // err pencarian account di handle oleh restrict
+    //mencari account di database
+    let isExist = await prisma.account.findUnique({
+      where: {
+        account_id,
+      },
+    });
+    // err pencarian account di handle oleh restrict
 
-  return res.status(200).json({
-    status: true,
-    message: 'success!',
-    err: null,
-    data: {user:isExist},
-  });
-  
+    return res.status(200).json({
+      status: true,
+      message: 'success!',
+      err: null,
+      data: { user: isExist },
+    });
   } catch (err) {
-    next(err.message)
+    next(err.message);
   }
-}
+};
 
-const updateProfilebyLogin = async (req,res,next) =>{
+const updateProfilebyLogin = async (req, res, next) => {
   try {
-    let {account_id} = req.user
+    let { account_id } = req.user;
     let { nama, no_telp, negara, kota } = req.body;
 
     // err pencarian account di handle oleh restrict
@@ -286,14 +285,13 @@ const updateProfilebyLogin = async (req,res,next) =>{
     });
     return res.status(200).json({
       success: true,
-      message:"account success updated!",
-      data: { user : accountUpdated },
+      message: 'account success updated!',
+      data: { user: accountUpdated },
     });
-    
   } catch (err) {
-    next(err)
+    next(err);
   }
-}
+};
 module.exports = {
   getAllAccountProfile,
   getAccountbyId,
@@ -302,5 +300,5 @@ module.exports = {
   getRiwayatPembayaran,
   changePasswordbyLogin,
   getAccountbyLogin,
-  updateProfilebyLogin
+  updateProfilebyLogin,
 };

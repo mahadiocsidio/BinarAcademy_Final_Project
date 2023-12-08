@@ -10,6 +10,6 @@ router.get('/', getAllCategory);
 router.post('/', createCategory);
 
 // BY ID
-router.get('/:category_id', getCategoryById);
+router.get('/:kategori_id', getCategoryById);
 
 module.exports = router;
