@@ -225,9 +225,16 @@ const beliCourse = async(req,res,next)=>{
                 status: "Menunggu Pembayaran"
             }
         })
+
+        let userCourse = await prisma.user_course.create({
+            data:{
+                account_id: account.account_id,
+                course_id
+            }
+        })
         res.status(200).json({
             success:true,
-            data:riwayat
+            data:{riwayat,userCourse}
         })
     } catch (error) {
         next(error)
