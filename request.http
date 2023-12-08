@@ -39,7 +39,7 @@ POST http://localhost:3000/auth/reset-password
 Content-Type: application/json
 
 {
-    "email":"fifaazahro@gmail.com"
+    "email":"200401141@student.umri.ac.id"
 }
 
 ### CHANGE PASSWORD BY TOKEN (TANPA LOGIN)
@@ -127,7 +127,7 @@ GET http://localhost:3000/category/2
 # ------------------------------------ COURSE ------------------------------------
 
 ### GetAllCourse
-GET http://localhost:3000/course?page1&limit=1
+GET http://localhost:3000/course
 
 ### AddCourse
 POST http://localhost:3000/course/addCourse
@@ -149,6 +149,45 @@ GET http://localhost:3000/course/filter?title=UI/UX untuk pemula
 ###
 GET http://localhost:3000/course/search?title=ui
 
+
+# ------------------------------------ VIDEO ------------------------------------
+### GET ALL VIDEO
+GET http://localhost:3000/video
+
+### CREATE VIDEO
+POST http://localhost:3000/video
+Content-Type: application/json
+
+{
+    "chapter_id":2,
+    "title":"UI/UX DESIGN II PART III",
+    "deskripsi":"belajar UI/UX DESIGN II PART III PREM",
+    "url_video":"https://youtu.be/DwTkyMJi890",
+    "is_preview":false
+}
+
+### GET VIDEO BY ID
+GET http://localhost:3000/video/2
+
+### GET VIDEO BY CHAPTER
+GET http://localhost:3000/video/chapter/3
+
+### UPDATE VIDEO
+PUT http://localhost:3000/video/106
+Content-Type: application/json
+
+{
+    "chapter_id":5,
+    "title":"new",
+    "deskripsi":"belajar new PREM",
+    "url_video":"httpssss://youtu.be/DwTkyMJi890",
+    "is_preview":true
+}
+
+### DELETE VIDEO BY ID
+DELETE http://localhost:3000/video/106
+
+# ------------------------------------ ### ------------------------------------
 
 ###
 GET https://binar-academy-final-project.vercel.app
