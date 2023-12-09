@@ -96,21 +96,13 @@ const addCourse = async(req,res,next)=>{
 
 const getCoursesByCategory = async (req, res, next) => {
     try {
-        const { title, kategori_id, sort, order } = req.query;
+        const { kategori_id, sort, order } = req.query;
 
         // Handle multiple kategori_id values
         const kategoriIds = Array.isArray(kategori_id) ? kategori_id.map(id => parseInt(id, 10)) : [parseInt(kategori_id, 10)];
 
         // Create an object to be used for conditions in the query
         const condition = {};
-
-        // Add conditions for title if it exists in the query parameters
-        if (title) {
-            condition.title = {
-                contains: title,
-                mode: 'insensitive', // Case-insensitive search for title
-            };
-        }
 
         // Add conditions for kategori_id if it exists in the query parameters
         if (kategoriIds && kategoriIds.length > 0) {
@@ -156,7 +148,7 @@ const getCoursebyTitle = async (req,res,next)=>{
         // Make the title case-insensitive by converting it to lowercase
         title = title.toLowerCase();
 
-        let course = await prisma.course.findFirst({
+        let course = await prisma.course.findMany({
             where: {
                 title: {
                     contains: title,
