@@ -28,27 +28,7 @@ paths:
       summary: Create a new user
       requestBody:
         required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                nama:
-                  type: string
-                  maxLength: 50
-                  example: "John Doe"
-                email:
-                  type: string
-                  format: email
-                  example: "user@example.com"
-                no_telp:
-                  type: string
-                  example: "123456789"
-                password:
-                  type: string
-                  minLength: 8
-                  maxLength: 15
-                  example: "password123"
+        $ref: "#/components/requestBodies/register"
       responses:
         '201':
           description: Successful operation
@@ -594,9 +574,22 @@ paths:
 
   /class:
     get:
-      summary: Get all user courses
+      summary: Get all user courses with pagination
       tags:
         - User Course
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 10
+          description: Number of items to return per page
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+          description: Page number to retrieve
       responses:
         '200':
           description: Successful response
@@ -605,22 +598,28 @@ paths:
               example:
                 success: true
                 data:
-                  - user_course_id: 1
-                    account_id: 2
-                    course_id: 1
-                    Course:
-                      title: 'Pengembangan Web 101'
-                      harga: 0
-                      Kategori:
-                        title: 'Web Development'
-                  - user_course_id: 2
-                    user_id: 102
-                    course_id: 2
-                    Course:
-                      title: 'Dasar Ilmu Data'
-                      harga: 19900
-                      Kategori:
-                        title: 'Data Science'
+                  pagination:
+                    totalItems: 25
+                    totalPages: 3
+                    currentPage: 1
+                    pageSize: 10
+                  userCourse:
+                    - user_course_id: 1
+                      account_id: 101
+                      course_id: 201
+                      Course:
+                        title: 'Introduction to Web Development'
+                        harga: 29.99
+                        Kategori:
+                          title: 'Programming'
+                    - user_course_id: 2
+                      account_id: 102
+                      course_id: 202
+                      Course:
+                        title: 'Data Science Fundamentals'
+                        harga: 19.99
+                        Kategori:
+                          title: 'Data Science'
         '404':
           description: No user courses found
           content:
@@ -630,10 +629,45 @@ paths:
                 message: 'No user courses found'
         '500':
           description: Internal Server Error
+    
+    post:
+      summary: Create user course
+      tags:
+        - User Course
+      requestBody:
+        required: true
+        $ref: "#/components/requestBodies/createUserCourse"
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                success: true
+                data:
+                  user_course_id: 1
+                  account_id: 101
+                  course_id: 201
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              example:
+                success: false
+                message: 'Invalid request payload'
+        '404':
+          description: Course not found
+          content:
+            application/json:
+              example:
+                success: false
+                message: 'Course not found'
+        '500':
+          description: Internal Server Error
   
   /class/myclass:
     get:
-      summary: Get user courses by account ID
+      summary: Get user courses by login
       security:
         - bearerAuth: []
       tags:
@@ -666,6 +700,52 @@ paths:
                         title: 'Data Science'
                       Riwayat_Transaksi:
                         status: 'in-progress'
+        '404':
+          description: No user courses found for the account
+          content:
+            application/json:
+              example:
+                success: false
+                message: 'No user courses found for the account'
+        '500':
+          description: Internal Server Error
+  
+  /class/{account_id}:
+    get:
+      summary: Get user courses by account ID
+      tags:
+        - User Course
+      parameters:
+        - in: path
+          name: account_id
+          required: true
+          schema:
+            type: integer
+          description: ID of the user account
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                success: true
+                data:
+                  - user_course_id: 1
+                    account_id: 101
+                    course_id: 201
+                    Course:
+                      title: 'Introduction to Web Development'
+                      harga: 29.99
+                      Kategori:
+                        title: 'Programming'
+                  - user_course_id: 2
+                    account_id: 101
+                    course_id: 202
+                    Course:
+                      title: 'Data Science Fundamentals'
+                      harga: 19.99
+                      Kategori:
+                        title: 'Data Science'
         '404':
           description: No user courses found for the account
           content:
@@ -1187,6 +1267,28 @@ components:
           $ref: "#/components/schemas/AccountModel"
 
   requestBodies:
+    register:
+      content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nama:
+                  type: string
+                  maxLength: 50
+                  example: "John Doe"
+                email:
+                  type: string
+                  format: email
+                  example: "user@example.com"
+                no_telp:
+                  type: string
+                  example: "123456789"
+                password:
+                  type: string
+                  minLength: 8
+                  maxLength: 15
+                  example: "password123"
     updateProfile:
       content:
           application/json:
@@ -1231,3 +1333,19 @@ components:
                 - password_lama
                 - password_baru
                 - ulangi_password
+
+    createUserCourse:
+      content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                course_id:
+                  type: integer
+                  description: ID of the course to be added
+                account_id:
+                  type: integer
+                  description: ID of the user account
+              required:
+                - course_id
+                - account_id

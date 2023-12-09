@@ -15,6 +15,6 @@ router.post('/', createUserCourse);
 router.get('/myclass', restrict, getUserCoursebyLogin);
 
 // BY ID
-router.get('/:user_course_id', getUserCoursebyAccountId);
+router.get('/:account_id', getUserCoursebyAccountId);
 
 module.exports = router;

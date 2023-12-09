@@ -91,15 +91,14 @@ module.exports ={
 
     createUserCourse: async (req,res,next)=>{
         try {
-            let {course_id} = req.body
-            let account = req.user
+            let {course_id,account_id} = req.body
             course_id = parseInt(course_id,10)
             let course = await prisma.course.findUnique({where:{course_id}})
             if(!course) return res.status(404).json("Course isnt registered")
 
             let userCourse = await prisma.user_course.create({
                 data:{
-                    account_id: account.account_id,
+                    account_id,
                     course_id,
                 }
             })
