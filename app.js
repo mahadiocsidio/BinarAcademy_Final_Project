@@ -16,6 +16,7 @@ const courseRouter = require('./routes/course.routes')
 const classes = require('./routes/user_course.routes')
 const category = require('./routes/category.routes')
 const video = require('./routes/video.routes')
+const rating = require('./routes/rating.routes')
 
 app.use('/auth', userRouter);
 app.use('/profile', profileRouter)
@@ -23,6 +24,7 @@ app.use('/course', courseRouter)
 app.use('/class', classes)
 app.use('/category', category)
 app.use('/video', video)
+app.use('/rating', rating)
 
 app.use('/',(req,res)=>{
     try {

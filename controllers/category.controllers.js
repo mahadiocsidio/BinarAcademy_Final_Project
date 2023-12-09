@@ -21,7 +21,7 @@ module.exports = {
       let pagination = getPagination(req, _count.kategori_id, page, limit);
 
       res.status(200).json({
-        stauts: true,
+        status: true,
         message: 'success',
         data: { pagination, category },
       });
@@ -136,13 +136,13 @@ deleteCategory : async (req, res, next) => {
   try{
       let { kategori_id } = req.params;
 
-      let isIdExist = await prisma.kategori.findUnique({
+      let isExist = await prisma.kategori.findUnique({
         where: {
           kategori_id: Number(kategori_id)
         },
       });
 
-      if (!isIdExist) {
+      if (!isExist) {
         return res.status(400).json({
           status: false,
           message: 'bad request!',
@@ -159,7 +159,7 @@ deleteCategory : async (req, res, next) => {
 
       return res.status(200).json({
           status: true,
-          message: 'Successful update image',
+          message: 'Successful delete category',
           err: null,
           data: deleteCategory
       });
