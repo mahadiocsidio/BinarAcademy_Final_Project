@@ -95,4 +95,78 @@ module.exports = {
       next(err);
     }
   },
+
+  updateCategory : async (req, res, next) => {
+    try {
+      let { title, deskripsi, url_img_preview } = req.body;
+
+      let isExist = await prisma.kategori.findFirst({ where: { title } });
+
+      // validasi title sudah digunakan atau belum
+      if (isExist) {
+        return res.status(400).json({
+          status: false,
+          message: 'bad request!',
+          err: 'title is already used',
+          data: null,
+        });
+      }
+
+        const updateCategory = await prisma.kategori.update({
+            where: {
+                kategori_id: Number(req.params.kategori_id)
+            },
+            data: {title, deskripsi, url_img_preview }
+        });
+
+
+        return res.status(200).json({
+            status: true,
+            message: 'Successful update category',
+            err: null,
+            data: {category: updateCategory}
+        });
+
+    } catch (err) {
+        next (err);
+    }
+},
+
+deleteCategory : async (req, res, next) => {
+  try{
+      let { kategori_id } = req.params;
+
+      let isIdExist = await prisma.kategori.findUnique({
+        where: {
+          kategori_id: Number(kategori_id)
+        },
+      });
+
+      if (!isIdExist) {
+        return res.status(400).json({
+          status: false,
+          message: 'bad request!',
+          err: 'category not found!',
+          data: null,
+        });
+      }
+
+      const deleteCategory = await prisma.kategori.delete({
+          where: {
+              kategori_id: Number(kategori_id)
+          }
+      });
+
+      return res.status(200).json({
+          status: true,
+          message: 'Successful update image',
+          err: null,
+          data: deleteCategory
+      });
+
+  } catch (err) {
+      next (err)
+  }
+} 
+
 };

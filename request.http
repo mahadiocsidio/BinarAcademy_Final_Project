@@ -124,6 +124,19 @@ Content-Type: application/json
 ### GET CATEGORY BY ID
 GET http://localhost:3000/category/2
 
+### PUT UPDATE CATEGORY
+PUT http://localhost:3000/category/3
+Content-Type: application/json
+
+{
+    "title":"Data analis",
+    "deskripsi":"mempelajari cara menganalisis dan menginterpretasi data untuk mendapatkan wawasan dan informasi yang berharga"
+}
+
+### DELETE CATEGORY BY ID
+DELETE http://localhost:3000/category/2
+
+
 # ------------------------------------ COURSE ------------------------------------
 
 ### GetAllCourse
