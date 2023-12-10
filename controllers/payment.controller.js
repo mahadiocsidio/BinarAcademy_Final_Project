@@ -16,7 +16,7 @@ module.exports = {
       const { _count } = await prisma.Riwayat_Transaksi.aggregate({
         _count: { riwayat_transaksi_id: true },
       });
-  
+
       let pagination = getPagination(req, _count.account_id, page, limit);
 
       res.status(200).json({
