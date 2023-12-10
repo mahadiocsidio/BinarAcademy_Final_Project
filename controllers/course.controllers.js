@@ -16,6 +16,12 @@ const getAllCourse = async(req,res,next)=>{
                 kategori_id: true,
                 premium: true,
                 harga: true,
+                level:true,
+                Kategori:{
+                    select:{
+                        title: true,
+                    },
+                }
             }
         })
 
@@ -40,16 +46,24 @@ const getCoursebyId = async(req,res,next)=>{
         let {course_id} = req.params
         //mengubah course_id menjadi tipe number/int
         course_id = parseInt(course_id,10)
-        let course = await prisma.course.findUnique({ where: {course_id},select:{
-            course_id: true,
-            title: true,
-            kategori_id: true,
-            harga: true,
-            Kategori:{
-                select:{
-                    title: true,
+        let course = await prisma.course.findUnique({ 
+            where: {
+                course_id
             },
-        }}})
+            select:{
+                course_id: true,
+                title: true,
+                kategori_id: true,
+                premium: true,
+                harga: true,
+                level:true,
+                Kategori:{
+                    select:{
+                        title: true,
+                    },
+                }
+            }
+        })
         if(!course) return res.json("Course isnt registered")
 
         res.status(200).json({
@@ -79,6 +93,9 @@ const addCourse = async(req,res,next)=>{
                 course_id: true,
                 title: true,
                 harga: true,
+                level:true,
+                premium:true,
+                kode_kelas:true,
                 Kategori:{
                     select:{
                         title: true,
@@ -160,6 +177,7 @@ const getCoursebyTitle = async (req,res,next)=>{
                 title: true,
                 kategori_id: true,
                 harga: true,
+                level:true,
                 Kategori: {
                     select: {
                         title: true,
