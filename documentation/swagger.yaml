@@ -1149,9 +1149,9 @@ paths:
       description: Retrieve details of a payment transaction based on the account ID.
       parameters:
         - in: path
-          name: account_id
+          name: riwayat_transaksi_id
           required: true
-          description: ID of the account for which payment details are requested
+          description: ID of the Riwayat_Transaksi for which payment details are requested
           schema:
             type: integer
       responses:
@@ -1185,7 +1185,7 @@ paths:
       summary: Update payment status by ID
       tags:
         - Payment
-      description: Update the status of a payment transaction by its ID.
+      description: Update the status of a payment transaction by its ID from waiting to paid
       parameters:
         - in: path
           name: riwayat_transaksi_id
@@ -1351,6 +1351,51 @@ paths:
               example:
                 success: false
                 message: 'Course not found.'
+
+        '500':
+          description: Internal Server Error
+
+  /courses/{course_id}:
+    get:
+      summary: Get course by ID
+      tags:
+        - Course
+      description: Retrieve information about a course based on its ID.
+      parameters:
+        - in: path
+          name: course_id
+          schema:
+            type: integer
+          required: true
+          description: ID of the course to retrieve
+
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                success: true
+                data:
+                  course_id: 1
+                  title: 'Programming Basics'
+                  kode_kelas: 'P101'
+                  kategori_id: 2
+                  premium: true
+                  harga: 49.99
+                  level: 'Beginner'
+                  Kategori:
+                    title: 'Programming'
+                # Add other course fields as needed
+
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              example:
+                success: false
+                message: 'Course isnt registered'
+                data: null
 
         '500':
           description: Internal Server Error
