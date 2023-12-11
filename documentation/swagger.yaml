@@ -1876,6 +1876,177 @@ paths:
                 err: Rating not found
                 data: null
 
+  /chapter/:
+    get:
+      tags:
+        - Chapter
+      summary: Get all chapters
+      description: "Retrieve a list of chapters with pagination."
+      parameters:
+        - in: query
+          name: limit
+          schema: 
+            type: integer
+            default: 10
+          description: Number of items to retrieve per page
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+          description: Page number
+
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                success: true
+                message: "Success"
+                data:
+                  pagination:
+                    total_items: 100  # Replace with the actual total number of items
+                    total_pages: 10   # Replace with the actual total number of pages
+                    current_page: 1
+                    items_per_page: 10
+                  category:
+                    - chapter_id: 1
+                      title: "Chapter 1 - Pendahuluan"
+                      course_id: 1
+                    - kategori_id: 2
+                      title: "Product Management"
+                      course_id: 1
+
+        '500':
+          description: Internal Server Error
+
+  /chapter/{course_id}:
+    get:
+      tags:
+        - Chapter
+      summary: Get chapters by course ID
+      parameters:
+        - name: course_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ChapterModel'
+        '404':
+          description: Course not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /chapter/addChapter:
+    post:
+      tags:
+        - Chapter
+      summary: Add a new chapter
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChapterInput'
+      responses:
+        '201':
+          description: Chapter created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChapterResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+        '404':
+          description: Course or Video not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /chapter/updateChapter/{chapter_id}:
+    put:
+      tags:
+        - Chapter
+      summary: Update a chapter by ID
+      parameters:
+        - name: chapter_id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: body
+          in: path
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChapterInput'
+      responses:
+        '201':
+          description: Chapter updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChapterResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+        '404':
+          description: Chapter, Course, or Video not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /chapter/deleteChapter/{chapter_id}:
+    delete:
+      tags:
+        - Chapter
+      summary: Delete a chapter by ID
+      parameters:
+        - name: chapter_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Chapter deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '404':
+          description: Chapter not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
         '500':
           description: Internal Server Error
 
@@ -1943,6 +2114,43 @@ components:
       properties:
         message:
           type: string
+
+    SuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+
+    Error:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        message:
+          type: string
+
+    ChapterInput:
+      type: object
+      properties:
+        chapter_title:
+          type: string
+        course_id:
+          type: integer
+        video_id:
+          type: integer
+
+    ChapterResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/ChapterModel'
 
     DateModel:
       title: DateModel
@@ -2149,12 +2357,6 @@ components:
           type: integer
           format: int64
           example: 1
-        Course:
-          $ref: "#/components/schemas/CourseModel"
-        Video:
-          type: array
-          items:
-            $ref: "#/components/schemas/VideoModel"
 
     VideoModel:
       type: object
