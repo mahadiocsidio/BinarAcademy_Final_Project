@@ -85,7 +85,7 @@ const updateProfilebyId = async (req, res, next) => {
 
     //validasi akun te ada atau tidak
     if (!accountExist) {
-      return res.status(400).json({
+      return res.status(401).json({
         status: false,
         message: 'bad request!',
         err: 'Account Not Found!',
@@ -236,7 +236,12 @@ const getRiwayatPembayaran = async (req, res, next) => {
 
 const logout = async (req, res, next) => {
   try {
-    res.json({ message: 'Logout successful' });
+    res.status(200).json({ 
+      status: true,
+      message: 'Logout successful',
+      err:null,
+      data:null 
+    });
   } catch (error) {
     next(error);
   }

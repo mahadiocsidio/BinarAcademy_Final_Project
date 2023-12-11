@@ -23,15 +23,15 @@ Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjo0OCwiZW1h
 #### resend otp
 POST http://localhost:3000/auth/resend-otp
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDAsImVtYWlsIjoiYiIsImlhdCI6MTcwMTk2MTIwOH0._GJxdj6WMMq3cwXRfR3LVwkSAu74rnPyMdvwhmo2wUU
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDUsImVtYWlsIjoiMjAwNDAxMTQxQHN0dWRlbnQudW1yaS5hYy5pZCIsImlhdCI6MTcwMjI5NDQ1NH0.5YOVAQ6iVfvT8T4DTdGKxuzxVXaGwMEU1s_Z9mtsm-4
 
 ### login
 POST http://localhost:3000/auth/login
 Content-Type: application/json
 
 {
-    "email":"a",
-    "password":"password123"
+    "email":"200401141@student.umri.ac.id",
+    "password":"aldi123"
 }
 
 ### RESET PASSWORD
@@ -55,16 +55,16 @@ Content-Type: application/json
 GET http://localhost:3000/auth/whoami
 Authorization: eyJhbGciOiJIUzI1NiIasInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjo0NSwiZW1haWwiOiIyMDA0MDExNDFAc3R1ZGVudC51bXJpLmFjLmlkIiwiaWF0IjoxNzAxODYyNTQ0fQ.JljK-AO405MyHBbokt8TFXKP64QSpd3HMYno-T8F1ic
 
-# ------------------------------------ PROFIL ------------------------------------
+# ------------------------------------ PROFILE ------------------------------------
 
 ### getAllAccount
 GET http://localhost:3000/profile
 
 ### getAccountById
-GET http://localhost:3000/profile/36
+GET http://localhost:3000/profile/361
 
 ### updateProfilebyId
-PUT http://localhost:3000/profile/36
+PUT http://localhost:3000/profile/361
 Content-Type: application/json
 
 {
@@ -77,20 +77,11 @@ Content-Type: application/json
 ### Logout
 POST http://localhost:3000/profile/logout
 
-### Change Password By Login
-PUT http://localhost:3000/profile/changePassword
-Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDUsImVtYWlsIjoiMjAwNDAxMTQxQHN0dWRlbnQudW1yaS5hYy5pZCIsImlhdCI6MTcwMTg4NTAzMX0.RNs5ArZibeYnG0oHUVikf_-S8fsQB4qOpm0S70iz3fk
-
-{
-    "password_lama": "password123",
-    "password_baru": "aldi123",
-    "Confirmationpassword_baru": "aldi123"
-}
 
 ### GetAccountByLogin
 GET http://localhost:3000/profile/account
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDUsImVtYWlsIjoiMjAwNDAxMTQxQHN0dWRlbnQudW1yaS5hYy5pZCIsImlhdCI6MTcwMTg4NTAzMX0.RNs5ArZibeYnG0oHUVikf_-S8fsQB4qOpm0S70iz3fk
+Authorization: aeyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDUsImVtYWlsIjoiMjAwNDAxMTQxQHN0dWRlbnQudW1yaS5hYy5pZCIsImlhdCI6MTcwMTg4NTAzMX0.RNs5ArZibeYnG0oHUVikf_-S8fsQB4qOpm0S70iz3fk
+
 
 ### updateProfilebyLogin
 PUT http://localhost:3000/profile/updateProfile
@@ -104,9 +95,20 @@ Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDUsImVtYWlsIjoiMjAw
     "kota": "jogyas"
 }
 
+### Change Password By Login
+PUT http://localhost:3000/profile/changePassword
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDUsImVtYWlsIjoiMjAwNDAxMTQxQHN0dWRlbnQudW1yaS5hYy5pZCIsImlhdCI6MTcwMTg4NTAzMX0.RNs5ArZibeYnG0oHUVikf_-S8fsQB4qOpm0S70iz3fk
+
+{
+    "password_lama": "aldi123",
+    "password_baru": "aldi123",
+    "Confirmationpassword_baru": "aldi123"
+}
+
 ### GetRiwayatPembayaranByLogin
 GET http://localhost:3000/profile/paymentHistory
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDMsImVtYWlsIjoiYmJiYiIsImlhdCI6MTcwMTg4NTM3OX0.cVDmLAUets2yZHr09DNyn4tIvqrzrjuedwTXvK481D8
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDUsImVtYWlsIjoiMjAwNDAxMTQxQHN0dWRlbnQudW1yaS5hYy5pZCIsImlhdCI6MTcwMTg4NTAzMX0.RNs5ArZibeYnG0oHUVikf_-S8fsQB4qOpm0S70iz3fk
 
 # ------------------------------------ CATEGORY ------------------------------------
 ### GET ALL CATEGORY
