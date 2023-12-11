@@ -1264,11 +1264,13 @@ paths:
                   course:
                     - course_id: 1
                       title: 'Web Development Fundamentals'
+                      kode_kelas: 'WD001'
                       kategori_id: 101
                       premium: true
                       harga: 99.99
                     - course_id: 2
                       title: 'Data Science Basics'
+                      kode_kelas: 'DS001'
                       kategori_id: 102
                       premium: false
                       harga: 129.99
@@ -1335,7 +1337,9 @@ paths:
                 data:
                   - course_id: 1
                     title: 'Web Development Fundamentals'
+                    kode_kelas: 'WD001'
                     kategori_id: 101
+                    premium: true
                     harga: 99.99
                     Kategori:
                       title: 'Programming'
