@@ -23,7 +23,7 @@ module.exports = {
       let pagination = getPagination(req, _count.rating_id, page, limit);
 
       res.status(200).json({
-        stauts: true,
+        status: true,
         message: 'success',
         data: { pagination, rating },
       });
