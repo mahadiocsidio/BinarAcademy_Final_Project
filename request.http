@@ -212,3 +212,36 @@ GET http://localhost:3000/class
 ### Get User Course By login
 GET http://localhost:3000/class/myclass
 Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NywiZW1haWwiOiJtYWhhZGlvY3NpZGlvQHN0dWRlbnRzLmFtaWtvbS5hYy5pZCIsImlhdCI6MTcwMTk1MTU5Nn0.EOEStpZULcR0KUeKfYpFje071MfwYB4HVFc0JB1Bwco
+
+### ----------------------------------CHAPTER------------------------------------
+### GET ALL CHAPTER
+GET http://localhost:3000/chapter/
+
+### GET CHAPTER BY COURSE ID
+GET http://localhost:3000/chapter/1
+
+### ADD CHAPTER
+POST http://localhost:3000/chapter/addChapter
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiIyMTEwNDA2NEBpdHRlbGtvbS1wd3QuYWMuaWQiLCJpYXQiOjE3MDE3NTc3NDh9.adHgBrrqy9R0q6UdXocx0mLWkxIcDK33iU6vo-NUsTw
+
+{
+    "chapter_title": "Chapter 3 - Masuk materi kedua",
+    "course_id": 1,
+    "video_id": 4
+}
+
+### UPDATE CHAPTER BY CHAPTER_ID
+PUT http://localhost:3000/chapter/updateChapter/4
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiIyMTEwNDA2NEBpdHRlbGtvbS1wd3QuYWMuaWQiLCJpYXQiOjE3MDE3NTc3NDh9.adHgBrrqy9R0q6UdXocx0mLWkxIcDK33iU6vo-NUsTw
+
+{
+    "chapter_title": "Chapter 2 - Masuk materi yuk!",
+    "course_id": 1,
+    "video_id": 4
+}
+
+### DELETE CHAPTER BY CHAPTER_ID
+DELETE http://localhost:3000/chapter/deleteChapter/9
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiIyMTEwNDA2NEBpdHRlbGtvbS1wd3QuYWMuaWQiLCJpYXQiOjE3MDE3NTc3NDh9.adHgBrrqy9R0q6UdXocx0mLWkxIcDK33iU6vo-NUsTw
