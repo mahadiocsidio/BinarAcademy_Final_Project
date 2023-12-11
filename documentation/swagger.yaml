@@ -897,7 +897,7 @@ paths:
       summary: Get all payments
       tags:
         - Payment
-      description: Retrieve a list of payment transactions with pagination.
+      description: Retrieve a list of payments with pagination.
       parameters:
         - in: query
           name: limit
@@ -921,16 +921,24 @@ paths:
                 success: true
                 data:
                   pagination:
-                    total_items: 100  # Replace with the actual total number of items
                     total_pages: 10   # Replace with the actual total number of pages
-                    current_page: 1
-                    items_per_page: 10
+                    links:
+                      next: "https://binar-academy-final-project.vercel.app/payment/?page=2&limit=10"
+                      prev: null
+                  total_items: 100  # Replace with the actual total number of items  
                   payment:
                     - riwayat_transaksi_id: 1
-                      # Add other payment fields here
-                    - riwayat_transaksi_id: 2
-                      # Add other payment fields here
-                  # Add more payment entries as needed
+                      account_id: 123
+                      Account:
+                        nama: 'John Doe'
+                        email: 'john@example.com'
+                      Course:
+                        title: 'Programming Basics'
+                        kode_kelas: 'P101'
+                        harga: 49990
+                      status: 'Sudah Bayar'
+                      tanggal_pembayaran: '2023-01-01T12:00:00Z'
+                    # Add more payment entries as needed
 
         '500':
           description: Internal Server Error
