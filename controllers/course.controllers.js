@@ -13,6 +13,7 @@ const getAllCourse = async(req,res,next)=>{
             select:{
                 course_id: true,
                 title: true,
+                kode_kelas:true,
                 kategori_id: true,
                 premium: true,
                 harga: true,
@@ -53,6 +54,7 @@ const getCoursebyId = async(req,res,next)=>{
             select:{
                 course_id: true,
                 title: true,
+                kode_kelas:true,
                 kategori_id: true,
                 premium: true,
                 harga: true,
@@ -137,6 +139,7 @@ const getCoursesByCategory = async (req, res, next) => {
             select: {
                 course_id: true,
                 title: true,
+                kode_kelas:true,
                 kategori_id: true,
                 harga: true,
                 level: true,
@@ -175,6 +178,7 @@ const getCoursebyTitle = async (req,res,next)=>{
             select: {
                 course_id: true,
                 title: true,
+                kode_kelas:true,
                 kategori_id: true,
                 harga: true,
                 level:true,

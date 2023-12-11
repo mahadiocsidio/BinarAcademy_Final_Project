@@ -1,14 +1,14 @@
 -- CreateTable
 CREATE TABLE "Account" (
     "account_id" SERIAL NOT NULL,
-    "nama" TEXT NOT NULL,
+    "nama" TEXT,
     "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
-    "no_telp" TEXT NOT NULL,
-    "negara" TEXT NOT NULL,
-    "kota" TEXT NOT NULL,
-    "role" TEXT NOT NULL,
-    "url_image" TEXT NOT NULL,
+    "no_telp" TEXT,
+    "negara" TEXT,
+    "kota" TEXT,
+    "role" TEXT NOT NULL DEFAULT 'user',
+    "url_image" TEXT,
     "is_verified" BOOLEAN NOT NULL DEFAULT false,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
@@ -19,8 +19,9 @@ CREATE TABLE "Account" (
 -- CreateTable
 CREATE TABLE "Otp" (
     "otp_id" SERIAL NOT NULL,
+    "otp" TEXT,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "account_id" INTEGER NOT NULL,
-    "otp" INTEGER NOT NULL,
 
     CONSTRAINT "Otp_pkey" PRIMARY KEY ("otp_id")
 );
@@ -28,8 +29,8 @@ CREATE TABLE "Otp" (
 -- CreateTable
 CREATE TABLE "Mentor" (
     "mentor_id" SERIAL NOT NULL,
-    "name" TEXT NOT NULL,
-    "job" TEXT NOT NULL,
+    "name" TEXT,
+    "job" TEXT,
 
     CONSTRAINT "Mentor_pkey" PRIMARY KEY ("mentor_id")
 );
@@ -37,8 +38,9 @@ CREATE TABLE "Mentor" (
 -- CreateTable
 CREATE TABLE "Kategori" (
     "kategori_id" SERIAL NOT NULL,
-    "title" TEXT NOT NULL,
-    "deskripsi" TEXT NOT NULL,
+    "title" TEXT,
+    "deskripsi" TEXT,
+    "url_img_preview" TEXT,
 
     CONSTRAINT "Kategori_pkey" PRIMARY KEY ("kategori_id")
 );
@@ -46,15 +48,16 @@ CREATE TABLE "Kategori" (
 -- CreateTable
 CREATE TABLE "Course" (
     "course_id" SERIAL NOT NULL,
-    "title" TEXT NOT NULL,
-    "deskripsi" TEXT NOT NULL,
+    "title" TEXT,
+    "deskripsi" TEXT,
+    "kode_kelas" TEXT,
     "kategori_id" INTEGER NOT NULL,
     "premium" BOOLEAN NOT NULL DEFAULT false,
     "mentor_id" INTEGER NOT NULL,
     "level" TEXT NOT NULL,
     "harga" DOUBLE PRECISION NOT NULL,
-    "url_image_preview" TEXT NOT NULL,
-    "url_gc_tele" TEXT NOT NULL,
+    "url_image_preview" TEXT,
+    "url_gc_tele" TEXT,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
@@ -75,7 +78,7 @@ CREATE TABLE "Video" (
     "video_id" SERIAL NOT NULL,
     "chapter_id" INTEGER NOT NULL,
     "title" TEXT NOT NULL,
-    "deskripsi" TEXT NOT NULL,
+    "deskripsi" TEXT,
     "url_video" TEXT NOT NULL,
     "is_preview" BOOLEAN NOT NULL DEFAULT false,
 
@@ -117,8 +120,8 @@ CREATE TABLE "Rating" (
     "rating_id" SERIAL NOT NULL,
     "account_id" INTEGER NOT NULL,
     "course_id" INTEGER NOT NULL,
-    "skor" INTEGER NOT NULL,
-    "comment" TEXT NOT NULL,
+    "skor" INTEGER,
+    "comment" TEXT,
 
     CONSTRAINT "Rating_pkey" PRIMARY KEY ("rating_id")
 );
@@ -127,7 +130,7 @@ CREATE TABLE "Rating" (
 CREATE TABLE "Promo" (
     "promo_id" SERIAL NOT NULL,
     "course_id" INTEGER NOT NULL,
-    "deskripsi" TEXT NOT NULL,
+    "deskripsi" TEXT,
     "tanggal_mulai" TIMESTAMP(3) NOT NULL,
     "tanggal_selesai" TIMESTAMP(3) NOT NULL,
     "total_promo" INTEGER NOT NULL,
@@ -142,7 +145,7 @@ CREATE TABLE "Riwayat_Transaksi" (
     "course_id" INTEGER NOT NULL,
     "metode_pembayaran" TEXT NOT NULL,
     "tanggal_pembayaran" TIMESTAMP(3) NOT NULL,
-    "status" TEXT NOT NULL,
+    "status" TEXT,
 
     CONSTRAINT "Riwayat_Transaksi_pkey" PRIMARY KEY ("riwayat_transaksi_id")
 );
@@ -151,8 +154,8 @@ CREATE TABLE "Riwayat_Transaksi" (
 CREATE TABLE "Notifikasi" (
     "notifikasi_id" SERIAL NOT NULL,
     "account_id" INTEGER NOT NULL,
-    "title" TEXT NOT NULL,
-    "deskripsi" TEXT NOT NULL,
+    "title" TEXT,
+    "deskripsi" TEXT,
     "is_read" BOOLEAN NOT NULL DEFAULT false,
 
     CONSTRAINT "Notifikasi_pkey" PRIMARY KEY ("notifikasi_id")
@@ -160,6 +163,9 @@ CREATE TABLE "Notifikasi" (
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Account_email_key" ON "Account"("email");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Otp_account_id_key" ON "Otp"("account_id");
 
 -- AddForeignKey
 ALTER TABLE "Otp" ADD CONSTRAINT "Otp_account_id_fkey" FOREIGN KEY ("account_id") REFERENCES "Account"("account_id") ON DELETE RESTRICT ON UPDATE CASCADE;
