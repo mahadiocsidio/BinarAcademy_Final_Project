@@ -8,6 +8,7 @@ info:
   version: 1.0.0
 servers:
   - url: https://binar-academy-final-project.vercel.app
+
 tags:
   - name: Start
     description: all about creating account or login
@@ -21,6 +22,8 @@ tags:
     description: all about Payment History
   - name: User Course
     description: all about Course that user have
+  - name: Rating
+    description: all about Rating
 paths:
   /auth/register:
     post:
@@ -1425,6 +1428,326 @@ paths:
         '500':
           description: Internal Server Error
 
+  /rating:
+    get:
+      summary: Get all rating
+      tags:
+        - Rating
+      description: Retrieve a list of ratings with pagination.
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 10
+          description: Number of items to retrieve per page
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+          description: Page number
+
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                success: true
+                message: 'success'
+                data:
+                  pagination:
+                    total_items: 100  # Replace with the actual total number of items
+                    total_pages: 10   # Replace with the actual total number of pages
+                    current_page: 1
+                    items_per_page: 10
+                  rating:
+                    - rating_id: 1
+                      account_id: 1,
+                      course_id : 1,
+                      skor: 4,
+                      comment: "This course was really helpful!"
+                    - rating_id: 2
+                      account_id: 2,
+                      course_id : 1,
+                      skor: 1,
+                      comment: "This course was really not helpful!"
+                  # Add more category entries as needed
+
+        '500':
+          description: Internal Server Error
+
+  /rating/myRates:
+    get:
+      summary: Get all rating by Login
+      security:
+        - bearerAuth: []
+      tags:
+        - Rating
+      description: Retrieve a list of ratings with pagination.
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 10
+          description: Number of items to retrieve per page
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+          description: Page number
+
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                success: true
+                message: 'success'
+                data:
+                  pagination:
+                    total_items: 100  # Replace with the actual total number of items
+                    total_pages: 10   # Replace with the actual total number of pages
+                    current_page: 1
+                    items_per_page: 10
+                  rating:
+                    - rating_id: 1
+                      account_id: 1,
+                      course_id : 1,
+                      skor: 4,
+                      comment: "This course was really helpful!"
+                    - rating_id: 2
+                      account_id: 2,
+                      course_id : 1,
+                      skor: 1,
+                      comment: "This course was really not helpful!"
+                  # Add more category entries as needed
+
+        '500':
+          description: Internal Server Error
+
+
+  /rating/filter:
+    get:
+      summary: Get all ratings by score
+      tags:
+        - Rating
+      description: Retrieve a list of ratings filtered by score with pagination. Sorting and ordering are not supported in this endpoint.
+      parameters:
+        - in: query
+          name: skor
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 5
+            description: Filter ratings by score (1 to 5)
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 10
+            description: Number of items to retrieve per page
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+            description: Page number
+
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                success: true
+                message: 'Successful get all ratings by score'
+                data:
+                  pagination:
+                    total_items: 100  # Replace with the actual total number of items
+                    total_pages: 10   # Replace with the actual total number of pages
+                    current_page: 1
+                    items_per_page: 10
+                  rating:
+                    - rating_id: 1
+                      account_id: 1
+                      course_id: 1
+                      skor: 4
+                      comment: "This course was really helpful!"
+                    - rating_id: 2
+                      account_id: 2
+                      course_id: 1
+                      skor: 4
+                      comment: "This course was really good!"
+                    # Add more category entries as needed
+
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              example:
+                success: false
+                message: 'Bad request!'
+                err: 'Score cannot be greater than 5.'
+                data: null
+
+        '404':
+          description: No Data Found
+          content:
+            application/json:
+              example:
+                success: true
+                message: 'No data found for the requested score.'
+                data: null
+
+        '500':
+          description: Internal Server Error
+
+  /rating/rate:
+    post:
+      summary: Create a new Rating
+      security:
+        - bearerAuth: []
+      tags:
+        - Rating
+      description: Create a new Rating in the system.
+      requestBody:
+        required: true
+        $ref: "#/components/requestBodies/createRating"
+
+
+      responses:
+        '201':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                status: true
+                message: 'Successful create rating'
+                err: null
+                data:
+                  createRating:
+                    account_id: 1
+                    course_id: 1
+                    skor: 4
+                    comment: 'Great course!'
+                    # Add other Rating fields as needed
+        '500':
+          description: Internal Server Error
+
+  /rating/{rating_id}:
+    put:
+      summary: Update Rating by ID
+      security:
+        - bearerAuth: []
+      tags:
+        - Rating
+      description: Update a Rating by its ID.
+      parameters:
+        - in: path
+          name: rating_id
+          schema:
+            type: integer
+          required: true
+          description: ID of the Rating to update
+      requestBody:
+        required: true
+        $ref: "#/components/requestBodies/updateRating"
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                status: true
+                message: 'Successful update Rating'
+                err: null
+                data:
+                  rating:
+                    rating_id: 1
+                    skor: 4
+                    comment: 'Updated comment'
+                    # Add other Rating fields as needed
+
+        '500':
+          description: Internal Server Error
+
+    delete:
+      summary: Delete Rating by ID
+      security:
+        - bearerAuth: []
+      tags:
+        - Rating
+      description: Delete a Rating by its ID.
+      parameters:
+        - in: path
+          name: rating_id
+          schema:
+            type: integer
+          required: true
+          description: ID of the rating to delete
+
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                status: true
+                message: Successful delete rating
+                err: null
+                data:
+                  rating_id: 1
+                  skor: 4
+                  comment: Great Course
+                  # Add other Rating fields as needed
+
+        '500':
+          description: Internal Server Error
+
+    get:
+      summary: Get Rating by ID
+      tags:
+        - Rating
+      parameters:
+        - in: path
+          name: rating_id
+          required: true
+          schema:
+            type: integer
+          description: ID of the rating
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                success: true
+                data:
+                  rating_id: 1
+                  account_id: 101
+                  course_id: 201
+                  skor: 4
+                  comment: 'Great course!'
+                  # Add other rating fields as needed
+
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              example:
+                success: false
+                message: bad request!
+                err: Rating not found
+                data: null
+
+        '500':
+          description: Internal Server Error
+
 components:
   securitySchemes:
     bearerAuth:
@@ -2108,3 +2431,44 @@ components:
               required:
                 - course_id
                 - account_id
+    
+    createRating:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              course_id:
+                type: integer
+                description: ID of the course being rated
+                example : 1
+              skor:
+                type: integer
+                minimum: 0
+                maximum: 4
+                description: Rating score for the course (0 to 5)
+                example: 1
+              comment:
+                type: string
+                description: Optional comment for the rating
+                example : Great Course
+            required:
+              - course_id
+              - skor
+
+    updateRating:
+      content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                skor:
+                  type: integer
+                  minimum: 0
+                  maximum: 5
+                  description: Updated rating score for the course (0 to 5)
+                comment:
+                  type: string
+                  description: Updated comment for the rating
+              required:
+                - skor
