@@ -1,22 +1,29 @@
 openapi: 3.0.3
 info:
-  title: Challenge Chapter 5 | Binar Academy
+  title: Learn Wise API App
   description: |-
     lorem ipsum dolor is amet
   contact:
-    email: muhtopik07@gmail.com
+    email: mahadiocsidio@students.amikom.ac.id
   version: 1.0.0
 servers:
-  - url: http://localhost:3000
+  - url: https://binar-academy-final-project.vercel.app
+
 tags:
   - name: Start
     description: all about creating account or login
   - name: Account
-    description: all about accounts
-  - name: Transaction
-    description: all about Transaction
-  - name: Authentication
-    description: all about Authentication
+    description: all about accounts profile
+  - name: Course
+    description: all about Course
+  - name: Category
+    description: all about Course Category
+  - name: Payment
+    description: all about Payment History
+  - name: User Course
+    description: all about Course that user have
+  - name: Rating
+    description: all about Rating
 paths:
   /auth/register:
     post:
@@ -26,27 +33,7 @@ paths:
       summary: Create a new user
       requestBody:
         required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                nama:
-                  type: string
-                  maxLength: 50
-                  example: "John Doe"
-                email:
-                  type: string
-                  format: email
-                  example: "user@example.com"
-                no_telp:
-                  type: string
-                  example: "123456789"
-                password:
-                  type: string
-                  minLength: 8
-                  maxLength: 15
-                  example: "password123"
+        $ref: "#/components/requestBodies/register"
       responses:
         '201':
           description: Successful operation
@@ -123,21 +110,11 @@ paths:
         - Start
       operationId: verify-otp
       summary: Verify OTP
+      security:
+        - bearerAuth: []
       requestBody:
-        description: Verify OTP request
         required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                email:
-                  type: string
-                  format: email
-                  example: user@example.com
-                otp:
-                  type: string
-                  example: 123456
+        $ref: "#/components/requestBodies/verify-otp"
       responses:
         '200':
           description: OTP verification successful
@@ -193,18 +170,8 @@ paths:
         - Start
       operationId: resend-otp
       summary: Resend OTP
-      requestBody:
-        description: Resend OTP request
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                email:
-                  type: string
-                  format: email
-                  example: user@example.com
+      security:
+        - bearerAuth: []
       responses:
         '200':
           description: OTP resent successfully
@@ -266,7 +233,6 @@ paths:
                   data: 
                     example : null
 
-
   /auth/login:
     post:
       tags:
@@ -276,18 +242,7 @@ paths:
       requestBody:
         description: User login credentials
         required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                email:
-                  type: string
-                  format: email
-                  example: user@example.com
-                password:
-                  type: string
-                  example: password123
+        $ref: "#/components/requestBodies/login"
       responses:
         '200':
           description: Successful login
@@ -305,19 +260,15 @@ paths:
                   data:
                     type: object
                     properties:
-                      token:
-                        type: string
-                        example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InB1dHJpaW5kcml5YW50aTE5MDIwM0BnbWFpbC5jb20iLCJpYXQiOjE3MDE0MDU5MDJ9.gTd_DuEmS1hfDaiDBOYFnQ9ITVw9qk_x0Yu09-04d-g"
                       user:
                         type: object
                         properties:
-                          content:
-                            type: object
-                            properties:
-                              application/json:
-                                $ref: '#/components/schemas/AccountModel'
+                        $ref: '#/components/schemas/AccountModel'
+                      token:
+                        type: string
+                        example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InB1dHJpaW5kcml5YW50aTE5MDIwM0BnbWFpbC5jb20iLCJpYXQiOjE3MDE0MDU5MDJ9.gTd_DuEmS1hfDaiDBOYFnQ9ITVw9qk_x0Yu09-04d-g"
         '400':
-          description: Failed operation
+          description: Failed login
           content:
             application/json:
               schema:
@@ -331,10 +282,32 @@ paths:
                     example: 'Bad Request'
                   error:
                     type: string
-                    example: 'Invalid Email or Password or OTP verification required'
-                  details:
+                    example: 'Invalid Email or Password'
+        '401':
+          description: account not verified
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  err:
                     type: string
-                    example: 'Please verify your email by entering the OTP sent to your registered email address.'
+                    example: 'lakukan verifikasi terlebih dahulu'
+                  message:
+                    type: string
+                    example: 'harap periksa email anda untuk mendapat otp'
+                  data:
+                    type: object
+                    properties:
+                      email:
+                        type: string
+                        example: 'john@example.com'
+                      is_verified:
+                        type: boolean
+                        example: false
 
   /auth/reset-password:
     post:
@@ -396,6 +369,1512 @@ paths:
                     example: 'Enter Registered Email!'
                   data:
                     example: null
+    put:
+      tags:
+        - Start
+      operationId: change-password
+      summary: Reset Password
+      parameters:
+        - in: query
+          name: token
+          schema:
+            type: string
+            example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDAsImVtYWlsIjoiYiIsImlhdCI6MTcwMTk2MTIwOH0._GJxdj6WMMq3cwXRfR3LVwkSAu74rnPyMdvwhmo2wUU
+      requestBody:
+        description: change password
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                password:
+                  type: string
+                  example: password123
+                ConfirmationPassword:
+                  type: string
+                  example: password213
+      responses:
+        '200':
+          description: change password successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: 'success'
+                  err:
+                    type: string
+                    example: null
+                  data:
+                    type: object
+                    properties:
+                      user:
+                        type: object
+                        properties:
+                          nama:
+                            type: string
+                            example: John Doe
+                          email:
+                            type: string
+                            example: john@example.com
+                          role:
+                            type: string
+                            example: user
+        '400':
+          description: new password not same
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: bad request
+                  err:
+                    type: string
+                    example: please ensure that the password and password confirmation match!
+                  data:
+                    type: string
+                    example: null
+        '401':
+          description: invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'bad request'
+                  err:
+                    type: string
+                    example: invalid token
+                  data:
+                    type: string
+                    example: null
+  /auth/whoami:
+    get:
+      tags:
+        - Start
+      summary: Get all accounts profile
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: OK
+                  err:
+                    type: string
+                    example: null
+                  data:
+                    type: object
+                    properties:
+                      user:
+                        type: object
+                        properties:
+                        $ref: '#/components/schemas/AccountModel'
+        '401':
+          description: Failed response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Unauthorized
+                  err:
+                    type: string
+                    example: invalid token
+                  data:
+                    type: string
+                    example: null
+                          
+  /profile:
+    get:
+      tags:
+        - Account
+      summary: Get all accounts profile
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                success: true
+                data:
+                  - account_id: 1
+                    nama: John Doe
+                    email: john@example.com
+                    role: user
+                    created_at: '2023-01-01T12:00:00Z'
+                  - account_id: 2
+                    nama: Jane Doe
+                    email: jane@example.com
+                    role: admin
+                    created_at: '2023-01-02T14:30:00Z'
+        '500':
+          description: Internal Server Error
+
+  /profile/account:
+    get:
+      tags:
+        - Account
+      summary: Get the current user's profile account
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                success: true
+                data:
+                  account_id: 1
+                  nama: John Doe
+                  email: john@example.com
+                  no_telp: '+1234567890'
+                  negara: 'Indonesia'
+                  kota: 'Jakarta'
+                  url_image: 'https://example.com/image.jpg'
+        '404':
+          description: Account not found
+          content:
+            application/json:
+              example:
+                success: false
+                message: 'Account not found'
+        '500':
+          description: Internal Server Error
+
+  /profile/updateProfile:
+    put:
+      tags:
+        - Account
+      summary: Update user profile
+      security:
+        - bearerAuth: []
+      requestBody:
+        $ref: "#/components/requestBodies/updateProfile"
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                success: true
+                data:
+                  account_id: 1
+                  nama: John Doe
+                  email: john@example.com
+                  no_telp: '+1234567890'
+                  negara: 'Indonesia'
+                  kota: 'Jakarta'
+                  url_image: 'https://example.com/image.jpg'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              example:
+                success: false
+                message: 'Invalid request payload'
+        '404':
+          description: Account not found
+          content:
+            application/json:
+              example:
+                success: false
+                message: 'Account not found'
+        '500':
+          description: Internal Server Error
+
+  /profile/changePassword:
+    post:
+      tags:
+        - Account
+      summary: Change user password
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        $ref: "#/components/requestBodies/changePassword"
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                success: true
+                message: 'Successfully changed your password'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              example:
+                success: false
+                message: 'Invalid request payload'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              example:
+                success: false
+                message: 'Invalid current password'
+        '404':
+          description: Account isnt registered
+          content:
+            application/json:
+              example:
+                success: false
+                message: 'Account isnt registered'
+        '500':
+          description: Internal Server Error
+        
+  /profile/paymentHistory:
+    get:
+      summary: Get Account's Transaction History
+      security:
+        - bearerAuth: []
+      description: Get Account's Transaction History that have login
+      tags:
+        - Account
+      parameters:
+        - name: Authorization
+          in: header
+          description: JWT Bearer token
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              example:
+                success: true
+                data:
+                  - status: "Berhasil"
+                    Course:
+                      title: "Pengembangan Web 101"
+                      harga: 29.99
+                      level: "Pemula"
+                      Kategori:
+                        title: "Pemrograman Web"
+                  - status: "Berhasil"
+                    Course:
+                      title: "JavaScript Lanjutan"
+                      harga: 49.99
+                      level: "Lanjutan"
+                      Kategori:
+                        title: "Pemrograman Web"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              example:
+                success: false
+                message: "Unauthorized: Token tidak valid atau tidak ada"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              example:
+                success: false
+                message: "Terjadi kesalahan server"
+
+  /class:
+    get:
+      summary: Get all user courses with pagination
+      tags:
+        - User Course
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 10
+          description: Number of items to return per page
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+          description: Page number to retrieve
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                success: true
+                data:
+                  pagination:
+                    totalItems: 25
+                    totalPages: 3
+                    currentPage: 1
+                    pageSize: 10
+                  userCourse:
+                    - user_course_id: 1
+                      account_id: 101
+                      course_id: 201
+                      Course:
+                        title: 'Introduction to Web Development'
+                        harga: 29.99
+                        Kategori:
+                          title: 'Programming'
+                    - user_course_id: 2
+                      account_id: 102
+                      course_id: 202
+                      Course:
+                        title: 'Data Science Fundamentals'
+                        harga: 19.99
+                        Kategori:
+                          title: 'Data Science'
+        '404':
+          description: No user courses found
+          content:
+            application/json:
+              example:
+                success: false
+                message: 'No user courses found'
+        '500':
+          description: Internal Server Error
+    
+    post:
+      summary: Create user course
+      tags:
+        - User Course
+      requestBody:
+        required: true
+        $ref: "#/components/requestBodies/createUserCourse"
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                success: true
+                data:
+                  user_course_id: 1
+                  account_id: 101
+                  course_id: 201
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              example:
+                success: false
+                message: 'Invalid request payload'
+        '404':
+          description: Course not found
+          content:
+            application/json:
+              example:
+                success: false
+                message: 'Course not found'
+        '500':
+          description: Internal Server Error
+  
+  /class/myclass:
+    get:
+      summary: Get user courses by login
+      security:
+        - bearerAuth: []
+      tags:
+        - User Course
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                success: true
+                data:
+                  - user_course_id: 1
+                    account_id: 101
+                    course_id: 201
+                    Course:
+                      title: 'Introduction to Web Development'
+                      harga: 29.99
+                      Kategori:
+                        title: 'Programming'
+                      Riwayat_Transaksi:
+                        status: 'completed'
+                  - user_course_id: 2
+                    account_id: 101
+                    course_id: 202
+                    Course:
+                      title: 'Data Science Fundamentals'
+                      harga: 19.99
+                      Kategori:
+                        title: 'Data Science'
+                      Riwayat_Transaksi:
+                        status: 'in-progress'
+        '404':
+          description: No user courses found for the account
+          content:
+            application/json:
+              example:
+                success: false
+                message: 'No user courses found for the account'
+        '500':
+          description: Internal Server Error
+  
+  /class/{account_id}:
+    get:
+      summary: Get user courses by account ID
+      tags:
+        - User Course
+      parameters:
+        - in: path
+          name: account_id
+          required: true
+          schema:
+            type: integer
+          description: ID of the user account
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                success: true
+                data:
+                  - user_course_id: 1
+                    account_id: 101
+                    course_id: 201
+                    Course:
+                      title: 'Introduction to Web Development'
+                      harga: 29.99
+                      Kategori:
+                        title: 'Programming'
+                  - user_course_id: 2
+                    account_id: 101
+                    course_id: 202
+                    Course:
+                      title: 'Data Science Fundamentals'
+                      harga: 19.99
+                      Kategori:
+                        title: 'Data Science'
+        '404':
+          description: No user courses found for the account
+          content:
+            application/json:
+              example:
+                success: false
+                message: 'No user courses found for the account'
+        '500':
+          description: Internal Server Error
+
+  /payment:
+    get:
+      summary: Get all payments
+      tags:
+        - Payment
+      description: Retrieve a list of payment transactions with pagination.
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 10
+          description: Number of items to retrieve per page
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+          description: Page number
+
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                success: true
+                data:
+                  pagination:
+                    total_items: 100  # Replace with the actual total number of items
+                    total_pages: 10   # Replace with the actual total number of pages
+                    current_page: 1
+                    items_per_page: 10
+                  payment:
+                    - riwayat_transaksi_id: 1
+                      # Add other payment fields here
+                    - riwayat_transaksi_id: 2
+                      # Add other payment fields here
+                  # Add more payment entries as needed
+
+        '500':
+          description: Internal Server Error
+
+    post:
+      summary: Create a new payment
+      tags:
+        - Payment
+      description: Create a new payment transaction for a course.
+      requestBody:
+        required: true
+        $ref: "#/components/requestBodies/createPayment"
+
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                success: true
+                data:
+                  riwayat_transaksi_id: 1
+                  account_id: 123
+                  course_id: 456
+                  tanggal_pembayaran: '2023-01-01T12:00:00Z' # Replace with the actual timestamp
+                  metode_pembayaran: 'Credit Card'
+                  status: 'Menunggu Pembayaran'
+
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              example:
+                success: false
+                message: 'Invalid input. Please provide valid account_id, course_id, and metode_pembayaran.'
+
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              example:
+                success: false
+                message: 'Course is not registered'
+
+        '500':
+          description: Internal Server Error
+
+  /payment/checkout:
+    get:
+      summary: Get payment details after user login
+      tags:
+        - Payment
+      security:
+        - bearerAuth: []
+      description: Retrieve details of payment transactions for the logged-in user.
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                success: true
+                data:
+                  - riwayat_transaksi_id: 1
+                    account_id: 123
+                    Course:
+                      title: 'Web Development Fundamentals'
+                      harga: 99.99
+                    status: 'Sudah Bayar'
+                    tanggal_pembayaran: '2023-01-01T12:00:00Z' # Replace with the actual timestamp
+                  - riwayat_transaksi_id: 2
+                    account_id: 123
+                    Course:
+                      title: 'Data Science Basics'
+                      harga: 129.99
+                    status: 'Menunggu Pembayaran'
+                    tanggal_pembayaran: '2023-02-01T12:00:00Z' # Replace with the actual timestamp
+
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              example:
+                success: false
+                message: 'No payment found for the logged-in user.'
+
+        '500':
+          description: Internal Server Error
+
+    post:
+      summary: Create a new payment after user login
+      tags:
+        - Payment
+      security:
+        - bearerAuth: []
+      description: Create a new payment transaction for a course after user login.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                course_id:
+                  type: integer
+                  description: ID of the course for which the payment is made
+                metode_pembayaran:
+                  type: string
+                  description: Payment method used (e.g., credit card, bank transfer)
+              required:
+                - course_id
+                - metode_pembayaran
+
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                success: true
+                data:
+                  riwayat_transaksi_id: 1
+                  account_id: 123
+                  course_id: 456
+                  tanggal_pembayaran: '2023-01-01T12:00:00Z' # Replace with the actual timestamp
+                  metode_pembayaran: 'Credit Card'
+                  status: 'Menunggu Pembayaran'
+
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              example:
+                success: false
+                message: 'Invalid input. Please provide valid course_id and metode_pembayaran.'
+
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              example:
+                success: false
+                message: 'Payment isnt registered.'
+
+        '500':
+          description: Internal Server Error
+
+    put:
+      summary: Update payment status after user login
+      tags:
+        - Payment
+      security:
+        - bearerAuth: []
+      description: Update the status of a payment transaction for a specific course after user login.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                course_id:
+                  type: integer
+                  description: ID of the course for which the payment status is updated
+              required:
+                - course_id
+
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                success: true
+                message: 'Payment with id 1 updated'
+                data:
+                  riwayat_transaksi_id: 1
+                  account_id: 123
+                  course_id: 456
+                  tanggal_pembayaran: '2023-01-01T12:00:00Z' # Replace with the actual timestamp
+                  metode_pembayaran: 'Credit Card'
+                  status: 'Sudah Bayar'
+
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              example:
+                success: false
+                message: 'Invalid input. Please provide a valid course_id.'
+
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              example:
+                success: false
+                message: 'Transaction not found for the specified account and course.'
+
+        '500':
+          description: Internal Server Error
+    
+  /payment/{riwayat_transaksi_id}:
+    get:
+      summary: Get payment details by ID
+      tags:
+        - Payment
+      description: Retrieve details of a payment transaction based on the account ID.
+      parameters:
+        - in: path
+          name: account_id
+          required: true
+          description: ID of the account for which payment details are requested
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                success: true
+                data:
+                  riwayat_transaksi_id: 1
+                  account_id: 123
+                  Course:
+                    title: 'Web Development Fundamentals'
+                    harga: 99.99
+                  status: 'Sudah Bayar'
+                  tanggal_pembayaran: '2023-01-01T12:00:00Z' # Replace with the actual timestamp
+
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              example:
+                success: false
+                message: 'Payment for the specified account ID not found.'
+
+        '500':
+          description: Internal Server Error
+
+    put:
+      summary: Update payment status by ID
+      tags:
+        - Payment
+      description: Update the status of a payment transaction by its ID.
+      parameters:
+        - in: path
+          name: riwayat_transaksi_id
+          required: true
+          description: ID of the payment transaction to update
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                success: true
+                message: 'Payment with id 1 updated'
+                data:
+                  riwayat_transaksi_id: 1
+                  account_id: 123
+                  course_id: 456
+                  tanggal_pembayaran: '2023-01-01T12:00:00Z' # Replace with the actual timestamp
+                  metode_pembayaran: 'Credit Card'
+                  status: 'Sudah Bayar'
+
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              example:
+                success: false
+                message: 'Invalid input. Please provide a valid status.'
+
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              example:
+                success: false
+                message: 'Payment with specified ID not found.'
+
+        '500':
+          description: Internal Server Error
+
+  /course:
+    get:
+      summary: Get all courses
+      tags:
+        - Course
+      description: Retrieve a list of courses with pagination.
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 10
+          description: Number of items to retrieve per page
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+          description: Page number
+
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                success: true
+                data:
+                  pagination:
+                    total_items: 100  # Replace with the actual total number of items
+                    total_pages: 10   # Replace with the actual total number of pages
+                    current_page: 1
+                    items_per_page: 10
+                  course:
+                    - course_id: 1
+                      title: 'Web Development Fundamentals'
+                      kategori_id: 101
+                      premium: true
+                      harga: 99.99
+                    - course_id: 2
+                      title: 'Data Science Basics'
+                      kategori_id: 102
+                      premium: false
+                      harga: 129.99
+
+        '500':
+          description: Internal Server Error
+
+  /course/addCourse:
+    post:
+      summary: Add a new course
+      tags:
+        - Course
+      description: Add a new course to the system.
+      requestBody:
+        required: true
+        $ref: "#/components/requestBodies/addCourse"
+
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                success: true
+                data:
+                  course_id: 1
+                  title: 'Web Development Fundamentals'
+                  harga: 99.99
+                  Kategori:
+                    title: 'Programming'
+                  # Add other course fields as needed
+
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              example:
+                success: false
+                message: 'Invalid input. Please provide valid title, kategori_id, harga, and mentor_id.'
+
+        '500':
+          description: Internal Server Error
+
+  /course/search:
+    get:
+      summary: Get course by title
+      tags:
+        - Course
+      description: Retrieve a course by title with case-insensitive search.
+      parameters:
+        - in: query
+          name: title
+          schema:
+            type: string
+          description: Title of the course to retrieve (case-insensitive)
+
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                success: true
+                data:
+                  - course_id: 1
+                    title: 'Web Development Fundamentals'
+                    kategori_id: 101
+                    harga: 99.99
+                    Kategori:
+                      title: 'Programming'
+
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              example:
+                success: false
+                message: 'Course not found.'
+
+        '500':
+          description: Internal Server Error
+
+  /category:
+    get:
+      summary: Get all categories
+      tags:
+        - Category
+      description: Retrieve a list of categories with pagination.
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 10
+          description: Number of items to retrieve per page
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+          description: Page number
+
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                success: true
+                message: 'success'
+                data:
+                  pagination:
+                    total_items: 100  # Replace with the actual total number of items
+                    total_pages: 10   # Replace with the actual total number of pages
+                    current_page: 1
+                    items_per_page: 10
+                  category:
+                    - kategori_id: 1
+                      title: "UI/UX Design"
+                      deskripsi: "Pendekatan pengembangan produk digital yang mencakup UI Design (fokus pada tampilan visual), UX Design (berorientasi pada pengalaman pengguna), dan bekerja sama untuk menciptakan produk yang menarik dan mudah digunakan."
+                      url_img_preview: null
+                    - kategori_id: 2
+                      title: "Product Management"
+                      deskripsi: "Memimpin pengembangan, peluncuran, dan pengelolaan produk atau layanan. Termasuk identifikasi kebutuhan pasar, perencanaan strategis, koordinasi tim, dan komunikasi antardepartemen untuk memastikan produk mencapai tujuan bisnis."
+                      url_img_preview: null
+                  # Add more category entries as needed
+
+        '500':
+          description: Internal Server Error
+
+    post:
+      summary: Create a new category
+      tags:
+        - Category
+      description: Create a new category in the system.
+      requestBody:
+        required: true
+        $ref: "#/components/requestBodies/createCategory"
+      responses:
+        '201':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                status: true
+                message: 'success!'
+                err: null
+                data:
+                  kategori_id: 1
+                  title: 'Programming'
+                  deskripsi: 'Category for programming courses'
+                  url_img_preview: 'https://example.com/programming.jpg'
+                  # Add other category fields as needed
+
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              example:
+                status: false
+                message: 'bad request!'
+                err: 'title is already used'
+                data: null
+
+        '500':
+          description: Internal Server Error
+  
+  /category/{kategori_id}:
+    get:
+      summary: Get category by ID
+      tags:
+        - Category
+      description: Retrieve a category by its ID.
+      parameters:
+        - in: path
+          name: kategori_id
+          schema:
+            type: integer
+          required: true
+          description: ID of the category to retrieve
+
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                status: true
+                message: 'success!'
+                err: null
+                data:
+                  category:
+                    kategori_id: 1
+                    title: 'Programming'
+                    deskripsi: 'Category for programming courses'
+                    url_img_preview: 'https://example.com/programming.jpg'
+                    # Add other category fields as needed
+
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              example:
+                status: false
+                message: 'bad request!'
+                err: 'category not found!'
+                data: null
+
+        '500':
+          description: Internal Server Error
+
+    put:
+      summary: Update category by ID
+      tags:
+        - Category
+      description: Update a category by its ID.
+      parameters:
+        - in: path
+          name: kategori_id
+          schema:
+            type: integer
+          required: true
+          description: ID of the category to update
+      requestBody:
+        required: true
+        $ref: "#/components/requestBodies/updateProfile"
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                status: true
+                message: 'Successful update category'
+                err: null
+                data:
+                  category:
+                    kategori_id: 1
+                    title: 'Updated Programming'
+                    deskripsi: 'Updated category for programming courses'
+                    url_img_preview: 'https://example.com/updated_programming.jpg'
+                    # Add other category fields as needed
+
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              example:
+                status: false
+                message: 'bad request!'
+                err: 'title is already used'
+                data: null
+
+        '500':
+          description: Internal Server Error
+    
+    delete:
+      summary: Delete category by ID
+      tags:
+        - Category
+      description: Delete a category by its ID.
+      parameters:
+        - in: path
+          name: kategori_id
+          schema:
+            type: integer
+          required: true
+          description: ID of the category to delete
+
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                status: true
+                message: 'Successful delete category'
+                err: null
+                data:
+                  kategori_id: 1
+                  title: 'Deleted Programming'
+                  deskripsi: 'Deleted category for programming courses'
+                  url_img_preview: 'https://example.com/deleted_programming.jpg'
+                  # Add other category fields as needed
+
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              example:
+                status: false
+                message: 'bad request!'
+                err: 'category not found!'
+                data: null
+
+        '500':
+          description: Internal Server Error
+
+  /rating:
+    get:
+      summary: Get all rating
+      tags:
+        - Rating
+      description: Retrieve a list of ratings with pagination.
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 10
+          description: Number of items to retrieve per page
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+          description: Page number
+
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                success: true
+                message: 'success'
+                data:
+                  pagination:
+                    total_items: 100  # Replace with the actual total number of items
+                    total_pages: 10   # Replace with the actual total number of pages
+                    current_page: 1
+                    items_per_page: 10
+                  rating:
+                    - rating_id: 1
+                      account_id: 1,
+                      course_id : 1,
+                      skor: 4,
+                      comment: "This course was really helpful!"
+                    - rating_id: 2
+                      account_id: 2,
+                      course_id : 1,
+                      skor: 1,
+                      comment: "This course was really not helpful!"
+                  # Add more category entries as needed
+
+        '500':
+          description: Internal Server Error
+
+  /rating/myRates:
+    get:
+      summary: Get all rating by Login
+      security:
+        - bearerAuth: []
+      tags:
+        - Rating
+      description: Retrieve a list of ratings with pagination.
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 10
+          description: Number of items to retrieve per page
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+          description: Page number
+
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                success: true
+                message: 'success'
+                data:
+                  pagination:
+                    total_items: 100  # Replace with the actual total number of items
+                    total_pages: 10   # Replace with the actual total number of pages
+                    current_page: 1
+                    items_per_page: 10
+                  rating:
+                    - rating_id: 1
+                      account_id: 1,
+                      course_id : 1,
+                      skor: 4,
+                      comment: "This course was really helpful!"
+                    - rating_id: 2
+                      account_id: 2,
+                      course_id : 1,
+                      skor: 1,
+                      comment: "This course was really not helpful!"
+                  # Add more category entries as needed
+
+        '500':
+          description: Internal Server Error
+
+
+  /rating/filter:
+    get:
+      summary: Get all ratings by score
+      tags:
+        - Rating
+      description: Retrieve a list of ratings filtered by score with pagination. Sorting and ordering are not supported in this endpoint.
+      parameters:
+        - in: query
+          name: skor
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 5
+            description: Filter ratings by score (1 to 5)
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 10
+            description: Number of items to retrieve per page
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+            description: Page number
+
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                success: true
+                message: 'Successful get all ratings by score'
+                data:
+                  pagination:
+                    total_items: 100  # Replace with the actual total number of items
+                    total_pages: 10   # Replace with the actual total number of pages
+                    current_page: 1
+                    items_per_page: 10
+                  rating:
+                    - rating_id: 1
+                      account_id: 1
+                      course_id: 1
+                      skor: 4
+                      comment: "This course was really helpful!"
+                    - rating_id: 2
+                      account_id: 2
+                      course_id: 1
+                      skor: 4
+                      comment: "This course was really good!"
+                    # Add more category entries as needed
+
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              example:
+                success: false
+                message: 'Bad request!'
+                err: 'Score cannot be greater than 5.'
+                data: null
+
+        '404':
+          description: No Data Found
+          content:
+            application/json:
+              example:
+                success: true
+                message: 'No data found for the requested score.'
+                data: null
+
+        '500':
+          description: Internal Server Error
+
+  /rating/rate:
+    post:
+      summary: Create a new Rating
+      security:
+        - bearerAuth: []
+      tags:
+        - Rating
+      description: Create a new Rating in the system.
+      requestBody:
+        required: true
+        $ref: "#/components/requestBodies/createRating"
+
+
+      responses:
+        '201':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                status: true
+                message: 'Successful create rating'
+                err: null
+                data:
+                  createRating:
+                    account_id: 1
+                    course_id: 1
+                    skor: 4
+                    comment: 'Great course!'
+                    # Add other Rating fields as needed
+        '500':
+          description: Internal Server Error
+
+  /rating/{rating_id}:
+    put:
+      summary: Update Rating by ID
+      security:
+        - bearerAuth: []
+      tags:
+        - Rating
+      description: Update a Rating by its ID.
+      parameters:
+        - in: path
+          name: rating_id
+          schema:
+            type: integer
+          required: true
+          description: ID of the Rating to update
+      requestBody:
+        required: true
+        $ref: "#/components/requestBodies/updateRating"
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                status: true
+                message: 'Successful update Rating'
+                err: null
+                data:
+                  rating:
+                    rating_id: 1
+                    skor: 4
+                    comment: 'Updated comment'
+                    # Add other Rating fields as needed
+
+        '500':
+          description: Internal Server Error
+
+    delete:
+      summary: Delete Rating by ID
+      security:
+        - bearerAuth: []
+      tags:
+        - Rating
+      description: Delete a Rating by its ID.
+      parameters:
+        - in: path
+          name: rating_id
+          schema:
+            type: integer
+          required: true
+          description: ID of the rating to delete
+
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                status: true
+                message: Successful delete rating
+                err: null
+                data:
+                  rating_id: 1
+                  skor: 4
+                  comment: Great Course
+                  # Add other Rating fields as needed
+
+        '500':
+          description: Internal Server Error
+
+    get:
+      summary: Get Rating by ID
+      tags:
+        - Rating
+      parameters:
+        - in: path
+          name: rating_id
+          required: true
+          schema:
+            type: integer
+          description: ID of the rating
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                success: true
+                data:
+                  rating_id: 1
+                  account_id: 101
+                  course_id: 201
+                  skor: 4
+                  comment: 'Great course!'
+                  # Add other rating fields as needed
+
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              example:
+                success: false
+                message: bad request!
+                err: Rating not found
+                data: null
 
   /chapter/:
     get:
@@ -568,6 +2047,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
+        '500':
+          description: Internal Server Error
+
 components:
   securitySchemes:
     bearerAuth:
@@ -609,6 +2091,29 @@ components:
           example: 'some error from user'
         data:
           example: null
+    AccountResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          $ref: '#/components/schemas/AccountModel'
+
+    AccountWithMessageResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/AccountModel'
+
+    LogoutResponse:
+      type: object
+      properties:
+        message:
+          type: string
 
     SuccessResponse:
       type: object
@@ -674,8 +2179,6 @@ components:
         password:
           type: string
           example: "password123"
-        otp:
-          $ref: "#/components/schemas/OtpModel"
         no_telp:
           type: string
           example: "123456789"
@@ -693,7 +2196,7 @@ components:
           example: "https://example.com/image.png"
         is_verified:
           type: boolean
-          example: false
+          example: true
         created_at:
           type: string
           format: date-time
@@ -702,26 +2205,6 @@ components:
           type: string
           format: date-time
           example: "2023-10-15T12:13:48.276Z"
-        User_course:
-          type: array
-          items:
-            $ref: "#/components/schemas/User_courseModel"
-        Course_progress:
-          type: array
-          items:
-            $ref: "#/components/schemas/Course_progressModel"
-        Rating:
-          type: array
-          items:
-            $ref: "#/components/schemas/RatingModel"
-        Riwayat_Transaksi:
-          type: array
-          items:
-            $ref: "#/components/schemas/Riwayat_TransaksiModel"
-        Notifikasi:
-          type: array
-          items:
-            $ref: "#/components/schemas/NotifikasiModel"
 
     OtpModel:
       type: object
@@ -1084,3 +2567,246 @@ components:
           example: false
         Account:
           $ref: "#/components/schemas/AccountModel"
+
+  requestBodies:
+    register:
+      content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nama:
+                  type: string
+                  maxLength: 50
+                  example: "John Doe"
+                email:
+                  type: string
+                  format: email
+                  example: "user@example.com"
+                no_telp:
+                  type: string
+                  example: "123456789"
+                password:
+                  type: string
+                  minLength: 8
+                  maxLength: 15
+                  example: "password123"
+                ConfirmationPassword:
+                  type: string
+                  minLength: 8
+                  maxLength: 15
+                  example: "password123"
+    verify-otp:
+      content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                otp:
+                  type: string
+                  example: 494387
+    login:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              email:
+                type: string
+                format: email
+                example: user@example.com
+              password:
+                type: string
+                example: password123
+    addCourse:
+      content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  description: Title of the new course
+                deskripsi:
+                  type: string
+                  description: Description of the new course
+                kode_kelas:
+                  type: string
+                  description: Code of the new course
+                kategori_id:
+                  type: integer
+                  description: ID of the category to which the new course belongs
+                harga:
+                  type: number
+                  description: Price of the new course
+                premium:
+                  type: boolean
+                  description: Whether the new course is premium or not
+                mentor_id:
+                  type: integer
+                  description: ID of the mentor for the new course
+                level:
+                  type: string
+                  description: Level of the new course (e.g., beginner, intermediate, advanced)
+              required:
+                - title
+                - kategori_id
+                - harga
+                - mentor_id
+    
+    createCategory:
+      content:
+        application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  description: Title of the new category
+                deskripsi:
+                  type: string
+                  description: Description of the new category
+                url_img_preview:
+                  type: string
+                  description: URL of the image preview for the new category
+              required:
+                - title
+                - deskripsi
+      
+    updateCategory:
+      content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  description: Updated title of the category
+                deskripsi:
+                  type: string
+                  description: Updated description of the category
+                url_img_preview:
+                  type: string
+                  description: Updated URL of the image preview for the category
+
+    createPayment:
+      content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                account_id:
+                  type: integer
+                  description: ID of the account making the payment
+                course_id:
+                  type: integer
+                  description: ID of the course for which the payment is made
+                metode_pembayaran:
+                  type: string
+                  description: Payment method used (e.g., credit card, bank transfer)
+              required:
+                - account_id
+                - course_id
+                - metode_pembayaran  
+    updateProfile:
+      content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: New name for the user
+                email:
+                  type: string
+                  format: email
+                  description: New email for the user
+                no_telp:
+                  type: string
+                  description: New phone number for the user
+                negara:
+                  type: string
+                  description: New country for the user
+                kota:
+                  type: string
+                  description: New city for the user
+              required:
+                - name  
+    
+    changePassword:
+      content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                password_lama:
+                  type: string
+                  description: Current password of the user
+                password_baru:
+                  type: string
+                  description: New password for the user
+                ulangi_password:
+                  type: string
+                  description: Confirm the new password
+              required:
+                - password_lama
+                - password_baru
+                - ulangi_password
+
+    createUserCourse:
+      content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                course_id:
+                  type: integer
+                  description: ID of the course to be added
+                account_id:
+                  type: integer
+                  description: ID of the user account
+              required:
+                - course_id
+                - account_id
+    
+    createRating:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              course_id:
+                type: integer
+                description: ID of the course being rated
+                example : 1
+              skor:
+                type: integer
+                minimum: 0
+                maximum: 4
+                description: Rating score for the course (0 to 5)
+                example: 1
+              comment:
+                type: string
+                description: Optional comment for the rating
+                example : Great Course
+            required:
+              - course_id
+              - skor
+
+    updateRating:
+      content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                skor:
+                  type: integer
+                  minimum: 0
+                  maximum: 5
+                  description: Updated rating score for the course (0 to 5)
+                comment:
+                  type: string
+                  description: Updated comment for the rating
+              required:
+                - skor

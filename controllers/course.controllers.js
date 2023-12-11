@@ -1,18 +1,39 @@
 const prisma = require('../libs/prisma')
+const { getPagination } = require('../helper/index');
 
 const getAllCourse = async(req,res,next)=>{
     try {
+        let { limit = 10, page = 1 } = req.query;
+            limit = Number(limit);
+            page = Number(page);
+
         let course = await prisma.course.findMany({
+            skip: (page - 1) * limit,
+            take: limit,
             select:{
                 course_id: true,
                 title: true,
                 kategori_id: true,
+                premium: true,
                 harga: true,
+                level:true,
+                Kategori:{
+                    select:{
+                        title: true,
+                    },
+                }
             }
         })
+
+        const { _count } = await prisma.course.aggregate({
+            _count: { course_id: true }
+        });
+
+        let pagination = getPagination(req, _count.course_id, page, limit);
+
         res.status(200).json({
             success:true,
-            data:course
+            data:{ pagination, course}
         })
     } catch (error) {
         next(error)
@@ -25,16 +46,24 @@ const getCoursebyId = async(req,res,next)=>{
         let {course_id} = req.params
         //mengubah course_id menjadi tipe number/int
         course_id = parseInt(course_id,10)
-        let course = await prisma.course.findUnique({ where: {course_id},select:{
-            course_id: true,
-            title: true,
-            kategori_id: true,
-            harga: true,
-            Kategori:{
-                select:{
-                    title: true,
+        let course = await prisma.course.findUnique({ 
+            where: {
+                course_id
             },
-        }}})
+            select:{
+                course_id: true,
+                title: true,
+                kategori_id: true,
+                premium: true,
+                harga: true,
+                level:true,
+                Kategori:{
+                    select:{
+                        title: true,
+                    },
+                }
+            }
+        })
         if(!course) return res.json("Course isnt registered")
 
         res.status(200).json({
@@ -48,12 +77,13 @@ const getCoursebyId = async(req,res,next)=>{
 
 const addCourse = async(req,res,next)=>{
     try {
-        let {title,deskripsi,kategori_id,harga,premium,mentor_id,level} = req.body
+        let {title,deskripsi,kode_kelas,kategori_id,harga,premium,mentor_id,level} = req.body
         let course = await prisma.course.create({
             data:{
                 title,
                 mentor_id,
                 deskripsi,
+                kode_kelas,
                 kategori_id,
                 harga,
                 premium,
@@ -63,6 +93,9 @@ const addCourse = async(req,res,next)=>{
                 course_id: true,
                 title: true,
                 harga: true,
+                level:true,
+                premium:true,
+                kode_kelas:true,
                 Kategori:{
                     select:{
                         title: true,
@@ -80,24 +113,24 @@ const addCourse = async(req,res,next)=>{
 
 const getCoursesByCategory = async (req, res, next) => {
     try {
-        const { kategori_id , sort, order} = req.query;
+        const { kategori_id, sort, order } = req.query;
 
-        // Menangani beberapa nilai kategori_id
+        // Handle multiple kategori_id values
         const kategoriIds = Array.isArray(kategori_id) ? kategori_id.map(id => parseInt(id, 10)) : [parseInt(kategori_id, 10)];
 
-        // Membuat objek yang akan digunakan untuk menyusun kondisi dalam query
+        // Create an object to be used for conditions in the query
         const condition = {};
 
-        const orderBy = sort && order ? { [sort]: order } : undefined;
-
-        // Menambahkan kondisi jika ada nilai kategori_id dalam query parameter
+        // Add conditions for kategori_id if it exists in the query parameters
         if (kategoriIds && kategoriIds.length > 0) {
             condition.kategori_id = {
-                in: kategoriIds,
+                in: kategoriIds.filter(id => !isNaN(id)), // Filter out NaN values
             };
         }
 
-        // Menggunakan query Prisma dengan kondisi
+        const orderBy = sort && order ? { [sort]: order } : undefined;
+
+        // Use Prisma query with conditions
         const courses = await prisma.course.findMany({
             where: condition,
             orderBy: orderBy,
@@ -107,7 +140,7 @@ const getCoursesByCategory = async (req, res, next) => {
                 kategori_id: true,
                 harga: true,
                 level: true,
-                // Jika perlu, tambahkan informasi kategori
+                // If needed, add category information
                 Kategori: {
                     select: {
                         title: true,
@@ -127,32 +160,46 @@ const getCoursesByCategory = async (req, res, next) => {
 
 const getCoursebyTitle = async (req,res,next)=>{
     try {
-        let {title} = req.params
+        let { title } = req.query;
+
+        // Make the title case-insensitive by converting it to lowercase
+        title = title.toLowerCase();
+
         let course = await prisma.course.findMany({
-            where:{
-                title: title
+            where: {
+                title: {
+                    contains: title,
+                    mode: 'insensitive', // Case-insensitive search
+                },
             },
-            select:{
+            select: {
                 course_id: true,
                 title: true,
                 kategori_id: true,
                 harga: true,
-                Kategori:{
-                    select:{
+                level:true,
+                Kategori: {
+                    select: {
                         title: true,
+                    },
                 },
-            }
-        }})
-        if(!course) return res.json("Course isnt registered")
+            },
+        });
+
+        if (!course) {
+            return res.status(404).json({
+                success: false,
+                message: "Course not found",
+            });
+        }
 
         res.status(200).json({
-        success:true,
-        data:course
-        })
+            success: true,
+            data: course,
+        });
     } catch (error) {
-        next(error)
+        next(error);
     }
-
 }
 
 const deleteCoursebyId = async(req,res,next)=>{
@@ -173,4 +220,36 @@ const deleteCoursebyId = async(req,res,next)=>{
     }
 }
 
-module.exports ={getAllCourse,getCoursebyId,addCourse,getCoursesByCategory,deleteCoursebyId}
+const beliCourse = async(req,res,next)=>{
+    try {
+        let {course_id} = req.body
+        let account = req.user
+        course_id = parseInt(course_id,10)
+        let course = await prisma.course.findUnique({where:{course_id}})
+        if(!course) return res.status(404).json("Course isnt registered")
+
+        let riwayat = await prisma.riwayat_transaksi.create({
+            data:{
+                account_id: account.account_id,
+                course_id,
+                status: "Menunggu Pembayaran"
+            }
+        })
+
+        let userCourse = await prisma.user_course.create({
+            data:{
+                account_id: account.account_id,
+                course_id
+            }
+        })
+        res.status(200).json({
+            success:true,
+            data:{riwayat,userCourse}
+        })
+    } catch (error) {
+        next(error)
+    }
+
+}
+
+module.exports ={getAllCourse,getCoursebyId,addCourse,getCoursesByCategory,getCoursebyTitle,deleteCoursebyId,beliCourse}

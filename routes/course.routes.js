@@ -1,9 +1,24 @@
 const router = require('express').Router();
-const {getAllCourse,getCoursebyId,addCourse,getCoursesByCategory} = require('../controllers/course.controllers')
+const { restrict } = require('../middlewares/auth.middlewares');
+const {
+  getAllCourse,
+  getCoursebyId,
+  addCourse,
+  getCoursesByCategory,
+  getCoursebyTitle,
+  beliCourse,
+} = require('../controllers/course.controllers');
 
-router.get('/', getAllCourse)
+router.get('/', getAllCourse);
+router.post('/addCourse', addCourse);
+
 router.get('/filter', getCoursesByCategory);
-router.get('/:course_id',getCoursebyId)
-router.post('/addCourse',addCourse)
+router.get('/search', getCoursebyTitle);
 
-module.exports=router
+// BY LOGIN
+router.post('/beli', restrict, beliCourse);
+
+// BY ID
+router.get('/:course_id', getCoursebyId);
+
+module.exports = router;

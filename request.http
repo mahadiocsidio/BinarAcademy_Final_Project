@@ -1,37 +1,37 @@
+# ------------------------------------ AUTH ------------------------------------
 ### register
 POST http://localhost:3000/auth/register
 Content-Type: application/json
 
 {
-    "nama":"wilson",
-    "email":"21104064@ittelkom-pwt.ac.id",
-    "no_telp":"08123456789",
-    "password":"password1234",
-    "password_confirmation":"password1234"
+    "nama":"aldi",
+    "email":"200401141@student.umri.ac.id",
+    "no_telp":"081368094422",
+    "password":"password123",
+    "ConfirmationPassword":"password123"
 }
 
 ### verify otp
 POST http://localhost:3000/auth/verify-otp
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjIxMTA0MDY0QGl0dGVsa29tLXB3dC5hYy5pZCIsImlhdCI6MTcwMTY5MDcwNH0.yjDtBxX0m8vQVUHWW2Pa5a-yffR6PXq6VrXxDMAN1Eo
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjo0OCwiZW1haWwiOiJmaWZhYXphaHJvQGdtYWlsLmNvbSIsImlhdCI6MTcwMTk2Mzk0M30.L97zpg3gNmotRPnX3U0b08dPhn4Dndxp5ARdmjLQ0Xw
 
 {
-    "otp":"355194"
+    "otp":"494387"
 }
 
 #### resend otp
 POST http://localhost:3000/auth/resend-otp
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjIxMTA0MDY0QGl0dGVsa29tLXB3dC5hYy5pZCIsImlhdCI6MTcwMTY5MDcwNH0.yjDtBxX0m8vQVUHWW2Pa5a-yffR6PXq6VrXxDMAN1Eo
-
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDAsImVtYWlsIjoiYiIsImlhdCI6MTcwMTk2MTIwOH0._GJxdj6WMMq3cwXRfR3LVwkSAu74rnPyMdvwhmo2wUU
 
 ### login
 POST http://localhost:3000/auth/login
 Content-Type: application/json
 
 {
-    "email":"21104064@ittelkom-pwt.ac.id",
-    "password":"password1234"
+    "email":"a",
+    "password":"password123"
 }
 
 ### RESET PASSWORD
@@ -42,36 +42,102 @@ Content-Type: application/json
     "email":"200401141@student.umri.ac.id"
 }
 
-### CHANGE PASSWORD
-PUT http://localhost:3000/auth/reset-password
+### CHANGE PASSWORD BY TOKEN (TANPA LOGIN)
+PUT http://localhost:3000/auth/reset-password?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImZpZmFhemFocm9AZ21haWwuY29tIiwiaWF0IjoxNzAxOTY0MTM0fQ.SdrpwH6AfCoMgWMhILjGPIM1Ukno9ABTXTnJrxyANy8
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjIwMDQwMTE0MUBzdHVkZW50LnVtcmkuYWMuaWQiLCJpYXQiOjE3MDEyNjg4Mzh9.UERpa6OT9e_GmA0qbsLveCmy8TAXSs0UOoCRG4OGJFM
 
 {
-    "password":"aldi123",
+    "password":"aaldi123",
     "confirmationPassword":"aldi123"
 }
 
 ### GET USER BY TOKEN
 GET http://localhost:3000/auth/whoami
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjIwMDQwMTE0MUBzdHVkZW50LnVtcmkuYWMuaWQiLCJpYXQiOjE3MDEyNjg4Mzh9.UERpa6OT9e_GmA0qbsLveCmy8TAXSs0UOoCRG4OGJFM
+Authorization: eyJhbGciOiJIUzI1NiIasInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjo0NSwiZW1haWwiOiIyMDA0MDExNDFAc3R1ZGVudC51bXJpLmFjLmlkIiwiaWF0IjoxNzAxODYyNTQ0fQ.JljK-AO405MyHBbokt8TFXKP64QSpd3HMYno-T8F1ic
+
+# ------------------------------------ PROFIL ------------------------------------
 
 ### getAllAccount
 GET http://localhost:3000/profile
 
 ### getAccountById
-GET http://localhost:3000/profile/1
+GET http://localhost:3000/profile/36
 
 ### updateProfilebyId
-PUT http://localhost:3000/profile/updateProfile
+PUT http://localhost:3000/profile/36
 Content-Type: application/json
 
 {
-    "account_id":1,
+    "nama":"ahmad",
     "no_telp":"012345678910",
-    "negara": "Indo",
+    "negara": "Indojaya",
     "kota": "jogya"
 }
+
+### Logout
+POST http://localhost:3000/profile/logout
+
+### Change Password By Login
+PUT http://localhost:3000/profile/changePassword
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDUsImVtYWlsIjoiMjAwNDAxMTQxQHN0dWRlbnQudW1yaS5hYy5pZCIsImlhdCI6MTcwMTg4NTAzMX0.RNs5ArZibeYnG0oHUVikf_-S8fsQB4qOpm0S70iz3fk
+
+{
+    "password_lama": "password123",
+    "password_baru": "aldi123",
+    "Confirmationpassword_baru": "aldi123"
+}
+
+### GetAccountByLogin
+GET http://localhost:3000/profile/account
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDUsImVtYWlsIjoiMjAwNDAxMTQxQHN0dWRlbnQudW1yaS5hYy5pZCIsImlhdCI6MTcwMTg4NTAzMX0.RNs5ArZibeYnG0oHUVikf_-S8fsQB4qOpm0S70iz3fk
+
+### updateProfilebyLogin
+PUT http://localhost:3000/profile/updateProfile
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDUsImVtYWlsIjoiMjAwNDAxMTQxQHN0dWRlbnQudW1yaS5hYy5pZCIsImlhdCI6MTcwMTg4NTAzMX0.RNs5ArZibeYnG0oHUVikf_-S8fsQB4qOpm0S70iz3fk
+
+{
+    "nama":"ahmad mmoraldi",
+    "no_telp":"012345678910",
+    "negara": "Indojaya",
+    "kota": "jogyas"
+}
+
+### GetRiwayatPembayaranByLogin
+GET http://localhost:3000/profile/paymentHistory
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDMsImVtYWlsIjoiYmJiYiIsImlhdCI6MTcwMTg4NTM3OX0.cVDmLAUets2yZHr09DNyn4tIvqrzrjuedwTXvK481D8
+
+# ------------------------------------ CATEGORY ------------------------------------
+### GET ALL CATEGORY
+GET http://localhost:3000/category
+
+### CREATE CATEGORY
+POST http://localhost:3000/category
+Content-Type: application/json
+
+{
+    "title" : "Web Development",
+    "deskripsi" : "Belajar membangun website yang dinamis seperti toko online dengan teknologi web development terbaru"
+}
+
+### GET CATEGORY BY ID
+GET http://localhost:3000/category/2
+
+### PUT UPDATE CATEGORY
+PUT http://localhost:3000/category/3
+Content-Type: application/json
+
+{
+    "title":"Data analis",
+    "deskripsi":"mempelajari cara menganalisis dan menginterpretasi data untuk mendapatkan wawasan dan informasi yang berharga"
+}
+
+### DELETE CATEGORY BY ID
+DELETE http://localhost:3000/category/2
+
+
+# ------------------------------------ COURSE ------------------------------------
 
 ### GetAllCourse
 GET http://localhost:3000/course
@@ -81,20 +147,73 @@ POST http://localhost:3000/course/addCourse
 Content-Type: application/json
 
 {
-    "title":"UI/UX untuk Sepuh",
+    "title":"UI/UX untuk pemula",
     "mentor_id": 1,
-    "deskripsi":"Course UI/UX untuk kamu yang mau jadi sepuh",
-    "kategori_id": 1,
+    "deskripsi":"Course UI/UX untuk kamu mau yang baru mau mulai",
+    "kategori_id":2,
     "harga":0,
     "premium":false,
-    "level":"Sepuh"
+    "level":"Beginner"
 }
 
 ### GetCourseByCategory
-GET http://localhost:3000/course/filter?kategori_id=1&kategori_id=3sort=created_at&order=asc
+GET http://localhost:3000/course/filter?title=UI/UX untuk pemula
+
+###
+GET http://localhost:3000/course/search?title=ui
 
 
-### CHAPTER
+# ------------------------------------ VIDEO ------------------------------------
+### GET ALL VIDEO
+GET http://localhost:3000/video
+
+### CREATE VIDEO
+POST http://localhost:3000/video
+Content-Type: application/json
+
+{
+    "chapter_id":2,
+    "title":"UI/UX DESIGN II PART III",
+    "deskripsi":"belajar UI/UX DESIGN II PART III PREM",
+    "url_video":"https://youtu.be/DwTkyMJi890",
+    "is_preview":false
+}
+
+### GET VIDEO BY ID
+GET http://localhost:3000/video/2
+
+### GET VIDEO BY CHAPTER
+GET http://localhost:3000/video/chapter/3
+
+### UPDATE VIDEO
+PUT http://localhost:3000/video/106
+Content-Type: application/json
+
+{
+    "chapter_id":5,
+    "title":"new",
+    "deskripsi":"belajar new PREM",
+    "url_video":"httpssss://youtu.be/DwTkyMJi890",
+    "is_preview":true
+}
+
+### DELETE VIDEO BY ID
+DELETE http://localhost:3000/video/106
+
+# ------------------------------------ ### ------------------------------------
+
+###
+GET https://binar-academy-final-project.vercel.app
+
+
+### Get All User Course
+GET http://localhost:3000/class
+
+### Get User Course By login
+GET http://localhost:3000/class/myclass
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NywiZW1haWwiOiJtYWhhZGlvY3NpZGlvQHN0dWRlbnRzLmFtaWtvbS5hYy5pZCIsImlhdCI6MTcwMTk1MTU5Nn0.EOEStpZULcR0KUeKfYpFje071MfwYB4HVFc0JB1Bwco
+
+### ----------------------------------CHAPTER------------------------------------
 ### GET ALL CHAPTER
 GET http://localhost:3000/chapter/
 
