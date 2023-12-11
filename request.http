@@ -16,7 +16,7 @@ Content-Type: application/json
 Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjIxMTA0MDY0QGl0dGVsa29tLXB3dC5hYy5pZCIsImlhdCI6MTcwMTY5MDcwNH0.yjDtBxX0m8vQVUHWW2Pa5a-yffR6PXq6VrXxDMAN1Eo
 
 {
-    "otp":"498890"
+    "otp":"355194"
 }
 
 #### resend otp
@@ -60,7 +60,7 @@ Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjIwMDQwMTE0MUBz
 GET http://localhost:3000/profile
 
 ### getAccountById
-GET http://localhost:3000/profile/3
+GET http://localhost:3000/profile/1
 
 ### updateProfilebyId
 PUT http://localhost:3000/profile/updateProfile
@@ -81,14 +81,48 @@ POST http://localhost:3000/course/addCourse
 Content-Type: application/json
 
 {
-    "title":"UI/UX untuk pemula",
+    "title":"UI/UX untuk Sepuh",
     "mentor_id": 1,
-    "deskripsi":"Course UI/UX untuk kamu mau yang baru mau mulai",
-    "kategori_id":2,
+    "deskripsi":"Course UI/UX untuk kamu yang mau jadi sepuh",
+    "kategori_id": 1,
     "harga":0,
     "premium":false,
-    "level":"Beginner"
+    "level":"Sepuh"
 }
 
 ### GetCourseByCategory
 GET http://localhost:3000/course/filter?kategori_id=1&kategori_id=3sort=created_at&order=asc
+
+
+### CHAPTER
+### GET ALL CHAPTER
+GET http://localhost:3000/chapter/
+
+### GET CHAPTER BY COURSE ID
+GET http://localhost:3000/chapter/1
+
+### ADD CHAPTER
+POST http://localhost:3000/chapter/addChapter
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiIyMTEwNDA2NEBpdHRlbGtvbS1wd3QuYWMuaWQiLCJpYXQiOjE3MDE3NTc3NDh9.adHgBrrqy9R0q6UdXocx0mLWkxIcDK33iU6vo-NUsTw
+
+{
+    "chapter_title": "Chapter 3 - Masuk materi kedua",
+    "course_id": 1,
+    "video_id": 4
+}
+
+### UPDATE CHAPTER BY CHAPTER_ID
+PUT http://localhost:3000/chapter/updateChapter/4
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiIyMTEwNDA2NEBpdHRlbGtvbS1wd3QuYWMuaWQiLCJpYXQiOjE3MDE3NTc3NDh9.adHgBrrqy9R0q6UdXocx0mLWkxIcDK33iU6vo-NUsTw
+
+{
+    "chapter_title": "Chapter 2 - Masuk materi yuk!",
+    "course_id": 1,
+    "video_id": 4
+}
+
+### DELETE CHAPTER BY CHAPTER_ID
+DELETE http://localhost:3000/chapter/deleteChapter/9
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiIyMTEwNDA2NEBpdHRlbGtvbS1wd3QuYWMuaWQiLCJpYXQiOjE3MDE3NTc3NDh9.adHgBrrqy9R0q6UdXocx0mLWkxIcDK33iU6vo-NUsTw

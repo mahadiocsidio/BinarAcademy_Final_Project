@@ -9,7 +9,7 @@ generator client {
 datasource db {
   provider  = "postgresql"
   url  	    = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  // directUrl = env("DIRECT_URL")
 }
 
 // schema.prisma
@@ -68,6 +68,7 @@ model Course {
   course_id         Int                 @id @default(autoincrement())
   title             String?
   deskripsi         String?
+  kode_kelas        String?
   kategori_id       Int
   premium           Boolean             @default(false)
   mentor_id         Int

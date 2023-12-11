@@ -13,9 +13,12 @@ app.use(cors());
 const userRouter = require('./routes/user.routes');
 const profileRouter = require('./routes/profile.routes')
 const courseRouter = require('./routes/course.routes')
+const chapterRouter = require('./routes/chapter.routes')
+
 app.use('/auth', userRouter);
 app.use('/profile', profileRouter)
 app.use('/course', courseRouter)
+app.use('/chapter', chapterRouter)
 
 
 app.listen(PORT, () => {
