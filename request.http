@@ -30,8 +30,8 @@ POST http://localhost:3000/auth/login
 Content-Type: application/json
 
 {
-    "email":"a@gmail.com",
-    "password":"aldi123"
+    "email":"a",
+    "password":"password123"
 }
 
 ### RESET PASSWORD
@@ -47,13 +47,13 @@ PUT http://localhost:3000/auth/reset-password?token=eyJhbGciOiJIUzI1NiIsInR5cCI6
 Content-Type: application/json
 
 {
-    "password":"aldi123",
+    "password":"aaldi123",
     "confirmationPassword":"aldi123"
 }
 
 ### GET USER BY TOKEN
 GET http://localhost:3000/auth/whoami
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjo0NSwiZW1haWwiOiIyMDA0MDExNDFAc3R1ZGVudC51bXJpLmFjLmlkIiwiaWF0IjoxNzAxODYyNTQ0fQ.JljK-AO405MyHBbokt8TFXKP64QSpd3HMYno-T8F1ic
+Authorization: eyJhbGciOiJIUzI1NiIasInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjo0NSwiZW1haWwiOiIyMDA0MDExNDFAc3R1ZGVudC51bXJpLmFjLmlkIiwiaWF0IjoxNzAxODYyNTQ0fQ.JljK-AO405MyHBbokt8TFXKP64QSpd3HMYno-T8F1ic
 
 # ------------------------------------ PROFIL ------------------------------------
 

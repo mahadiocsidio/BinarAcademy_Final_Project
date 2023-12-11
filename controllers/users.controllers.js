@@ -265,7 +265,7 @@ module.exports = {
       if (!userVerified) {
         //generate otp
         createUpdateotp(user.account_id, user.nama, user.email, res);
-        return res.status(400).json({
+        return res.status(401).json({
           status: false,
           err: 'lakukan verifikasi terlebih dahulu',
           message: 'harap periksa email anda untuk mendapat otp',
@@ -345,7 +345,7 @@ module.exports = {
 
       jwt.verify(token, JWT_SECRET_KEY, async (err, decoded) => {
         if (err) {
-          return res.status(400).json({
+          return res.status(401).json({
             status: false,
             message: 'Bad Request',
             err: err.message,

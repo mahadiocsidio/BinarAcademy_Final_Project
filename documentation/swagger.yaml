@@ -110,21 +110,11 @@ paths:
         - Start
       operationId: verify-otp
       summary: Verify OTP
+      security:
+        - bearerAuth: []
       requestBody:
-        description: Verify OTP request
         required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                email:
-                  type: string
-                  format: email
-                  example: user@example.com
-                otp:
-                  type: string
-                  example: 123456
+        $ref: "#/components/requestBodies/verify-otp"
       responses:
         '200':
           description: OTP verification successful
@@ -180,18 +170,8 @@ paths:
         - Start
       operationId: resend-otp
       summary: Resend OTP
-      requestBody:
-        description: Resend OTP request
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                email:
-                  type: string
-                  format: email
-                  example: user@example.com
+      security:
+        - bearerAuth: []
       responses:
         '200':
           description: OTP resent successfully
@@ -253,7 +233,6 @@ paths:
                   data: 
                     example : null
 
-
   /auth/login:
     post:
       tags:
@@ -263,18 +242,7 @@ paths:
       requestBody:
         description: User login credentials
         required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                email:
-                  type: string
-                  format: email
-                  example: user@example.com
-                password:
-                  type: string
-                  example: password123
+        $ref: "#/components/requestBodies/login"
       responses:
         '200':
           description: Successful login
@@ -292,19 +260,15 @@ paths:
                   data:
                     type: object
                     properties:
-                      token:
-                        type: string
-                        example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InB1dHJpaW5kcml5YW50aTE5MDIwM0BnbWFpbC5jb20iLCJpYXQiOjE3MDE0MDU5MDJ9.gTd_DuEmS1hfDaiDBOYFnQ9ITVw9qk_x0Yu09-04d-g"
                       user:
                         type: object
                         properties:
-                          content:
-                            type: object
-                            properties:
-                              application/json:
-                                $ref: '#/components/schemas/AccountModel'
+                        $ref: '#/components/schemas/AccountModel'
+                      token:
+                        type: string
+                        example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InB1dHJpaW5kcml5YW50aTE5MDIwM0BnbWFpbC5jb20iLCJpYXQiOjE3MDE0MDU5MDJ9.gTd_DuEmS1hfDaiDBOYFnQ9ITVw9qk_x0Yu09-04d-g"
         '400':
-          description: Failed operation
+          description: Failed login
           content:
             application/json:
               schema:
@@ -318,10 +282,32 @@ paths:
                     example: 'Bad Request'
                   error:
                     type: string
-                    example: 'Invalid Email or Password or OTP verification required'
-                  details:
+                    example: 'Invalid Email or Password'
+        '401':
+          description: account not verified
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  err:
                     type: string
-                    example: 'Please verify your email by entering the OTP sent to your registered email address.'
+                    example: 'lakukan verifikasi terlebih dahulu'
+                  message:
+                    type: string
+                    example: 'harap periksa email anda untuk mendapat otp'
+                  data:
+                    type: object
+                    properties:
+                      email:
+                        type: string
+                        example: 'john@example.com'
+                      is_verified:
+                        type: boolean
+                        example: false
 
   /auth/reset-password:
     post:
@@ -383,7 +369,152 @@ paths:
                     example: 'Enter Registered Email!'
                   data:
                     example: null
-
+    put:
+      tags:
+        - Start
+      operationId: change-password
+      summary: Reset Password
+      parameters:
+        - in: query
+          name: token
+          schema:
+            type: string
+            example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDAsImVtYWlsIjoiYiIsImlhdCI6MTcwMTk2MTIwOH0._GJxdj6WMMq3cwXRfR3LVwkSAu74rnPyMdvwhmo2wUU
+      requestBody:
+        description: change password
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                password:
+                  type: string
+                  example: password123
+                ConfirmationPassword:
+                  type: string
+                  example: password213
+      responses:
+        '200':
+          description: change password successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: 'success'
+                  err:
+                    type: string
+                    example: null
+                  data:
+                    type: object
+                    properties:
+                      user:
+                        type: object
+                        properties:
+                          nama:
+                            type: string
+                            example: John Doe
+                          email:
+                            type: string
+                            example: john@example.com
+                          role:
+                            type: string
+                            example: user
+        '400':
+          description: new password not same
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: bad request
+                  err:
+                    type: string
+                    example: please ensure that the password and password confirmation match!
+                  data:
+                    type: string
+                    example: null
+        '401':
+          description: invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'bad request'
+                  err:
+                    type: string
+                    example: invalid token
+                  data:
+                    type: string
+                    example: null
+  /auth/whoami:
+    get:
+      tags:
+        - Start
+      summary: Get all accounts profile
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: OK
+                  err:
+                    type: string
+                    example: null
+                  data:
+                    type: object
+                    properties:
+                      user:
+                        type: object
+                        properties:
+                        $ref: '#/components/schemas/AccountModel'
+        '401':
+          description: Failed response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Unauthorized
+                  err:
+                    type: string
+                    example: invalid token
+                  data:
+                    type: string
+                    example: null
+                          
   /profile:
     get:
       tags:
@@ -1840,8 +1971,6 @@ components:
         password:
           type: string
           example: "password123"
-        otp:
-          $ref: "#/components/schemas/OtpModel"
         no_telp:
           type: string
           example: "123456789"
@@ -1859,7 +1988,7 @@ components:
           example: "https://example.com/image.png"
         is_verified:
           type: boolean
-          example: false
+          example: true
         created_at:
           type: string
           format: date-time
@@ -1868,26 +1997,6 @@ components:
           type: string
           format: date-time
           example: "2023-10-15T12:13:48.276Z"
-        User_course:
-          type: array
-          items:
-            $ref: "#/components/schemas/User_courseModel"
-        Course_progress:
-          type: array
-          items:
-            $ref: "#/components/schemas/Course_progressModel"
-        Rating:
-          type: array
-          items:
-            $ref: "#/components/schemas/RatingModel"
-        Riwayat_Transaksi:
-          type: array
-          items:
-            $ref: "#/components/schemas/Riwayat_TransaksiModel"
-        Notifikasi:
-          type: array
-          items:
-            $ref: "#/components/schemas/NotifikasiModel"
 
     OtpModel:
       type: object
@@ -2280,7 +2389,34 @@ components:
                   minLength: 8
                   maxLength: 15
                   example: "password123"
-    
+                ConfirmationPassword:
+                  type: string
+                  minLength: 8
+                  maxLength: 15
+                  example: "password123"
+    verify-otp:
+      content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                otp:
+                  type: string
+                  example: 494387
+    login:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              email:
+                type: string
+                format: email
+                example: user@example.com
+              password:
+                type: string
+                example: password123
     addCourse:
       content:
           application/json:
