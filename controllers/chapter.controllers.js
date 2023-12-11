@@ -1,9 +1,6 @@
-const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
+const prisma = require('../libs/prisma');
 const jwt = require('jsonwebtoken');
 const { getPagination } = require('../helper/index');
-
-const prisma = require('../libs/prisma');
 
 module.exports = {
   getAllChapter: async (req, res, next) => {

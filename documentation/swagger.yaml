@@ -402,20 +402,45 @@ paths:
       tags:
         - Chapter
       summary: Get all chapters
+      description: "Retrieve a list of chapters with pagination."
+      parameters:
+        - in: query
+          name: limit
+          schema: 
+            type: integer
+            default: 10
+          description: Number of items to retrieve per page
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+          description: Page number
+
       responses:
         '200':
           description: Successful response
           content:
             application/json:
-              schema:
-                type: object
-                properties:
-                  success:
-                    type: boolean
-                  data:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/ChapterModel'
+              example:
+                success: true
+                message: "Success"
+                data:
+                  pagination:
+                    total_items: 100  # Replace with the actual total number of items
+                    total_pages: 10   # Replace with the actual total number of pages
+                    current_page: 1
+                    items_per_page: 10
+                  category:
+                    - chapter_id: 1
+                      title: "Chapter 1 - Pendahuluan"
+                      course_id: 1
+                    - kategori_id: 2
+                      title: "Product Management"
+                      course_id: 1
+
+        '500':
+          description: Internal Server Error
 
   /chapter/{course_id}:
     get:
