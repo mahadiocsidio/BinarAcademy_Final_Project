@@ -897,7 +897,7 @@ paths:
       summary: Get all payments
       tags:
         - Payment
-      description: Retrieve a list of payment transactions with pagination.
+      description: Retrieve a list of payments with pagination.
       parameters:
         - in: query
           name: limit
@@ -921,16 +921,24 @@ paths:
                 success: true
                 data:
                   pagination:
-                    total_items: 100  # Replace with the actual total number of items
                     total_pages: 10   # Replace with the actual total number of pages
-                    current_page: 1
-                    items_per_page: 10
+                    links:
+                      next: "https://binar-academy-final-project.vercel.app/payment/?page=2&limit=10"
+                      prev: null
+                  total_items: 100  # Replace with the actual total number of items  
                   payment:
                     - riwayat_transaksi_id: 1
-                      # Add other payment fields here
-                    - riwayat_transaksi_id: 2
-                      # Add other payment fields here
-                  # Add more payment entries as needed
+                      account_id: 123
+                      Account:
+                        nama: 'John Doe'
+                        email: 'john@example.com'
+                      Course:
+                        title: 'Programming Basics'
+                        kode_kelas: 'P101'
+                        harga: 49990
+                      status: 'Sudah Bayar'
+                      tanggal_pembayaran: '2023-01-01T12:00:00Z'
+                    # Add more payment entries as needed
 
         '500':
           description: Internal Server Error
@@ -1141,9 +1149,9 @@ paths:
       description: Retrieve details of a payment transaction based on the account ID.
       parameters:
         - in: path
-          name: account_id
+          name: riwayat_transaksi_id
           required: true
-          description: ID of the account for which payment details are requested
+          description: ID of the Riwayat_Transaksi for which payment details are requested
           schema:
             type: integer
       responses:
@@ -1177,7 +1185,7 @@ paths:
       summary: Update payment status by ID
       tags:
         - Payment
-      description: Update the status of a payment transaction by its ID.
+      description: Update the status of a payment transaction by its ID from waiting to paid
       parameters:
         - in: path
           name: riwayat_transaksi_id
@@ -1256,11 +1264,13 @@ paths:
                   course:
                     - course_id: 1
                       title: 'Web Development Fundamentals'
+                      kode_kelas: 'WD001'
                       kategori_id: 101
                       premium: true
                       harga: 99.99
                     - course_id: 2
                       title: 'Data Science Basics'
+                      kode_kelas: 'DS001'
                       kategori_id: 102
                       premium: false
                       harga: 129.99
@@ -1327,7 +1337,9 @@ paths:
                 data:
                   - course_id: 1
                     title: 'Web Development Fundamentals'
+                    kode_kelas: 'WD001'
                     kategori_id: 101
+                    premium: true
                     harga: 99.99
                     Kategori:
                       title: 'Programming'
@@ -1339,6 +1351,51 @@ paths:
               example:
                 success: false
                 message: 'Course not found.'
+
+        '500':
+          description: Internal Server Error
+
+  /courses/{course_id}:
+    get:
+      summary: Get course by ID
+      tags:
+        - Course
+      description: Retrieve information about a course based on its ID.
+      parameters:
+        - in: path
+          name: course_id
+          schema:
+            type: integer
+          required: true
+          description: ID of the course to retrieve
+
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                success: true
+                data:
+                  course_id: 1
+                  title: 'Programming Basics'
+                  kode_kelas: 'P101'
+                  kategori_id: 2
+                  premium: true
+                  harga: 49.99
+                  level: 'Beginner'
+                  Kategori:
+                    title: 'Programming'
+                # Add other course fields as needed
+
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              example:
+                success: false
+                message: 'Course isnt registered'
+                data: null
 
         '500':
           description: Internal Server Error
