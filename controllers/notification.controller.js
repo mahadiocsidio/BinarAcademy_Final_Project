@@ -10,5 +10,5 @@ module.exports = {
 
   getNotifbyAccountId: async (req, res, next) => {},
 
-  getNotifById: async (req, res, next) => {},
+  getNotifbyId: async (req, res, next) => {},
 };

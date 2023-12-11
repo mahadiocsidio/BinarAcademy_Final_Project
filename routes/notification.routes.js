@@ -4,7 +4,7 @@ const {
   getAllNotif,
   createNotif,
   getNotifbyAccountId,
-  getNotifById,
+  getNotifbyId,
 } = require('../controllers/notification.controller');
 
 router.get('/', getAllNotif);
@@ -14,6 +14,6 @@ router.post('/', createNotif);
 router.get('/myNotifications', restrict, getNotifbyAccountId);
 
 // BY ID
-router.get('/:notification_id', getNotifById);
+router.get('/:notification_id', getNotifbyId);
 
 module.exports = router;

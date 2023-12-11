@@ -8,6 +8,7 @@ info:
   version: 1.0.0
 servers:
   - url: https://binar-academy-final-project.vercel.app
+  - url: http://localhost:3000
 
 tags:
   - name: Start
@@ -25,6 +26,7 @@ tags:
   - name: Rating
     description: all about Rating
 paths:
+# ------------------------------------ AUTH ------------------------------------
   /auth/register:
     post:
       tags:
@@ -514,32 +516,209 @@ paths:
                   data:
                     type: string
                     example: null
-                          
+
+# ------------------------------------ PROFILE ------------------------------------
   /profile:
     get:
       tags:
         - Account
       summary: Get all accounts profile
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 10
+          description: Number of items to return per page
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+          description: Page number to retrieve
       responses:
         '200':
           description: Successful response
           content:
             application/json:
-              example:
-                success: true
-                data:
-                  - account_id: 1
-                    nama: John Doe
-                    email: john@example.com
-                    role: user
-                    created_at: '2023-01-01T12:00:00Z'
-                  - account_id: 2
-                    nama: Jane Doe
-                    email: jane@example.com
-                    role: admin
-                    created_at: '2023-01-02T14:30:00Z'
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      pagination:
+                        type: object
+                        properties:
+                        $ref: '#/components/schemas/pagination'
+                      account:
+                        type: array
+                        items:
+                            type: object
+                            properties:
+                            $ref: '#/components/schemas/AccountModel'
+
+              #   data:
+              #     type: object
+                  # - account_id: 1
+                  #   nama: John Doe
+                  #   email: john@example.com
+                  #   is_verified: true
+                  #   role: user
+                  #   created_at: '2023-01-01T12:00:00Z'
+                  # - account_id: 2
+                  #   nama: Jane Doe
+                  #   email: jane@example.com
+                  #   is_verified: true
+                  #   role: admin
+                  #   created_at: '2023-01-02T14:30:00Z'
         '500':
           description: Internal Server Error
+  /profile/{account_id}:
+    get:
+      tags:
+        - "Account"
+      summary: Get user's profile account by id
+      parameters:
+        - in: path
+          name: account_id
+          schema:
+            type: integer
+          required: true
+          description: ID of the account
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    example: true
+                  message:
+                    type: string
+                    example: 'success!'
+                  data:
+                    type: object
+                    properties:
+                    $ref: '#/components/schemas/AccountModel'
+        '400':
+          description: Failed response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: false
+                  message:
+                    type: string
+                    example: 'bad request!'
+                  err:
+                    type: string
+                    example: Account isnt registered
+                  data:
+                    type: string
+                    example: null
+    put:
+      tags:
+        - "Account"
+      summary: Update user's detail profile account by id
+      parameters:
+        - in: path
+          name: account_id
+          schema:
+            type: integer
+          required: true
+          description: ID of the account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nama:
+                  type: string
+                  example: John Doe
+                no_telp:
+                  type: string
+                  example: 0812345678
+                negara:
+                  type: string
+                  example: Indojaya
+                kota:
+                  type: string
+                  example: pekanbaru
+        
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: account success updated!
+                  data:
+                    type: object
+                    properties:
+                    $ref: '#/components/schemas/AccountModel'
+        '400':
+          description: Failed response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: false
+                  message:
+                    type: string
+                    example: 'bad request!'
+                  err:
+                    type: string
+                    example: Account Not Found!
+                  data:
+                    type: string
+                    example: null
+  /profile/logout:
+    post:
+      tags:
+        - Account
+      summary: Logout
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Logout successful
+                  err:
+                    type: string
+                    example: null
+                  data:
+                    type: string
+                    example: null
 
   /profile/account:
     get:
@@ -553,23 +732,45 @@ paths:
           description: Successful response
           content:
             application/json:
-              example:
-                success: true
-                data:
-                  account_id: 1
-                  nama: John Doe
-                  email: john@example.com
-                  no_telp: '+1234567890'
-                  negara: 'Indonesia'
-                  kota: 'Jakarta'
-                  url_image: 'https://example.com/image.jpg'
-        '404':
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: success!
+                  err:
+                    type: string
+                    example: null
+                  data:
+                    type: object
+                    properties:
+                      user:
+                        type: object
+                        properties:
+                        $ref: '#/components/schemas/AccountModel'
+         
+        '401':
           description: Account not found
           content:
             application/json:
-              example:
-                success: false
-                message: 'Account not found'
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Unauthorized
+                  err:
+                    type: string
+                    example: invalid token
+                  data:
+                    type: string
+                    example: null
         '500':
           description: Internal Server Error
 
@@ -587,16 +788,23 @@ paths:
           description: Successful response
           content:
             application/json:
-              example:
-                success: true
-                data:
-                  account_id: 1
-                  nama: John Doe
-                  email: john@example.com
-                  no_telp: '+1234567890'
-                  negara: 'Indonesia'
-                  kota: 'Jakarta'
-                  url_image: 'https://example.com/image.jpg'
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: account success updated!
+                  data:
+                    type: object
+                    properties: 
+                      user:
+                        type: object
+                        properties:
+                        $ref: '#/components/schemas/AccountModel'
+
         '400':
           description: Bad Request
           content:
@@ -604,13 +812,25 @@ paths:
               example:
                 success: false
                 message: 'Invalid request payload'
-        '404':
+        '401':
           description: Account not found
           content:
             application/json:
-              example:
-                success: false
-                message: 'Account not found'
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Unauthorized
+                  err:
+                    type: string
+                    example: invalid token
+                  data:
+                    type: string
+                    example: null
         '500':
           description: Internal Server Error
 
@@ -629,30 +849,87 @@ paths:
           description: Successful response
           content:
             application/json:
-              example:
-                success: true
-                message: 'Successfully changed your password'
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Successfully changed your password
+                  data:
+                    type: object
+                    properties:
+                      user:
+                        type: object
+                        properties:
+                          name:
+                            type: string
+                            example: John Dao
+                          email:
+                            type: string
+                            example: John@example.com
+                          role:
+                            type: string
+                            example: user
         '400':
           description: Bad Request
           content:
             application/json:
-              example:
-                success: false
-                message: 'Invalid request payload'
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: bad request
+                  err:
+                    type: string
+                    example: Password isn't match
+                  data:
+                    type: string
+                    example: null
         '401':
-          description: Unauthorized
+          description: Account not found
           content:
             application/json:
-              example:
-                success: false
-                message: 'Invalid current password'
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Unauthorized
+                  err:
+                    type: string
+                    example: invalid token
+                  data:
+                    type: string
+                    example: null
         '404':
-          description: Account isnt registered
+          description: false input new password
           content:
             application/json:
-              example:
-                success: false
-                message: 'Account isnt registered'
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: bad request
+                  err:
+                    type: string
+                    example: New Password & Confirmation Password must be same!
+                  data:
+                    type: string
+                    example: null
         '500':
           description: Internal Server Error
         
@@ -664,42 +941,76 @@ paths:
       description: Get Account's Transaction History that have login
       tags:
         - Account
-      parameters:
-        - name: Authorization
-          in: header
-          description: JWT Bearer token
-          required: true
-          schema:
-            type: string
       responses:
         '200':
-          description: OK
+          description: Successful responses
           content:
             application/json:
-              example:
-                success: true
-                data:
-                  - status: "Berhasil"
-                    Course:
-                      title: "Pengembangan Web 101"
-                      harga: 29.99
-                      level: "Pemula"
-                      Kategori:
-                        title: "Pemrograman Web"
-                  - status: "Berhasil"
-                    Course:
-                      title: "JavaScript Lanjutan"
-                      harga: 49.99
-                      level: "Lanjutan"
-                      Kategori:
-                        title: "Pemrograman Web"
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: success!
+                  err:
+                    type: string
+                    example: null
+                  data:
+                    type: object
+                    properties:
+                      pagination:
+                        type: object
+                        properties:
+                        $ref: "#/components/schemas/pagination"
+                      riwayat:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            status:
+                              type: object
+                              example: paid
+                            Course:
+                              type: object
+                              properties:
+                                title:
+                                  type: string
+                                  example: WEB DEVELOPMENT COURSE
+                                harga:
+                                  type: integer
+                                  example: 0
+                                level:
+                                  type: string
+                                  example: beginer
+                                Kategori:
+                                  type: object
+                                  properties:
+                                    title:
+                                      type: string
+                                      example: WEB DEVELOPMENT
+
         '401':
-          description: Unauthorized
+          description: Account not found
           content:
             application/json:
-              example:
-                success: false
-                message: "Unauthorized: Token tidak valid atau tidak ada"
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Unauthorized
+                  err:
+                    type: string
+                    example: invalid token
+                  data:
+                    type: string
+                    example: null
         '500':
           description: Internal Server Error
           content:
@@ -708,6 +1019,7 @@ paths:
                 success: false
                 message: "Terjadi kesalahan server"
 
+# ------------------------------------ CLASS ------------------------------------
   /class:
     get:
       summary: Get all user courses with pagination
@@ -1908,6 +2220,23 @@ components:
         message:
           type: string
           example: 'success'
+    pagination:
+      title: pagination
+      type: object
+      properties:
+        links:
+          type: object
+          properties:
+            next:
+              type: string
+              example: http://domain.com/course?page=3&limit=10
+            prev:
+              type: string
+              example: http://domain.com/course?page=1&limit=10
+        total_items:
+          type: integer
+          example: 42
+
     BadRequestResponse:
       title: BadRequestResponse
       type: object
@@ -2544,7 +2873,7 @@ components:
                 password_baru:
                   type: string
                   description: New password for the user
-                ulangi_password:
+                Confirmationpassword_baru:
                   type: string
                   description: Confirm the new password
               required:
