@@ -247,3 +247,53 @@ Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiIyMTEw
 ### DELETE CHAPTER BY CHAPTER_ID
 DELETE http://localhost:3000/chapter/deleteChapter/9
 Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiIyMTEwNDA2NEBpdHRlbGtvbS1wd3QuYWMuaWQiLCJpYXQiOjE3MDE3NTc3NDh9.adHgBrrqy9R0q6UdXocx0mLWkxIcDK33iU6vo-NUsTw
+
+###------------------------------------ RATING-----------------------------------
+
+###POST create rating
+POST http://localhost:3000/rating/rate
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoxLCJlbWFpbCI6InB1dHJpaW5kcml5YW50aTE5MDIwM0BnbWFpbC5jb20iLCJpYXQiOjE3MDIxMTA4NzB9.AyHnqyuwN4ec689P404lPFPZ0SnMkIAL_qdCreOasSg
+Content-Type: application/json
+
+{
+    "course_id" : 1,
+    "skor": 3,
+    "comment": "This course was really helpful!"
+}
+
+###GET all rating
+GET http://localhost:3000/rating
+
+###GET all rating by course_id
+GET http://localhost:3000/rating?course_id=1
+
+###GET all rating by course_id
+GET http://localhost:3000/rating?skor=4
+
+###GET all rating by rating_id
+GET http://localhost:3000/rating?rating_id=3
+
+###GET all rating by rating_id
+GET http://localhost:3000/rating?course_id=1&skor=3
+
+
+###GET all rating by login
+GET http://localhost:3000/rating/myRates
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoxLCJlbWFpbCI6InB1dHJpaW5kcml5YW50aTE5MDIwM0BnbWFpbC5jb20iLCJpYXQiOjE3MDIxMTA4NzB9.AyHnqyuwN4ec689P404lPFPZ0SnMkIAL_qdCreOasSg
+
+
+### PUT UPDATE RATING
+PUT http://localhost:3000/rating/2
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoxLCJlbWFpbCI6InB1dHJpaW5kcml5YW50aTE5MDIwM0BnbWFpbC5jb20iLCJpYXQiOjE3MDIxMTA4NzB9.AyHnqyuwN4ec689P404lPFPZ0SnMkIAL_qdCreOasSg
+Content-Type: application/json
+
+{
+    "course_id" : 1,
+    "skor": 1,
+    "comment": "This course was really not helpful!"
+}
+
+### DELETE  RATING
+DELETE  http://localhost:3000/rating/1
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoxLCJlbWFpbCI6InB1dHJpaW5kcml5YW50aTE5MDIwM0BnbWFpbC5jb20iLCJpYXQiOjE3MDIxMTA4NzB9.AyHnqyuwN4ec689P404lPFPZ0SnMkIAL_qdCreOasSg
+

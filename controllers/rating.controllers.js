@@ -4,14 +4,45 @@ const jwt = require('jsonwebtoken');
 const { getPagination } = require('../helper/index');
 
 module.exports = {
-  //get seluruh rating
+  //get seluruh rating berdasarkan course_id dan skor atau rating_id
   getAllRating: async (req, res, next) => {
     try {
+      let {course_id, skor, rating_id} = req.query;
+      let conditions = {}
+
+      //course_id
+      if(course_id){
+        const courseIds = Array.isArray(course_id) ? course_id.map(id => parseInt(id, 10)) : [parseInt(course_id, 10)];
+        conditions.course_id = {
+          in: courseIds.filter(id => !isNaN(id)), // Filter out NaN values
+
+        }
+      }
+
+      //skor
+      if(skor){
+        const skorIds = Array.isArray(skor) ? skor.map(id => parseInt(id, 10)) : [parseInt(skor, 10)];
+        conditions.skor = {
+          in: skorIds.filter(id => !isNaN(id)), // Filter out NaN values
+
+        }
+      }
+
+      //rating_id
+      if(rating_id){
+        const Rating_id = Array.isArray(rating_id) ? rating_id.map(id => parseInt(id, 10)) : [parseInt(rating_id, 10)];
+        conditions.rating_id = {
+          in: Rating_id.filter(id => !isNaN(id)), // Filter out NaN values
+
+        }
+      }
+
       let { limit = 10, page = 1 } = req.query;
       limit = Number(limit);
       page = Number(page);
 
       const rating = await prisma.rating.findMany({
+        where : conditions,
         skip: (page - 1) * limit,
         take: limit
       });
@@ -29,71 +60,6 @@ module.exports = {
       });
     } catch (err) {
       next(err);
-    }
-  },
-
-  // get rating berdasarkan skor
-  getAllRatingBySkor: async (req, res, next) => {
-    try {
-        let { rating_id, skor, sort, order, limit = 10, page = 1 } = req.query;
-        limit = Number(limit);
-        page = Number(page);
-
-        const requestedSkor = parseInt(skor, 10);
-
-        if (requestedSkor > 5) {
-            res.status(400).json({
-                status: false,
-                message: 'Bad request!',
-                err: 'Score cannot be greater than 5.',
-                data: null
-            });
-        } else {
-            const ratingId = Array.isArray(rating_id) ? rating_id.map(id => parseInt(id, 10)) : [parseInt(rating_id, 10)];
-
-            const allRatings = await prisma.rating.findMany({
-                select: {
-                    account_id: true,
-                    course_id: true,
-                    skor: true,
-                    comment: true,
-                },
-            });
-
-            const filteredRatings = allRatings.filter(rating => rating.skor === requestedSkor);
-
-            if (filteredRatings.length === 0) {
-                res.status(200).json({
-                    status: true,
-                    message: 'No data found for the requested score.',
-                    data: null
-                });
-            } else {
-                const orderBy = sort && order ? { [sort]: order } : undefined;
-
-                const sortedFilteredRatings = orderBy ? filteredRatings.sort((a, b) => a[sort] - b[sort]) : filteredRatings;
-
-                // Pagination
-                let rating = await prisma.rating.findMany({
-                    skip: (page - 1) * limit,
-                    take: limit,
-                });
-
-                const { _count } = await prisma.rating.aggregate({
-                    _count: { rating_id: true },
-                });
-
-                let pagination = getPagination(req, _count.rating_id, page, limit);
-
-                res.status(200).json({
-                    status: true,
-                    message: 'Successful get all rating by skor',
-                    data: { pagination, rating },
-                });
-            }
-        }
-    } catch (error) {
-        next(error);
     }
   },
 
@@ -182,38 +148,6 @@ module.exports = {
     }
   },
 
-  //mendapatkan rating berdasarkan id
-  getRatingById: async (req, res, next) => {
-    try {
-      let { rating_id } = req.params;
-      rating_id = Number(rating_id)
-
-      let isExist = await prisma.rating.findUnique({
-        where: {
-          rating_id,
-        },
-      });
-
-      if (!isExist) {
-        return res.status(400).json({
-          status: false,
-          message: 'bad request!',
-          err: 'rating not found!',
-          data: null,
-        });
-      }
-
-      return res.status(200).json({
-        status: true,
-        message: 'success!',
-        err: null,
-        data: { rating: isExist },
-      });
-    } catch (err) {
-      next(err);
-    }
-  },
-
   //melakukan update rating
   updateRating: async (req, res, next) => {
     try {
@@ -258,42 +192,42 @@ module.exports = {
     }
   },
 
-//melakukan delete rating
-deleteRating : async (req, res, next) => {
-  try{
-      let { rating_id } = req.params;
-      let {account_id} = req.user;
+  //melakukan delete rating
+  deleteRating : async (req, res, next) => {
+    try{
+        let { rating_id } = req.params;
+        let {account_id} = req.user;
 
-      let isExist = await prisma.rating.findUnique({
-        where: {
-          rating_id: Number(rating_id)
-        },
-      });
-
-      if (!isExist) {
-        return res.status(400).json({
-          status: false,
-          message: 'bad request!',
-          err: 'rating not found!',
-          data: null,
-        });
-      }
-
-      const deleteRating = await prisma.rating.delete({
+        let isExist = await prisma.rating.findUnique({
           where: {
-              rating_id: Number(rating_id)
-          }
-      });
+            rating_id: Number(rating_id)
+          },
+        });
 
-      return res.status(200).json({
-          status: true,
-          message: 'Successful delete rating',
-          err: null,
-          data: deleteRating
-      });
+        if (!isExist) {
+          return res.status(400).json({
+            status: false,
+            message: 'bad request!',
+            err: 'rating not found!',
+            data: null,
+          });
+        }
 
-    } catch (err) {
-        next (err)
-    }     
-  } 
+        const deleteRating = await prisma.rating.delete({
+            where: {
+                rating_id: Number(rating_id)
+            }
+        });
+
+        return res.status(200).json({
+            status: true,
+            message: 'Successful delete rating',
+            err: null,
+            data: deleteRating
+        });
+
+      } catch (err) {
+          next (err)
+      }     
+    } 
 };
