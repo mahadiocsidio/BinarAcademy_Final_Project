@@ -4,16 +4,11 @@ const {
   getAllCourse,
   getCoursebyId,
   addCourse,
-  getCoursesByCategory,
-  getCoursebyTitle,
   beliCourse,
 } = require('../controllers/course.controllers');
 
 router.get('/', getAllCourse);
 router.post('/addCourse', addCourse);
-
-router.get('/filter', getCoursesByCategory);
-router.get('/search', getCoursebyTitle);
 
 // BY LOGIN
 router.post('/beli', restrict, beliCourse);
