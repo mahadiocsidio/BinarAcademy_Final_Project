@@ -3,11 +3,35 @@ const { getPagination } = require('../helper/index');
 
 const getAllCourse = async(req,res,next)=>{
     try {
+        let {search,category_ids, sort, order} = req.query
+        let conditions = {}
+        let orderBy = {}
+
+        if (search){
+            conditions.title ={
+                contains: search,
+                mode: 'insensitive',
+            }
+        }
+        if (category_ids){
+        const kategoriIds = Array.isArray(category_ids) ? category_ids.map(id => parseInt(id, 10)) : [parseInt(category_ids, 10)];
+        conditions.kategori_id = {
+            in: kategoriIds.filter(id => !isNaN(id)), // Filter out NaN values
+        };
+        }
+        if(sort && order){
+            orderBy = sort && order ? { [sort]: order } : undefined;
+        }
+        console.log("conditions")
+        console.log(conditions)
+
         let { limit = 10, page = 1 } = req.query;
             limit = Number(limit);
             page = Number(page);
 
         let course = await prisma.course.findMany({
+            where:conditions,
+            orderBy:orderBy,
             skip: (page - 1) * limit,
             take: limit,
             select:{
@@ -22,6 +46,11 @@ const getAllCourse = async(req,res,next)=>{
                     select:{
                         title: true,
                     },
+                },
+                Mentor:{
+                    select:{
+                        name:true
+                    }
                 }
             }
         })
@@ -63,6 +92,11 @@ const getCoursebyId = async(req,res,next)=>{
                     select:{
                         title: true,
                     },
+                },
+                Mentor:{
+                    select:{
+                        name:true
+                    }
                 }
             }
         })
@@ -110,99 +144,6 @@ const addCourse = async(req,res,next)=>{
         })
     } catch (error) {
         next(error)
-    }
-}
-
-const getCoursesByCategory = async (req, res, next) => {
-    try {
-        const { kategori_id, sort, order } = req.query;
-
-        // Handle multiple kategori_id values
-        const kategoriIds = Array.isArray(kategori_id) ? kategori_id.map(id => parseInt(id, 10)) : [parseInt(kategori_id, 10)];
-
-        // Create an object to be used for conditions in the query
-        const condition = {};
-
-        // Add conditions for kategori_id if it exists in the query parameters
-        if (kategoriIds && kategoriIds.length > 0) {
-            condition.kategori_id = {
-                in: kategoriIds.filter(id => !isNaN(id)), // Filter out NaN values
-            };
-        }
-
-        const orderBy = sort && order ? { [sort]: order } : undefined;
-
-        // Use Prisma query with conditions
-        const courses = await prisma.course.findMany({
-            where: condition,
-            orderBy: orderBy,
-            select: {
-                course_id: true,
-                title: true,
-                kode_kelas:true,
-                kategori_id: true,
-                harga: true,
-                level: true,
-                // If needed, add category information
-                Kategori: {
-                    select: {
-                        title: true,
-                    },
-                },
-            },
-        });
-
-        res.status(200).json({
-            success: true,
-            data: courses,
-        });
-    } catch (error) {
-        next(error);
-    }
-};
-
-const getCoursebyTitle = async (req,res,next)=>{
-    try {
-        let { title } = req.query;
-
-        // Make the title case-insensitive by converting it to lowercase
-        title = title.toLowerCase();
-
-        let course = await prisma.course.findMany({
-            where: {
-                title: {
-                    contains: title,
-                    mode: 'insensitive', // Case-insensitive search
-                },
-            },
-            select: {
-                course_id: true,
-                title: true,
-                kode_kelas:true,
-                kategori_id: true,
-                harga: true,
-                level:true,
-                Kategori: {
-                    select: {
-                        title: true,
-                    },
-                },
-            },
-        });
-
-        if (!course) {
-            return res.status(404).json({
-                success: false,
-                message: "Course not found",
-            });
-        }
-
-        res.status(200).json({
-            success: true,
-            data: course,
-        });
-    } catch (error) {
-        next(error);
     }
 }
 
@@ -256,4 +197,4 @@ const beliCourse = async(req,res,next)=>{
 
 }
 
-module.exports ={getAllCourse,getCoursebyId,addCourse,getCoursesByCategory,getCoursebyTitle,deleteCoursebyId,beliCourse}
+module.exports ={getAllCourse,getCoursebyId,addCourse,deleteCoursebyId,beliCourse}

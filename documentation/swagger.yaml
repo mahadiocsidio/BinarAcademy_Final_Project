@@ -577,6 +577,7 @@ paths:
                   #   created_at: '2023-01-02T14:30:00Z'
         '500':
           description: Internal Server Error
+
   /profile/{account_id}:
     get:
       tags:
@@ -835,7 +836,7 @@ paths:
           description: Internal Server Error
 
   /profile/changePassword:
-    post:
+    put:
       tags:
         - Account
       summary: Change user password
@@ -1545,8 +1546,31 @@ paths:
       summary: Get all courses
       tags:
         - Course
-      description: Retrieve a list of courses with pagination.
+      description: Retrieve a list of courses with pagination and optional filtering.
       parameters:
+        - in: query
+          name: search
+          schema:
+            type: string
+          description: Search term to filter courses by title (case-insensitive)
+        - in: query
+          name: category_ids
+          schema:
+            type: array
+            items:
+              type: integer
+          description: Array of category IDs to filter courses by
+        - in: query
+          name: sort
+          schema:
+            type: string
+          description: Column to sort by (e.g., 'title', 'harga')
+        - in: query
+          name: order
+          schema:
+            type: string
+            enum: ['asc', 'desc']
+          description: Sorting order ('asc' for ascending, 'desc' for descending)
         - in: query
           name: limit
           schema:
@@ -1575,17 +1599,17 @@ paths:
                     items_per_page: 10
                   course:
                     - course_id: 1
-                      title: 'Web Development Fundamentals'
-                      kode_kelas: 'WD001'
-                      kategori_id: 101
+                      title: 'Programming Basics'
+                      kode_kelas: 'P101'
+                      kategori_id: 2
                       premium: true
-                      harga: 99.99
-                    - course_id: 2
-                      title: 'Data Science Basics'
-                      kode_kelas: 'DS001'
-                      kategori_id: 102
-                      premium: false
-                      harga: 129.99
+                      harga: 49.99
+                      level: 'Beginner'
+                      Kategori:
+                        title: 'Programming'
+                      Mentor:
+                        name: 'John Doe'
+                    # Add more course entries as needed
 
         '500':
           description: Internal Server Error
@@ -1626,47 +1650,6 @@ paths:
         '500':
           description: Internal Server Error
 
-  /course/search:
-    get:
-      summary: Get course by title
-      tags:
-        - Course
-      description: Retrieve a course by title with case-insensitive search.
-      parameters:
-        - in: query
-          name: title
-          schema:
-            type: string
-          description: Title of the course to retrieve (case-insensitive)
-
-      responses:
-        '200':
-          description: Successful response
-          content:
-            application/json:
-              example:
-                success: true
-                data:
-                  - course_id: 1
-                    title: 'Web Development Fundamentals'
-                    kode_kelas: 'WD001'
-                    kategori_id: 101
-                    premium: true
-                    harga: 99.99
-                    Kategori:
-                      title: 'Programming'
-
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              example:
-                success: false
-                message: 'Course not found.'
-
-        '500':
-          description: Internal Server Error
-
   /courses/{course_id}:
     get:
       summary: Get course by ID
@@ -1698,6 +1681,8 @@ paths:
                   level: 'Beginner'
                   Kategori:
                     title: 'Programming'
+                  Mentor:
+                    name: 'John Doe'
                 # Add other course fields as needed
 
         '404':
@@ -3128,7 +3113,7 @@ components:
               required:
                 - password_lama
                 - password_baru
-                - ulangi_password
+                - Confirmationpassword_baru
 
     createUserCourse:
       content:
