@@ -4,14 +4,12 @@ const {
   getAllRating,
   createRatingbyLogin,
   getRatingbyLogin,
-  getRatingById,
   updateRating,
   deleteRating,
-  getAllRatingBySkor,
 } = require('../controllers/rating.controllers');
 
+//get all by id/course_id/skor
 router.get('/', getAllRating);
-router.get('/filter', getAllRatingBySkor);
 
 // BY LOGIN
 router.get('/myRates', restrict, getRatingbyLogin);
@@ -19,7 +17,5 @@ router.post('/rate', restrict, createRatingbyLogin);
 router.put('/:rating_id', restrict, updateRating);
 router.delete('/:rating_id', restrict, deleteRating);
 
-// BY ID
-router.get('/:rating_id', getRatingById);
 
 module.exports = router;
