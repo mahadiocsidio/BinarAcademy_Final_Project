@@ -9,7 +9,7 @@ module.exports = {
       let { limit = 10, page = 1 } = req.query;
       limit = Number(limit);
       page = Number(page);
-      let payment = await prisma.Riwayat_Transaksi.findMany({
+      let payment = await prisma.riwayat_Transaksi.findMany({
         skip: (page - 1) * limit,
         take: limit,
         select:{
@@ -32,7 +32,7 @@ module.exports = {
           tanggal_pembayaran: true,
         }
       });
-      const { _count } = await prisma.Riwayat_Transaksi.aggregate({
+      const { _count } = await prisma.riwayat_Transaksi.aggregate({
         _count: { riwayat_transaksi_id: true },
       });
 
@@ -59,7 +59,7 @@ module.exports = {
 
       if (!Course) return res.json('Course isnt registered');
 
-      let payment = await prisma.Riwayat_Transaksi.create({
+      let payment = await prisma.riwayat_Transaksi.create({
         data: {
           account_id,
           course_id,
@@ -82,7 +82,7 @@ module.exports = {
     try {
       let {riwayat_transaksi_id} = req.params;
       riwayat_transaksi_id = parseInt(riwayat_transaksi_id, 10);
-      let payment = await prisma.Riwayat_Transaksi.update({
+      let payment = await prisma.riwayat_Transaksi.update({
         where:{
           riwayat_transaksi_id,
         },
@@ -106,7 +106,7 @@ module.exports = {
     try {
       let account = req.user;
 
-      let payment = await prisma.Riwayat_Transaksi.findMany({
+      let payment = await prisma.riwayat_Transaksi.findMany({
         where: {
           account_id: account.account_id,
         },
@@ -140,7 +140,7 @@ module.exports = {
       let { riwayat_transaksi_id} = req.params;
       riwayat_transaksi_id = parseInt(riwayat_transaksi_id, 10);
 
-      let payment = await prisma.Riwayat_Transaksi.findUnique({
+      let payment = await prisma.riwayat_Transaksi.findUnique({
         where: {
           riwayat_transaksi_id,
         },
@@ -179,7 +179,7 @@ module.exports = {
     try {
       let account = req.user
       let { course_id , metode_pembayaran} = req.body;
-      let payment = await prisma.Riwayat_Transaksi.create({
+      let payment = await prisma.riwayat_Transaksi.create({
         data: {
           account_id: account.account_id,
           course_id,
@@ -217,7 +217,7 @@ module.exports = {
         });
       }
 
-      let payment = await prisma.Riwayat_Transaksi.update({
+      let payment = await prisma.riwayat_Transaksi.update({
         where:{
           riwayat_transaksi_id: userTransaction.riwayat_transaksi_id,
         },

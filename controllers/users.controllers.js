@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const nodemailer = require('../libs/nodemailer');
 const { createUpdateotp } = require('./otp.controllers');
+const { createNotifAuto } = require('./notification.controller');
 
 const { JWT_SECRET_KEY } = process.env;
 
@@ -158,6 +159,17 @@ module.exports = {
           is_verified: true,
         },
       });
+
+      //create Notification
+      let titleNotif = 'Success Registrasi Akun!';
+      let deskNotif = `Congratulations ${email} on successfully verifying your account!`;
+      await createNotifAuto(
+        activationOtp.account_id,
+        titleNotif,
+        deskNotif,
+        res
+      );
+
       return res.status(200).json({
         status: true,
         message: 'Activation Code verified successfully',
@@ -309,7 +321,7 @@ module.exports = {
         });
       }
 
-      let token = jwt.sign({ email: emailExist.email }, JWT_SECRET_KEY);
+      let token = jwt.sign({ account_id: emailExist.account_id, email: emailExist.email }, JWT_SECRET_KEY);
       var location = req.headers.origin; //get HOST & PORT
 
       // let url = `${location}/auth/reset-password?token=${token}`; //send token in link to get user
@@ -320,6 +332,13 @@ module.exports = {
       // });
 
       nodemailer.sendEmail(email, 'Reset Password', url);
+
+      //create Notification
+      let titleNotif = 'Request Reset Password Detected!';
+      let deskNotif = `Request Password Reset in email ${email} has been detected!, please check your email to proceed to the next step or ignore this message if that's not you`;
+
+      await createNotifAuto(emailExist.account_id, titleNotif, deskNotif, res);
+
       return res.status(200).json({
         status: true,
         message: 'Send',
@@ -358,7 +377,13 @@ module.exports = {
           data: { password: encryptedPassword },
         });
 
-        res.json({
+        //create Notification
+        let titleNotif = 'SUCCESSFULLY CHANGING YOUR PASSWORD!';
+        let deskNotif = `Congratulations ${decoded.email} You have successfully changed your password, please log in using your new password!`;
+
+        await createNotifAuto(decoded.account_id, titleNotif, deskNotif, res);
+        
+        res.status(200).json({
           status: true,
           message: 'success',
           err: null,
