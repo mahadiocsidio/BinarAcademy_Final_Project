@@ -2398,7 +2398,7 @@ paths:
 
   /mentor:
     get:
-      summary: Get all mentor-course
+      summary: Get all mentor
       tags:
         - Mentor
       description: Retrieve a list of mentor with pagination.
@@ -2438,6 +2438,89 @@ paths:
                       name: Ririn asmarawati
                       job: fullstack developer
                   # Add more category entries as needed
+
+        '500':
+          description: Internal Server Error
+
+    post:
+      summary: Add a new mentor 
+      tags:
+        - Mentor
+      description: Add a new mentor to the system.
+      requestBody:
+        required: true
+        $ref: "#/components/requestBodies/addMentor"
+
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                success: true
+                data:
+                  mentor_id: 1
+                  name: "Zaki saputra"
+                  job: Back end developer
+                  # Add other course fields as needed
+
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              example:
+                success: false
+                message: mentor not found
+        '500':
+          description: Internal Server Error
+
+  /mentor/{mentor_id}:
+    get:
+      summary: Get mentor by ID
+      tags:
+        - Mentor
+      description: Retrieve a mentor by its ID.
+      parameters:
+        - in: path
+          name: mentor_id
+          schema:
+            type: integer
+          required: true
+          description: ID of the mentor to retrieve
+
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                status: true
+                message: 'success!'
+                err: null
+                data:
+                  Mentor:
+                  mentor_id: 1
+                  name: "Zaki saputra"
+                  job: Back end developer
+                  Course:
+                  course_id: 1
+                  title: 'Web Development Fundamentals'
+                  level: Beginner
+                  premium: false,
+                  harga: 99.99
+                  Kategori:
+                    title: 'Programming'
+                    # Add other mentor fields as needed
+
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              example:
+                status: false
+                message: 'bad request!'
+                err: 'mentor not found!'
+                data: null
 
         '500':
           description: Internal Server Error
@@ -3219,3 +3302,25 @@ components:
                   description: Updated comment for the rating
               required:
                 - skor
+
+    addMentor:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              mentor_id:
+                type: integer
+                description: ID of the mentor being rated
+                example : 1
+              name:
+                type: string
+                minimum: 0
+                maximum: 4
+                example: Ratih saputri
+              job:
+                type: string
+                description: job or profession of the mentor
+                example : Frontend developer
+            required:
+              - mentor_id

@@ -19,7 +19,8 @@ const category = require('./routes/category.routes');
 const video = require('./routes/video.routes');
 const rating = require('./routes/rating.routes');
 const payment = require('./routes/payment.routes');
-const mentor = require('./routes/mentor-course.routes');
+const mentor = require('./routes/mentor.routes')
+const mentorCourse = require('./routes/mentor-course.routes');
 const notification = require('./routes/notification.routes');
 
 app.use('/auth', userRouter);
@@ -32,6 +33,7 @@ app.use('/video', video);
 app.use('/rating', rating);
 app.use('/payment', payment);
 app.use('/mentor', mentor);
+app.use('/mentor-course',mentorCourse)
 app.use('/notification', notification);
 
 app.use('/', (req, res) => {
