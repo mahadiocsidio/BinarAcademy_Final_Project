@@ -25,6 +25,8 @@ tags:
     description: all about Course that user have
   - name: Rating
     description: all about Rating
+  - name: Admin
+    description: all about Admin
 paths:
 # ------------------------------------ AUTH ------------------------------------
   /auth/register:
@@ -1210,6 +1212,7 @@ paths:
       summary: Get all payments
       tags:
         - Payment
+        - Admin
       description: Retrieve a list of payments with pagination.
       parameters:
         - in: query
@@ -1546,6 +1549,7 @@ paths:
       summary: Get all courses
       tags:
         - Course
+        - Admin
       description: Retrieve a list of courses with pagination and optional filtering.
       parameters:
         - in: query
@@ -1619,6 +1623,7 @@ paths:
       summary: Add a new course
       tags:
         - Course
+        - Admin
       description: Add a new course to the system.
       requestBody:
         required: true
@@ -1702,6 +1707,7 @@ paths:
       summary: Get all categories
       tags:
         - Category
+        - Admin
       description: Retrieve a list of categories with pagination.
       parameters:
         - in: query
