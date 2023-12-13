@@ -297,3 +297,6 @@ Content-Type: application/json
 DELETE  http://localhost:3000/rating/1
 Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoxLCJlbWFpbCI6InB1dHJpaW5kcml5YW50aTE5MDIwM0BnbWFpbC5jb20iLCJpYXQiOjE3MDIxMTA4NzB9.AyHnqyuwN4ec689P404lPFPZ0SnMkIAL_qdCreOasSg
 
+###--------------------------------MENTOR--------------------------------------
+GET http://localhost:3000/mentor
+
