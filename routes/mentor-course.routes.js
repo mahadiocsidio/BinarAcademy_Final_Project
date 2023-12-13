@@ -9,9 +9,8 @@ const {
 router.get('/', getAllMentorCourse);
 router.post('/', createMentorCourse);
 
-// BY LOGIN
-
-// BY ID
+//GET MENTOR BY ID
 router.get('/:mentor_course_id', getMentorCourseById);
+
 
 module.exports = router;
