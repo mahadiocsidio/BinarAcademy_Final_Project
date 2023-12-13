@@ -14,16 +14,16 @@ Content-Type: application/json
 ### verify otp
 POST http://localhost:3000/auth/verify-otp
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjo0OCwiZW1haWwiOiJmaWZhYXphaHJvQGdtYWlsLmNvbSIsImlhdCI6MTcwMTk2Mzk0M30.L97zpg3gNmotRPnX3U0b08dPhn4Dndxp5ARdmjLQ0Xw
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDUsImVtYWlsIjoiMjAwNDAxMTQxQHN0dWRlbnQudW1yaS5hYy5pZCIsImlhdCI6MTcwMjQ3ODI2Nn0.UkYmv5sXpOfwJRwoMRQX-TsIXYVjtEAn6hqaQYlSfQM
 
 {
-    "otp":"494387"
+    "otp":"856015"
 }
 
 #### resend otp
 POST http://localhost:3000/auth/resend-otp
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDUsImVtYWlsIjoiMjAwNDAxMTQxQHN0dWRlbnQudW1yaS5hYy5pZCIsImlhdCI6MTcwMjI5NDQ1NH0.5YOVAQ6iVfvT8T4DTdGKxuzxVXaGwMEU1s_Z9mtsm-4
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDUsImVtYWlsIjoiMjAwNDAxMTQxQHN0dWRlbnQudW1yaS5hYy5pZCIsImlhdCI6MTcwMjQ3ODI2Nn0.UkYmv5sXpOfwJRwoMRQX-TsIXYVjtEAn6hqaQYlSfQM
 
 ### login
 POST http://localhost:3000/auth/login
@@ -43,17 +43,17 @@ Content-Type: application/json
 }
 
 ### CHANGE PASSWORD BY TOKEN (TANPA LOGIN)
-PUT http://localhost:3000/auth/reset-password?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImZpZmFhemFocm9AZ21haWwuY29tIiwiaWF0IjoxNzAxOTY0MTM0fQ.SdrpwH6AfCoMgWMhILjGPIM1Ukno9ABTXTnJrxyANy8
+PUT http://localhost:3000/auth/reset-password?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjo0NSwiZW1haWwiOiIyMDA0MDExNDFAc3R1ZGVudC51bXJpLmFjLmlkIiwiaWF0IjoxNzAyNDgwMjEwfQ.bsBSDAnx3uVi8qn3p88SZe9Y1EmZ_10nWet21UUIFDw
 Content-Type: application/json
 
 {
-    "password":"aaldi123",
+    "password":"aldi123",
     "confirmationPassword":"aldi123"
 }
 
 ### GET USER BY TOKEN
 GET http://localhost:3000/auth/whoami
-Authorization: eyJhbGciOiJIUzI1NiIasInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjo0NSwiZW1haWwiOiIyMDA0MDExNDFAc3R1ZGVudC51bXJpLmFjLmlkIiwiaWF0IjoxNzAxODYyNTQ0fQ.JljK-AO405MyHBbokt8TFXKP64QSpd3HMYno-T8F1ic
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjo0NSwiZW1haWwiOiIyMDA0MDExNDFAc3R1ZGVudC51bXJpLmFjLmlkIiwiaWF0IjoxNzAyNDgwMjEwfQ.bsBSDAnx3uVi8qn3p88SZe9Y1EmZ_10nWet21UUIFDw
 
 # ------------------------------------ PROFILE ------------------------------------
 
@@ -64,7 +64,7 @@ GET http://localhost:3000/profile
 GET http://localhost:3000/profile/361
 
 ### updateProfilebyId
-PUT http://localhost:3000/profile/361
+PUT http://localhost:3000/profile/45
 Content-Type: application/json
 
 {
@@ -80,25 +80,25 @@ POST http://localhost:3000/profile/logout
 
 ### GetAccountByLogin
 GET http://localhost:3000/profile/account
-Authorization: aeyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDUsImVtYWlsIjoiMjAwNDAxMTQxQHN0dWRlbnQudW1yaS5hYy5pZCIsImlhdCI6MTcwMTg4NTAzMX0.RNs5ArZibeYnG0oHUVikf_-S8fsQB4qOpm0S70iz3fk
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjo0NSwiZW1haWwiOiIyMDA0MDExNDFAc3R1ZGVudC51bXJpLmFjLmlkIiwiaWF0IjoxNzAyNDgwMjEwfQ.bsBSDAnx3uVi8qn3p88SZe9Y1EmZ_10nWet21UUIFDw
 
 
 ### updateProfilebyLogin
 PUT http://localhost:3000/profile/updateProfile
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDUsImVtYWlsIjoiMjAwNDAxMTQxQHN0dWRlbnQudW1yaS5hYy5pZCIsImlhdCI6MTcwMTg4NTAzMX0.RNs5ArZibeYnG0oHUVikf_-S8fsQB4qOpm0S70iz3fk
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjo0NSwiZW1haWwiOiIyMDA0MDExNDFAc3R1ZGVudC51bXJpLmFjLmlkIiwiaWF0IjoxNzAyNDgwMjEwfQ.bsBSDAnx3uVi8qn3p88SZe9Y1EmZ_10nWet21UUIFDw
 
 {
-    "nama":"ahmad mmoraldi",
-    "no_telp":"012345678910",
-    "negara": "Indojaya",
-    "kota": "jogyas"
+    "nama":"ahmad aldi",
+    "no_telp":"01",
+    "negara": "Indojayapura",
+    "kota": "pekanbaru"
 }
 
 ### Change Password By Login
 PUT http://localhost:3000/profile/changePassword
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDUsImVtYWlsIjoiMjAwNDAxMTQxQHN0dWRlbnQudW1yaS5hYy5pZCIsImlhdCI6MTcwMTg4NTAzMX0.RNs5ArZibeYnG0oHUVikf_-S8fsQB4qOpm0S70iz3fk
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjo0NSwiZW1haWwiOiIyMDA0MDExNDFAc3R1ZGVudC51bXJpLmFjLmlkIiwiaWF0IjoxNzAyNDgwMjEwfQ.bsBSDAnx3uVi8qn3p88SZe9Y1EmZ_10nWet21UUIFDw
 
 {
     "password_lama": "aldi123",
@@ -248,7 +248,7 @@ Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiIyMTEw
 DELETE http://localhost:3000/chapter/deleteChapter/9
 Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiIyMTEwNDA2NEBpdHRlbGtvbS1wd3QuYWMuaWQiLCJpYXQiOjE3MDE3NTc3NDh9.adHgBrrqy9R0q6UdXocx0mLWkxIcDK33iU6vo-NUsTw
 
-###------------------------------------ RATING-----------------------------------
+###------------------------------------ RATING -----------------------------------
 
 ###POST create rating
 POST http://localhost:3000/rating/rate
@@ -300,3 +300,32 @@ Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoxLCJlbWFp
 ###--------------------------------MENTOR--------------------------------------
 GET http://localhost:3000/mentor
 
+
+###------------------------------------ NOTIFICATION -----------------------------------
+GET http://localhost:3000/notification?page=3
+
+### CREATE NOTIFICATION PER ID USER
+POST http://localhost:3000/notification
+Content-Type: application/json
+
+{
+    "account_id" : 45,
+    "title" :"new notif2",
+    "deskripsi" : "ini test notif"
+}
+
+### GET NOTIFICATION BY ID
+GET http://localhost:3000/notification/
+
+### GET NOTIFICATION BY LOGIN
+GET http://localhost:3000/notification/myNotifications
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDUsImVtYWlsIjoiMjAwNDAxMTQxQHN0dWRlbnQudW1yaS5hYy5pZCIsImlhdCI6MTcwMjQ3MzY2OH0.oz5tx0YfNYtnMDFFW_dw9iszd_5sdBnCHRZhw5raoNU
+
+### CREATE NOTIF BROADCAST
+POST http://localhost:3000/notification/broadcast
+Content-Type: application/json
+
+{
+    "title" :"PROMO TODAY!!",
+    "deskripsi" : "PROMO INI BERLAKU HARI INI"
+}

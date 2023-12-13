@@ -1,6 +1,8 @@
 const prisma = require('../libs/prisma');
 const { getPagination } = require('../helper/index');
 let bcrypt = require('bcrypt');
+const { createNotifAuto } = require('./notification.controller');
+
 
 const getAllAccountProfile = async (req, res, next) => {
   try {
@@ -104,6 +106,13 @@ const updateProfilebyId = async (req, res, next) => {
         kota,
       },
     });
+
+    //create Notification
+    let titleNotif = 'SUCCESSFULLY CHANGING YOUR INFO ACCOUNT!';
+    let deskNotif = `Congratulations ${accountExist.email} Your account information has been successfully changed by admin!`;
+
+    await createNotifAuto(accountExist.account_id, titleNotif, deskNotif, res);
+
     return res.status(200).json({
       success: true,
       message: 'account success updated!',
@@ -169,6 +178,13 @@ const changePasswordbyLogin = async (req, res, next) => {
         password: hashedPassword,
       },
     });
+
+    //create Notification
+    let titleNotif = 'SUCCESSFULLY CHANGING YOUR PASSWORD!';
+    let deskNotif = `Congratulations ${isExist.nama} You have successfully changed your password via profile menu!`;
+
+    await createNotifAuto(isExist.account_id, titleNotif, deskNotif, res);
+
     res.status(200).json({
       success: true,
       message: `Successfully changed your password`,
@@ -236,11 +252,11 @@ const getRiwayatPembayaran = async (req, res, next) => {
 
 const logout = async (req, res, next) => {
   try {
-    res.status(200).json({ 
+    res.status(200).json({
       status: true,
       message: 'Logout successful',
-      err:null,
-      data:null 
+      err: null,
+      data: null,
     });
   } catch (error) {
     next(error);
@@ -272,14 +288,14 @@ const getAccountbyLogin = async (req, res, next) => {
 
 const updateProfilebyLogin = async (req, res, next) => {
   try {
-    let { account_id } = req.user;
+    let user = req.user;
     let { nama, no_telp, negara, kota } = req.body;
 
     // err pencarian account di handle oleh restrict
 
     let accountUpdated = await prisma.account.update({
       where: {
-        account_id,
+        account_id: user.account_id,
       },
       data: {
         nama,
@@ -288,6 +304,13 @@ const updateProfilebyLogin = async (req, res, next) => {
         kota,
       },
     });
+
+    //create Notification
+    let titleNotif = 'SUCCESSFULLY CHANGING YOUR INFO ACCOUNT!';
+    let deskNotif = `Congratulations ${user.email} You have successfully changed your info account!`;
+
+    await createNotifAuto(user.account_id, titleNotif, deskNotif, res);
+
     return res.status(200).json({
       success: true,
       message: 'account success updated!',
