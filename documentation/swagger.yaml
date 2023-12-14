@@ -26,6 +26,8 @@ tags:
   - name: Rating
     description: all about Rating
   - name : Mentor
+    description : all about mentor
+  - name : Mentor Course
     description : all about mentor-course
 paths:
 # ------------------------------------ AUTH ------------------------------------
@@ -2524,6 +2526,117 @@ paths:
 
         '500':
           description: Internal Server Error
+
+  /mentor-course:
+    get:
+      summary: Get all mentor course
+      tags:
+        - Mentor Course
+      description: Retrieve a list of mentor course with pagination.
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 10
+          description: Number of items to retrieve per page
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+          description: Page number
+
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                success: true
+                message: 'success'
+                data:
+                  pagination:
+                    total_items: 100  # Replace with the actual total number of items
+                    total_pages: 10   # Replace with the actual total number of pages
+                    current_page: 1
+                    items_per_page: 10
+                  mentorCourse:
+                  - Mentor:
+                      name: "Zaki saputra"
+                      job: "Back end developer"
+                    Course:
+                      title: "Introduction to Backend Development"
+                      harga: 49.99
+                      level: "Intermediate"
+                      premium: true
+                      Kategori:
+                        title: "Programming"
+                  - Mentor:
+                      name: "Ririn asmarawati"
+                      job: "Fullstack developer"
+                    Course:
+                      title: "Fullstack Web Development"
+                      harga: 79.99
+                      level: "Advanced"
+                      premium: true
+                      Kategori:
+                        title: "Programming"
+                  # Add more entries as needed
+
+        '500':
+          description: Internal Server Error
+
+  /mentor-course/{mentor_course_id}:
+    get:
+      summary: Get mentor course by ID
+      tags:
+        - Mentor Course
+      description: Retrieve a mentor course by its ID.
+      parameters:
+        - in: path
+          name: mentor_course_id
+          schema:
+            type: integer
+          required: true
+          description: ID of the mentor course to retrieve
+
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                status: true
+                message: 'success!'
+                err: null
+                data:
+                mentorCourse:
+                  - Mentor:
+                      name: "Zaki saputra"
+                      job: "Back end developer"
+                    Course:
+                      title: "Introduction to Backend Development"
+                      harga: 49.99
+                      level: "Intermediate"
+                      premium: true
+                      Kategori:
+                        title: "Programming"
+
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              example:
+                status: false
+                message: 'bad request!'
+                err: 'mentor course not found!'
+                data: null
+
+        '500':
+          description: Internal Server Error
+
+
 
 components:
   securitySchemes:
