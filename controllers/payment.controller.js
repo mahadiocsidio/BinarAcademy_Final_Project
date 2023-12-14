@@ -2,6 +2,7 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const jwt = require('jsonwebtoken');
 const { getPagination } = require('../helper/index');
+const { createNotifAuto } = require('./notification.controller');
 
 module.exports = {
   getAllPayment: async (req, res, next) => {
@@ -68,6 +69,16 @@ module.exports = {
           status: "Menunggu Pembayaran"
         },
       });
+      
+      //create Notification
+      // let titleNotif = 'Success Registrasi Akun!';
+      // let deskNotif = `Congratulations ${email} on successfully verifying your account!`;
+      // await createNotifAuto(
+      //   activationOtp.account_id,
+      //   titleNotif,
+      //   deskNotif,
+      //   res
+      // );
 
       res.status(200).json({
         success: true,
