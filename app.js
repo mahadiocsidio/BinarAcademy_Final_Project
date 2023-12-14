@@ -33,7 +33,7 @@ app.use('/video', video);
 app.use('/rating', rating);
 app.use('/payment', payment);
 app.use('/mentor', mentor);
-app.use('/mentor-course',mentorCourse)
+app.use('/mentor-course', mentorCourse);
 app.use('/notification', notification);
 
 app.use('/', (req, res) => {

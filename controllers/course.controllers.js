@@ -113,7 +113,7 @@ const getCoursebyId = async(req,res,next)=>{
 
 const addCourse = async(req,res,next)=>{
     try {
-        let {title,deskripsi,kode_kelas,kategori_id,harga,premium,mentor_id,level} = req.body
+        let {title,deskripsi,kode_kelas,kategori_id,harga,premium,mentor_id,level, course_id} = req.body
         let course = await prisma.course.create({
             data:{
                 title,
@@ -138,9 +138,18 @@ const addCourse = async(req,res,next)=>{
                 },
             }
         }})
+
+        let mentorCourse = await prisma.mentor_course.create({
+            data : {
+                mentor_id,
+                course_id: course.course_id
+            }
+        })
+
         res.status(200).json({
             success:true,
             data:{course}
+            
         })
     } catch (error) {
         next(error)
