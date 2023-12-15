@@ -117,6 +117,7 @@ const getCoursebyId = async(req,res,next)=>{
             select:{
                 course_id: true,
                 title: true,
+                deskripsi:true,
                 kode_kelas:true,
                 kategori_id: true,
                 premium: true,
@@ -131,10 +132,27 @@ const getCoursebyId = async(req,res,next)=>{
                     select:{
                         name:true
                     }
-                }
+                },
+                
             }
         })
         if(!course) return res.json("Course isnt registered")
+        // Mengambil informasi rating dari tabel Rating
+        let ratings = await prisma.rating.findMany({
+            where: {
+                course_id,
+            },
+            select: {
+                skor: true,
+            },
+        });
+
+        // Menghitung rata-rata skor secara manual
+        const totalSkor = ratings.reduce((acc, rating) => acc + rating.skor, 0);
+        const avgSkor = ratings.length > 0 ? totalSkor / ratings.length : 0;
+
+        // Menambahkan informasi rating ke objek course
+        course.avgRating = avgSkor;
 
         res.status(200).json({
         success:true,
