@@ -22,6 +22,7 @@ const payment = require('./routes/payment.routes');
 const mentor = require('./routes/mentor.routes')
 const mentorCourse = require('./routes/mentor-course.routes');
 const notification = require('./routes/notification.routes');
+const promo = require('./routes/promo.routes')
 
 app.use('/auth', userRouter);
 app.use('/profile', profileRouter);
@@ -35,6 +36,7 @@ app.use('/payment', payment);
 app.use('/mentor', mentor);
 app.use('/mentor-course', mentorCourse);
 app.use('/notification', notification);
+app.use('/promo', promo)
 
 app.use('/', (req, res) => {
   try {

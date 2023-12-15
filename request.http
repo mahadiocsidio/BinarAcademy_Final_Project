@@ -343,3 +343,43 @@ Content-Type: application/json
     "title" :"PROMO TODAY!!",
     "deskripsi" : "PROMO INI BERLAKU HARI INI"
 }
+
+
+### ----------------------------------PROMO------------------------------------
+### GET ALL PROMO
+GET http://localhost:3000/promo/
+
+### GET PROMO BY PROMO ID
+GET http://localhost:3000/promo/3
+
+### ADD PROMO
+POST http://localhost:3000/promo/addPromo
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoxLCJlbWFpbCI6IjIxMTA0MDY0QGl0dGVsa29tLXB3dC5hYy5pZCIsImlhdCI6MTcwMjM1Mjc5OH0.v0PMep5KMK_6-jdw2TdGmMxm8XuVljXo_44TEQWqf24
+
+{
+    "course_id": 1,
+    "deskripsi": "Promo akhir tahun",
+    "tanggal_mulai": "2023-12-01T00:00:00Z",
+    "tanggal_selesai": "2023-12-10T23:59:59Z",
+    "total_promo": 10000
+}
+### format waktu di tanggal_mulai dan tanggal_selesai
+### tahun-bulan-tanggal+T+jam-menit-detik+Z
+
+### UPDATE PROMO
+PUT http://localhost:3000/promo/updatePromo/1
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoxLCJlbWFpbCI6IjIxMTA0MDY0QGl0dGVsa29tLXB3dC5hYy5pZCIsImlhdCI6MTcwMjM1Mjc5OH0.v0PMep5KMK_6-jdw2TdGmMxm8XuVljXo_44TEQWqf24
+
+{
+    "deskripsi": "Promo akhir tahun",
+    "tanggal_mulai": "2023-12-01T00:00:00Z",
+    "tanggal_selesai": "2023-12-10T23:59:59Z",
+    "total_promo": 40000
+}
+
+### DELETE PROMO
+DELETE  http://localhost:3000/promo/deletePromo/2
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoxLCJlbWFpbCI6IjIxMTA0MDY0QGl0dGVsa29tLXB3dC5hYy5pZCIsImlhdCI6MTcwMjM1Mjc5OH0.v0PMep5KMK_6-jdw2TdGmMxm8XuVljXo_44TEQWqf24

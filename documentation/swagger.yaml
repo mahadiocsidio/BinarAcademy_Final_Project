@@ -2258,7 +2258,7 @@ paths:
                     total_pages: 10   # Replace with the actual total number of pages
                     current_page: 1
                     items_per_page: 10
-                  category:
+                  chapter:
                     - chapter_id: 1
                       title: "Chapter 1 - Pendahuluan"
                       course_id: 1
@@ -2273,7 +2273,7 @@ paths:
     get:
       tags:
         - Chapter
-      summary: Get chapters by course ID
+      summary: Get chapters by course_id
       parameters:
         - name: course_id
           in: path
@@ -2303,6 +2303,8 @@ paths:
 
   /chapter/addChapter:
     post:
+      security:
+        - bearerAuth: []
       tags:
         - Chapter
       summary: Add a new chapter
@@ -2334,9 +2336,11 @@ paths:
 
   /chapter/updateChapter/{chapter_id}:
     put:
+      security:
+        - bearerAuth: []
       tags:
         - Chapter
-      summary: Update a chapter by ID
+      summary: Update chapter by chapter_id
       parameters:
         - name: chapter_id
           in: path
@@ -2372,9 +2376,11 @@ paths:
 
   /chapter/deleteChapter/{chapter_id}:
     delete:
+      security:
+        - bearerAuth: []
       tags:
         - Chapter
-      summary: Delete a chapter by ID
+      summary: Delete chapter by chapter_id
       parameters:
         - name: chapter_id
           in: path
@@ -2636,6 +2642,232 @@ paths:
         '500':
           description: Internal Server Error
 
+  /promo/:
+    get:
+      tags:
+        - Promo
+      summary: Get all promos
+      description: "Retrieve a list of promos with pagination."
+      parameters:
+        - in: query
+          name: limit
+          schema: 
+            type: integer
+            default: 10
+          description: Number of items to retrieve per page
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+          description: Page number
+
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                success: true
+                message: "Success"
+                data:
+                  pagination:
+                    total_items: 100  # Replace with the actual total number of items
+                    total_pages: 10   # Replace with the actual total number of pages
+                    current_page: 1
+                    items_per_page: 10
+                  promo:
+                    - promo_id: 1
+                      course_id: 1
+                      deskripsi: "Promo akhir tahun"
+                      tanggal_mulai: "2023-12-01T00:00:00.000Z"
+                      tanggal_selesai: "2023-12-10T23:59:59.000Z"
+                      total_promo: 10000
+                    - promo_id: 2
+                      course_id: 2
+                      deskripsi: "Promo akhir tahun"
+                      tanggal_mulai: "2023-12-01T00:00:00.000Z"
+                      tanggal_selesai: "2023-12-10T23:59:59.000Z"
+                      total_promo: 10000
+
+        '500':
+          description: Internal Server Error
+
+  /promo/{promo_id}:
+    get:
+      tags:
+        - Promo
+      summary: Get promos by promo_id
+      parameters:
+        - name: promo_id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Promo ID
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                status: true
+                message: success
+                data:
+                  promo:
+                    promo_id: 1
+                    course_id: 1
+                    deskripsi: "Promo akhir tahun"
+                    tanggal_mulai: "2023-12-01T00:00:00.000Z"
+                    tanggal_selesai: "2023-12-10T23:59:59.000Z"
+                    total_promo: 10000
+
+        '404':
+          description: Promo not found
+          content:
+            application/json:
+              example:
+                status: false
+                message: Promo not found
+
+        '500':
+          description: Internal Server Error
+
+  /promo/addPromo:
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - Promo
+      summary: Add a new promo
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              course_id: 1
+              deskripsi: "Promo akhir tahun"
+              tanggal_mulai: "2023-12-01T00:00:00.000Z"
+              tanggal_selesai: "2023-12-10T23:59:59.000Z"
+              total_promo: 20000
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                status: true
+                message: 'Add new promo successfully'
+                data:
+                  newPromo:
+                    promo_id: 2
+                    course_id: 1
+                    deskripsi: "Promo akhir tahun"
+                    tanggal_mulai: "2023-12-01T00:00:00.000Z"
+                    tanggal_selesai: "2023-12-10T23:59:59.000Z"
+                    total_promo: 20000
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              example:
+                success: false
+                message: 'Missing required data.'
+
+        '500':
+          description: Internal Server Error
+
+  /promo/updatePromo/{promo_id}:
+    put:
+      security:
+        - bearerAuth: []
+      tags:
+        - Promo
+      summary: Update promo by promo_id
+      parameters:
+        - name: promo_id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Promo ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              deskripsi: 'Promo tahun baru'
+              tanggal_mulai: "2023-12-01T00:00:00.000Z"
+              tanggal_selesai: "2023-12-10T23:59:59.000Z"
+              total_promo: 20000
+      responses:
+        '201':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                status: true
+                message: 'Update promo successfully'
+                data:
+                  updatedPromo:
+                    promo_id: 1
+                    course_id: 1
+                    deskripsi: 'Promo tahun baru'
+                    tanggal_mulai: "2023-12-01T00:00:00.000Z"
+                    tanggal_selesai: "2023-12-10T23:59:59.000Z"
+                    total_promo: 20000
+
+        '404':
+          description: Promo not found
+          content:
+            application/json:
+              example:
+                success: false
+                message: 'Promo not found.'
+
+        '500':
+          description: Internal Server Error
+
+  /promo/deletePromo/{promo_id}:
+    delete:
+      security:
+        - bearerAuth: []
+      tags:
+        - Promo
+      summary: Delete promo by promo_id
+      parameters:
+        - name: promo_id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Promo ID
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                status: true
+                message: 'Delete promo successfully'
+                data:
+                  deletedPromo:
+                    promo_id: 1
+                    course_id: 1
+                    deskripsi: 'Promo tahun baru'
+                    tanggal_mulai: "2023-12-01T00:00:00.000Z"
+                    tanggal_selesai: "2023-12-10T23:59:59.000Z"
+                    total_promo: 20000
+        '404':
+          description: Promo not found
+          content:
+            application/json:
+              example:
+                success: false
+                message: 'Promo not found.'
+
+        '500':
+          description: Internal Server Error
 
 
 components:
