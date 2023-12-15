@@ -1214,6 +1214,7 @@ paths:
       summary: Get all payments
       tags:
         - Payment
+        - Admin
       description: Retrieve a list of payments with pagination.
       parameters:
         - in: query
@@ -1550,6 +1551,7 @@ paths:
       summary: Get all courses
       tags:
         - Course
+        - Admin
       description: Retrieve a list of courses with pagination and optional filtering.
       parameters:
         - in: query
@@ -1563,7 +1565,13 @@ paths:
             type: array
             items:
               type: integer
-          description: Array of category IDs to filter courses by
+        - in: query
+          name: level
+          description: Comma-separated list of levels to filter courses by (e.g., "beginner", "intermediate").
+          schema:
+            type: array
+            items:
+              type: string
         - in: query
           name: sort
           schema:
@@ -1623,6 +1631,7 @@ paths:
       summary: Add a new course
       tags:
         - Course
+        - Admin
       description: Add a new course to the system.
       requestBody:
         required: true
@@ -1654,7 +1663,7 @@ paths:
         '500':
           description: Internal Server Error
 
-  /courses/{course_id}:
+  /course/{course_id}:
     get:
       summary: Get course by ID
       tags:
@@ -1706,6 +1715,7 @@ paths:
       summary: Get all categories
       tags:
         - Category
+        - Admin
       description: Retrieve a list of categories with pagination.
       parameters:
         - in: query
