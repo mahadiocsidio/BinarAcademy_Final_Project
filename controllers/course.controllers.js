@@ -1,75 +1,109 @@
 const prisma = require('../libs/prisma')
 const { getPagination } = require('../helper/index');
 
-const getAllCourse = async(req,res,next)=>{
+const getAllCourse = async (req, res, next) => {
     try {
-        let {search,category_ids, sort, order} = req.query
-        let conditions = {}
-        let orderBy = {}
+        let { search, category_ids, sort, order="asc", level } = req.query;
+        let conditions = {};
+        let orderBy = {};
 
-        if (search){
-            conditions.title ={
+        if (search) {
+            conditions.title = {
                 contains: search,
                 mode: 'insensitive',
-            }
+            };
         }
-        if (category_ids){
-        const kategoriIds = Array.isArray(category_ids) ? category_ids.map(id => parseInt(id, 10)) : [parseInt(category_ids, 10)];
-        conditions.kategori_id = {
-            in: kategoriIds.filter(id => !isNaN(id)), // Filter out NaN values
-        };
+
+        if (category_ids) {
+            const kategoriIds = Array.isArray(category_ids) ? category_ids.map(id => parseInt(id, 10)) : [parseInt(category_ids, 10)];
+            conditions.kategori_id = {
+                in: kategoriIds.filter(id => !isNaN(id)), // Filter out NaN values
+            };
         }
-        if(sort && order){
+
+        if (level) {
+            const levelList = Array.isArray(level) ? level : [level];
+            conditions.level = {
+                in: levelList,
+            };
+        }
+
+        if (sort && order) {
             orderBy = sort && order ? { [sort]: order } : undefined;
         }
-        console.log("conditions")
-        console.log(conditions)
+
+        console.log('conditions');
+        console.log(conditions);
 
         let { limit = 10, page = 1 } = req.query;
-            limit = Number(limit);
-            page = Number(page);
+        limit = Number(limit);
+        page = Number(page);
 
         let course = await prisma.course.findMany({
-            where:conditions,
-            orderBy:orderBy,
+            where: conditions,
+            orderBy: orderBy,
             skip: (page - 1) * limit,
             take: limit,
-            select:{
+            select: {
                 course_id: true,
                 title: true,
-                kode_kelas:true,
+                kode_kelas: true,
                 kategori_id: true,
                 premium: true,
                 harga: true,
-                level:true,
-                Kategori:{
-                    select:{
+                level: true,
+                Kategori: {
+                    select: {
                         title: true,
                     },
                 },
-                Mentor:{
-                    select:{
-                        name:true
-                    }
-                }
+                Mentor: {
+                    select: {
+                        name: true,
+                    },
+                },
+                Rating: {
+                    select: {
+                        skor: true,
+                    },
+                },
+            },
+        });
+
+        // Menghitung rata-rata skor secara manual
+        course.forEach((c) => {
+            const totalSkor = c.Rating.reduce((acc, rating) => acc + rating.skor, 0);
+            const avgSkor = c.Rating.length > 0 ? totalSkor / c.Rating.length : 0;
+            c.avgRating = avgSkor;
+        });
+
+        // Mengurutkan berdasarkan rating jika diperlukan
+        if (sort && order && sort.toLowerCase() === 'rating') {
+            if (order.toLowerCase() === 'desc') {
+                course.sort((a, b) => b.avgRating - a.avgRating);
+            } else if (order.toLowerCase() === 'asc') {
+                course.sort((a, b) => a.avgRating - b.avgRating);
             }
-        })
+        }
 
         const { _count } = await prisma.course.aggregate({
-            _count: { course_id: true }
+            _count: { course_id: true },
         });
 
         let pagination = getPagination(req, _count.course_id, page, limit);
 
-        res.status(200).json({
-            success:true,
-            data:{ pagination, course}
+        course.forEach(object=>{
+            delete object['Rating']
         })
-    } catch (error) {
-        next(error)
-    }
 
-}
+        res.status(200).json({
+            success: true,
+            data: { pagination, course },
+        });
+    } catch (error) {
+        next(error);
+    }
+};
 
 const getCoursebyId = async(req,res,next)=>{
     try {

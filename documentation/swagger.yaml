@@ -1565,7 +1565,13 @@ paths:
             type: array
             items:
               type: integer
-          description: Array of category IDs to filter courses by
+        - in: query
+          name: level
+          description: Comma-separated list of levels to filter courses by (e.g., "beginner", "intermediate").
+          schema:
+            type: array
+            items:
+              type: string
         - in: query
           name: sort
           schema:
