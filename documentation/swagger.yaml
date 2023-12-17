@@ -29,8 +29,8 @@ tags:
     description : all about mentor
   - name : Mentor Course
     description : all about mentor-course
-  - name: Dashboard Admin
-    description: api di dashboard admin
+  - name : Notifikasi
+    description : all about notification
 paths:
 # ------------------------------------ AUTH ------------------------------------
   /auth/register:
@@ -948,56 +948,52 @@ paths:
       description: Get Account's Transaction History that have login
       tags:
         - Account
+      parameters:
+        - name: limit
+          in: query
+          description: Number of items to return per page
+          required: false
+          schema:
+            type: integer
+            default: 10
+        - name: page
+          in: query
+          description: Page number to retrieve
+          required: false
+          schema:
+            type: integer
+            default: 1
       responses:
         '200':
-          description: Successful responses
+          description: Successful response
           content:
             application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    type: boolean
-                    example: true
-                  message:
-                    type: string
-                    example: success!
-                  err:
-                    type: string
-                    example: null
-                  data:
-                    type: object
-                    properties:
-                      pagination:
-                        type: object
-                        properties:
-                        $ref: "#/components/schemas/pagination"
-                      riwayat:
-                        type: array
-                        items:
-                          type: object
-                          properties:
-                            status:
-                              type: object
-                              example: paid
-                            Course:
-                              type: object
-                              properties:
-                                title:
-                                  type: string
-                                  example: WEB DEVELOPMENT COURSE
-                                harga:
-                                  type: integer
-                                  example: 0
-                                level:
-                                  type: string
-                                  example: beginer
-                                Kategori:
-                                  type: object
-                                  properties:
-                                    title:
-                                      type: string
-                                      example: WEB DEVELOPMENT
+              example:
+                status: true
+                message: success!
+                err: null
+                data:
+                  pagination:
+                    totalItems: 42
+                    totalPages: 5
+                    currentPage: 1
+                    pageSize: 10
+                  listCourse:
+                    - course_id: 1
+                      title: Web Development 101
+                      deskripsi: Introduction to web development
+                      kode_kelas: WD101
+                      premium: true
+                      level: Beginner
+                      Kategori:
+                        title: Web Development
+                      Mentor:
+                        name: John Doe
+                      avgRating: 4.5
+                      Riwayat_Transaksi:
+                        status: Paid
+                        tanggal_pembayaran: '2023-12-01T12:34:56Z'
+                    # Additional payment history items...
 
         '401':
           description: Account not found
@@ -2915,27 +2911,231 @@ paths:
         '500':
           description: Internal Server Error
 
-  /admin:
+# ------------------------------------ NOTIFICATION ------------------------------------
+
+  /notification:
     get:
-      summary: Get the count of active users, active course, and premium course
       tags:
-        - Dashboard Admin
-      description: menampilkan user aktif, course aktif dan banyaknya course premium
+        - Notifikasi
+      summary: Show all notification
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 10
+          description: Number of items to return per page
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+          description: Page number to retrieve
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: success!
+                  err:
+                    type: string
+                    example: null
+                  data:
+                    type: object
+                    properties:
+                      pagination:
+                        type: object
+                        properties:
+                        $ref: '#/components/schemas/pagination'
+                      notification:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            notifikasi_id:
+                              type: integer
+                              example: 42
+                            account_id:
+                              type: integer
+                              example: 42
+                            title:
+                              type: string
+                              example: Success Registrasi Akun!
+                            deskripsi:
+                              type: string
+                              example: Congratulations test@example.com on successfully verifying your account!
+                            is_read:
+                              type: boolean
+                              example: falsess
+    post:
+      tags:
+        - Notifikasi
+      summary: Show all notification
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                account_id:
+                  type: integer
+                  example: 42
+                title:
+                  type: string
+                  example: new notif
+                deskripsi:
+                  type: string
+                  example: ini test notif
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              example:
+                status: true
+                message: success
+                err: null
+                data:
+                  notification:
+                    notifikasi_id: 1
+                    account_id: 42
+                    title: new notif
+                    deskripsi: ini test notif
+                    is_read: false
+        '400':
+          description: Failed operation
+          content:
+            application/json:
+              example:
+                status: false
+                message: bad request
+                err: account doesn't exist!
+                data: null
+  /notification/broadcast:
+    post:
+      tags:
+        - Notifikasi
+      summary: Broadcast notification to all valid user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  example: PROMO TODAY!!
+                deskripsi:
+                  type: string
+                  example: PROMO INI BERLAKU HARI INI
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              example:
+                status: true
+                message: success
+                err: null
+                data:
+                  blast:
+                    count: 42
+  /notification/myNotifications:
+    get:
+      tags:
+        - Notifikasi
+      summary: Show all notification user
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 10
+          description: Number of items to return per page
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+          description: Page number to retrieve
       responses:
         '200':
           description: Successful response
           content:
             application/json:
               example:
-                success: true
+                status: true
+                message: success
+                err: null
                 data:
-                  activeUsersCount: 9
-                  activeCourseCount: 6
-                  premiumCourseCount: 7  # Replace with the actual count of active users
-
-        '500':
-          description: Internal Server Error
-
+                  pagination:
+                    links:
+                      next:
+                      prev:
+                    total_items:
+                  notification:
+                    notifikasi_id: 1
+                    account_id: 42
+                    title: Success Registrasi Akun
+                    deskripsi: Congratulations test@example.com on successfully verifying your account!
+                    is_read: false
+        '401':
+          description: Failed response
+          content:
+            application/json:
+              example:
+                status: false
+                message: Unauthorized
+                error: Token not found
+  /notification/{notifikasi_id}:
+    get:
+      tags:
+        - Notifikasi
+      summary: Show all notification user
+      parameters:
+        - in: path
+          name: notifikasi_id
+          schema:
+            type: integer
+          required: true
+          description: ID of the notifikasi
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                status: true
+                message: success
+                err: null
+                data:
+                  notifikasi:
+                    notifikasi_id: 1
+                    account_id: 42
+                    title: Success Registrasi Akun!
+                    deskripsi: Congratulations user@example.com on successfully verifying your account!
+                    is_read: false
+        '400':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                status: false
+                message: bad request
+                err: notification doesn't exist
+                data: null
 components:
   securitySchemes:
     bearerAuth:
@@ -2965,6 +3165,9 @@ components:
         message:
           type: string
           example: 'success'
+        err:
+          type: string
+          example: null
     pagination:
       title: pagination
       type: object

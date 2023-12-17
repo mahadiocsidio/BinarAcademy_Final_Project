@@ -208,28 +208,49 @@ const getRiwayatPembayaran = async (req, res, next) => {
     page = Number(page);
 
     let { account_id } = req.user;
-
-    let riwayat = await prisma.riwayat_Transaksi.findMany({
+    const listCourse = await prisma.course.findMany({
       skip: (page - 1) * limit,
       take: limit,
-      where: {
-        account_id,
+      where:{
+        Riwayat_Transaksi:{
+          some:{
+            account_id
+          }
+        }
       },
-      select: {
-        status: true,
-        Course: {
-          select: {
-            title: true,
-            harga: true,
-            level: true,
-            Kategori: {
-              select: {
+      select:{
+        course_id: true,
+        title: true,
+        premium: true,
+        level:true,
+        Kategori:{
+            select:{
                 title: true,
-              },
             },
+        },
+        Mentor:{
+            select:{
+                name:true
+            }
+        },
+        Rating: {
+          select: {
+              skor: true,
           },
         },
-      },
+        Riwayat_Transaksi:{
+          where: {account_id: account_id},
+          select:{
+            status: true,
+          }
+        }
+      }
+    })
+
+    listCourse.forEach((c) => {
+      const totalSkor = c.Rating.reduce((acc, rating) => acc + rating.skor, 0);
+      const avgSkor = c.Rating.length > 0 ? totalSkor / c.Rating.length : 0;
+      c.avgRating = avgSkor;
     });
 
     const { _count } = await prisma.riwayat_Transaksi.aggregate({
@@ -239,11 +260,15 @@ const getRiwayatPembayaran = async (req, res, next) => {
 
     let pagination = getPagination(req, _count.account_id, page, limit);
 
+    listCourse.forEach(object=>{
+      delete object['Rating']
+    })  
+
     return res.status(200).json({
       status: true,
       message: 'success!',
       err: null,
-      data: { pagination, riwayat },
+      data: { pagination, listCourse },
     });
   } catch (error) {
     next(error);

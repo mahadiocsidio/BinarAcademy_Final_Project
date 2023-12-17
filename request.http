@@ -14,10 +14,10 @@ Content-Type: application/json
 ### verify otp
 POST http://localhost:3000/auth/verify-otp
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDUsImVtYWlsIjoiMjAwNDAxMTQxQHN0dWRlbnQudW1yaS5hYy5pZCIsImlhdCI6MTcwMjQ3ODI2Nn0.UkYmv5sXpOfwJRwoMRQX-TsIXYVjtEAn6hqaQYlSfQM
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjozOCwiZW1haWwiOiIyMDA0MDExNDFAc3R1ZGVudC51bXJpLmFjLmlkIiwiaWF0IjoxNzAyNzIwMDExfQ.EstEd6FrwkRXJpGe0ty01LS29UsUhnsawmT_Wf1Wf5I
 
 {
-    "otp":"856015"
+    "otp":"553314"
 }
 
 #### resend otp
@@ -31,7 +31,7 @@ Content-Type: application/json
 
 {
     "email":"200401141@student.umri.ac.id",
-    "password":"aldi123"
+    "password":"password123"
 }
 
 ### RESET PASSWORD
@@ -53,7 +53,7 @@ Content-Type: application/json
 
 ### GET USER BY TOKEN
 GET http://localhost:3000/auth/whoami
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjo0NSwiZW1haWwiOiIyMDA0MDExNDFAc3R1ZGVudC51bXJpLmFjLmlkIiwiaWF0IjoxNzAyNDgwMjEwfQ.bsBSDAnx3uVi8qn3p88SZe9Y1EmZ_10nWet21UUIFDw
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzgsImVtYWlsIjoiMjAwNDAxMTQxQHN0dWRlbnQudW1yaS5hYy5pZCIsImlhdCI6MTcwMjcyMDMyNH0.tdimyWKTyjQLG71vT56kJwqT8GRgqLQgQzSAOSHgNsY
 
 # ------------------------------------ PROFILE ------------------------------------
 
@@ -316,20 +316,20 @@ GET http://localhost:3000/mentor/1
 
 
 ###------------------------------------ NOTIFICATION -----------------------------------
-GET http://localhost:3000/notification?page=3
+GET http://localhost:3000/notification
 
 ### CREATE NOTIFICATION PER ID USER
 POST http://localhost:3000/notification
 Content-Type: application/json
 
 {
-    "account_id" : 45,
+    "account_id" : 36,
     "title" :"new notif2",
     "deskripsi" : "ini test notif"
 }
 
 ### GET NOTIFICATION BY ID
-GET http://localhost:3000/notification/
+GET http://localhost:3000/notification/111
 
 ### GET NOTIFICATION BY LOGIN
 GET http://localhost:3000/notification/myNotifications
@@ -383,3 +383,46 @@ Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoxLCJlbWFp
 DELETE  http://localhost:3000/promo/deletePromo/2
 Content-Type: application/json
 Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoxLCJlbWFpbCI6IjIxMTA0MDY0QGl0dGVsa29tLXB3dC5hYy5pZCIsImlhdCI6MTcwMjM1Mjc5OH0.v0PMep5KMK_6-jdw2TdGmMxm8XuVljXo_44TEQWqf24
+
+###------------------------------------ PAYMENT -----------------------------------
+GET http://localhost:3000/payment
+
+### CREATE PAYMENT
+POST http://localhost:3000/payment
+Content-Type: application/json
+
+{
+    "account_id" : 38,
+    "course_id" : 1,
+    "metode_pembayaran" : "Credit card"
+}
+
+### GET PAYMENT BY ID
+GET http://localhost:3000/payment/17
+
+### UPDATE PAYMENT BY ID
+PUT http://localhost:3000/payment/17
+
+### GET PAYMENT BY LOGIN
+GET http://localhost:3000/payment/checkout
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzgsImVtYWlsIjoiMjAwNDAxMTQxQHN0dWRlbnQudW1yaS5hYy5pZCIsImlhdCI6MTcwMjcyMDMyNH0.tdimyWKTyjQLG71vT56kJwqT8GRgqLQgQzSAOSHgNsY
+
+### CREATE PAYMENT BY LOGIN
+POST http://localhost:3000/payment/checkout
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzgsImVtYWlsIjoiMjAwNDAxMTQxQHN0dWRlbnQudW1yaS5hYy5pZCIsImlhdCI6MTcwMjcyMDMyNH0.tdimyWKTyjQLG71vT56kJwqT8GRgqLQgQzSAOSHgNsY
+
+
+{
+    "course_id" : 3,
+    "metode_pembayaran" : "Debit Card"
+}
+
+### UPDATE PAYMENT BY ID
+PUT http://localhost:3000/payment/checkout
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzgsImVtYWlsIjoiMjAwNDAxMTQxQHN0dWRlbnQudW1yaS5hYy5pZCIsImlhdCI6MTcwMjcyMDMyNH0.tdimyWKTyjQLG71vT56kJwqT8GRgqLQgQzSAOSHgNsY
+
+{
+    "course_id" : 3
+}
