@@ -2880,11 +2880,27 @@ paths:
 
         '500':
           description: Internal Server Error
+
+# ------------------------------------ NOTIFICATION ------------------------------------
+
   /notification:
     get:
       tags:
         - Notifikasi
       summary: Show all notification
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 10
+          description: Number of items to return per page
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+          description: Page number to retrieve
       responses:
         '200':
           description: Successful response
@@ -2928,9 +2944,168 @@ paths:
                               example: Congratulations test@example.com on successfully verifying your account!
                             is_read:
                               type: boolean
-                              example: false
-                            
-                      
+                              example: falsess
+    post:
+      tags:
+        - Notifikasi
+      summary: Show all notification
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                account_id:
+                  type: integer
+                  example: 42
+                title:
+                  type: string
+                  example: new notif
+                deskripsi:
+                  type: string
+                  example: ini test notif
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              example:
+                status: true
+                message: success
+                err: null
+                data:
+                  notification:
+                    notifikasi_id: 1
+                    account_id: 42
+                    title: new notif
+                    deskripsi: ini test notif
+                    is_read: false
+        '400':
+          description: Failed operation
+          content:
+            application/json:
+              example:
+                status: false
+                message: bad request
+                err: account doesn't exist!
+                data: null
+  /notification/broadcast:
+    post:
+      tags:
+        - Notifikasi
+      summary: Broadcast notification to all valid user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  example: PROMO TODAY!!
+                deskripsi:
+                  type: string
+                  example: PROMO INI BERLAKU HARI INI
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              example:
+                status: true
+                message: success
+                err: null
+                data:
+                  blast:
+                    count: 42
+  /notification/myNotifications:
+    get:
+      tags:
+        - Notifikasi
+      summary: Show all notification user
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 10
+          description: Number of items to return per page
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+          description: Page number to retrieve
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                status: true
+                message: success
+                err: null
+                data:
+                  pagination:
+                    links:
+                      next:
+                      prev:
+                    total_items:
+                  notification:
+                    notifikasi_id: 1
+                    account_id: 42
+                    title: Success Registrasi Akun
+                    deskripsi: Congratulations test@example.com on successfully verifying your account!
+                    is_read: false
+        '401':
+          description: Failed response
+          content:
+            application/json:
+              example:
+                status: false
+                message: Unauthorized
+                error: Token not found
+  /notification/{notifikasi_id}:
+    get:
+      tags:
+        - Notifikasi
+      summary: Show all notification user
+      parameters:
+        - in: path
+          name: notifikasi_id
+          schema:
+            type: integer
+          required: true
+          description: ID of the notifikasi
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                status: true
+                message: success
+                err: null
+                data:
+                  notifikasi:
+                    notifikasi_id: 1
+                    account_id: 42
+                    title: Success Registrasi Akun!
+                    deskripsi: Congratulations user@example.com on successfully verifying your account!
+                    is_read: false
+        '400':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                status: false
+                message: bad request
+                err: notification doesn't exist
+                data: null
 components:
   securitySchemes:
     bearerAuth:

@@ -8,15 +8,15 @@ const {
   createNotifBroadcast,
 } = require('../controllers/notification.controller');
 
-router.get('/', getAllNotif); //DONE
-router.post('/', createNotifbyId); //DONE
+router.get('/', getAllNotif);
+router.post('/', createNotifbyId);
 
-router.post('/broadcast', createNotifBroadcast); //DONE
+router.post('/broadcast', createNotifBroadcast);
 
 // BY LOGIN
-router.get('/myNotifications', restrict, getNotifbyLogin); //DONE
+router.get('/myNotifications', restrict, getNotifbyLogin);
 
 // BY ID
-router.get('/:notifikasi_id', getNotifbyId); // DONE
+router.get('/:notifikasi_id', getNotifbyId);
 
 module.exports = router;

@@ -316,20 +316,20 @@ GET http://localhost:3000/mentor/1
 
 
 ###------------------------------------ NOTIFICATION -----------------------------------
-GET http://localhost:3000/notification?page=3
+GET http://localhost:3000/notification
 
 ### CREATE NOTIFICATION PER ID USER
 POST http://localhost:3000/notification
 Content-Type: application/json
 
 {
-    "account_id" : 45,
+    "account_id" : 36,
     "title" :"new notif2",
     "deskripsi" : "ini test notif"
 }
 
 ### GET NOTIFICATION BY ID
-GET http://localhost:3000/notification/
+GET http://localhost:3000/notification/111
 
 ### GET NOTIFICATION BY LOGIN
 GET http://localhost:3000/notification/myNotifications

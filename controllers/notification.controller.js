@@ -23,6 +23,7 @@ module.exports = {
       res.status(200).json({
         stauts: true,
         message: 'success',
+        err: null,
         data: { pagination, notification },
       });
     } catch (err) {
