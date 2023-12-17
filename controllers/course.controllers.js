@@ -29,11 +29,18 @@ const getAllCourse = async (req, res, next) => {
         }
 
         if (sort && order) {
-            orderBy = sort && order ? { [sort]: order } : undefined;
+            //skip langkah jika ingin mengsorting berdasarkan rating
+            if (sort && order && sort.toLowerCase() === 'rating') {
+                
+            }else{
+                orderBy = sort && order ? { [sort]: order } : undefined;
+            }
         }
-
-        console.log('conditions');
-        console.log(conditions);
+        
+        const { _count } = await prisma.course.aggregate({
+            where:conditions,
+            _count: { course_id: true },
+        });
 
         let { limit = 10, page = 1 } = req.query;
         limit = Number(limit);
@@ -86,10 +93,6 @@ const getAllCourse = async (req, res, next) => {
             }
         }
 
-        const { _count } = await prisma.course.aggregate({
-            _count: { course_id: true },
-        });
-
         let pagination = getPagination(req, _count.course_id, page, limit);
 
         course.forEach(object=>{
@@ -119,7 +122,7 @@ const getCoursebyId = async(req,res,next)=>{
                 title: true,
                 deskripsi:true,
                 kode_kelas:true,
-                kategori_id: true,
+                url_gc_tele:true,
                 premium: true,
                 harga: true,
                 level:true,
@@ -133,7 +136,12 @@ const getCoursebyId = async(req,res,next)=>{
                         name:true
                     }
                 },
-                
+                Chapter:{
+                    select:{
+                        title:true,
+                        Video:true
+                    }
+                }
             }
         })
         if(!course) return res.json("Course isnt registered")
@@ -188,6 +196,11 @@ const addCourse = async(req,res,next)=>{
                     select:{
                         title: true,
                 },
+                Mentor:{
+                    select:{
+                        name:true
+                    }
+                }
             }
         }})
 
@@ -200,7 +213,7 @@ const addCourse = async(req,res,next)=>{
 
         res.status(200).json({
             success:true,
-            data:{course}
+            data:{course, mentorCourse}
             
         })
     } catch (error) {
@@ -228,32 +241,41 @@ const deleteCoursebyId = async(req,res,next)=>{
 
 const beliCourse = async(req,res,next)=>{
     try {
-        let {course_id} = req.body
-        let account = req.user
-        course_id = parseInt(course_id,10)
-        let course = await prisma.course.findUnique({where:{course_id}})
-        if(!course) return res.status(404).json("Course isnt registered")
+        let account = req.user;
+        let { course_id , metode_pembayaran=""} = req.body;
 
-        let riwayat = await prisma.riwayat_transaksi.create({
-            data:{
+        let course = await prisma.course.findUnique({
+            where: {
+                course_id,
+            },
+        });
+
+        if (!course) return res.json('Course is not registered');
+
+        let payment = await prisma.riwayat_Transaksi.create({
+            data: {
                 account_id: account.account_id,
                 course_id,
-                status: "Menunggu Pembayaran"
-            }
-        })
+                tanggal_pembayaran: new Date(Date.now()),
+                metode_pembayaran,
+                status: 'Menunggu Pembayaran',
+            },
+        });
 
+        // Menambahkan entri di tabel User_course
         let userCourse = await prisma.user_course.create({
-            data:{
+            data: {
                 account_id: account.account_id,
-                course_id
-            }
-        })
+                course_id,
+            },
+        });
+
         res.status(200).json({
-            success:true,
-            data:{riwayat,userCourse}
-        })
+            success: true,
+            data: { payment, userCourse },
+        });
     } catch (error) {
-        next(error)
+        next(error);
     }
 
 }
