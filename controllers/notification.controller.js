@@ -2,7 +2,6 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const jwt = require('jsonwebtoken');
 const { getPagination } = require('../helper/index');
-const { notifikasi } = require('../libs/prisma');
 
 module.exports = {
   getAllNotif: async (req, res, next) => {
@@ -171,7 +170,6 @@ module.exports = {
   },
   createNotifAuto: async (account_id, title, deskripsi ,res, next) => {
     try {
-      console.log(account_id);
       await prisma.notifikasi.create({
         data: {
           account_id,

@@ -188,7 +188,6 @@ module.exports = {
         },
       });
 
-      console.log(chapter_id);
       res.status(200).json({
         status: true,
         message: 'success!',
