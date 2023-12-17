@@ -1582,7 +1582,7 @@ paths:
           name: sort
           schema:
             type: string
-          description: Column to sort by (e.g., 'title', 'harga')
+          description: Column to sort by (e.g., 'title', 'harga', 'rating', 'course_id')
         - in: query
           name: order
           schema:

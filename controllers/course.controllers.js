@@ -29,8 +29,18 @@ const getAllCourse = async (req, res, next) => {
         }
 
         if (sort && order) {
-            orderBy = sort && order ? { [sort]: order } : undefined;
+            //skip langkah jika ingin mengsorting berdasarkan rating
+            if (sort && order && sort.toLowerCase() === 'rating') {
+                
+            }else{
+                orderBy = sort && order ? { [sort]: order } : undefined;
+            }
         }
+        
+        const { _count } = await prisma.course.aggregate({
+            where:conditions,
+            _count: { course_id: true },
+        });
 
         let { limit = 10, page = 1 } = req.query;
         limit = Number(limit);
@@ -82,10 +92,6 @@ const getAllCourse = async (req, res, next) => {
                 course.sort((a, b) => a.avgRating - b.avgRating);
             }
         }
-
-        const { _count } = await prisma.course.aggregate({
-            _count: { course_id: true },
-        });
 
         let pagination = getPagination(req, _count.course_id, page, limit);
 
