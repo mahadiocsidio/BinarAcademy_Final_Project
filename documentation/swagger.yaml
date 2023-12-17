@@ -1885,7 +1885,7 @@ paths:
           description: ID of the category to update
       requestBody:
         required: true
-        $ref: "#/components/requestBodies/updateProfile"
+        $ref: "#/components/requestBodies/createCategory"
       responses:
         '200':
           description: Successful response
@@ -2082,83 +2082,6 @@ paths:
                       skor: 1,
                       comment: "This course was really not helpful!"
                   # Add more category entries as needed
-
-        '500':
-          description: Internal Server Error
-
-
-  /rating/filter:
-    get:
-      summary: Get all ratings by score
-      tags:
-        - Rating
-      description: Retrieve a list of ratings filtered by score with pagination. Sorting and ordering are not supported in this endpoint.
-      parameters:
-        - in: query
-          name: skor
-          schema:
-            type: integer
-            minimum: 1
-            maximum: 5
-            description: Filter ratings by score (1 to 5)
-        - in: query
-          name: limit
-          schema:
-            type: integer
-            default: 10
-            description: Number of items to retrieve per page
-        - in: query
-          name: page
-          schema:
-            type: integer
-            default: 1
-            description: Page number
-
-      responses:
-        '200':
-          description: Successful response
-          content:
-            application/json:
-              example:
-                success: true
-                message: 'Successful get all ratings by score'
-                data:
-                  pagination:
-                    total_items: 100  # Replace with the actual total number of items
-                    total_pages: 10   # Replace with the actual total number of pages
-                    current_page: 1
-                    items_per_page: 10
-                  rating:
-                    - rating_id: 1
-                      account_id: 1
-                      course_id: 1
-                      skor: 4
-                      comment: "This course was really helpful!"
-                    - rating_id: 2
-                      account_id: 2
-                      course_id: 1
-                      skor: 4
-                      comment: "This course was really good!"
-                    # Add more category entries as needed
-
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              example:
-                success: false
-                message: 'Bad request!'
-                err: 'Score cannot be greater than 5.'
-                data: null
-
-        '404':
-          description: No Data Found
-          content:
-            application/json:
-              example:
-                success: true
-                message: 'No data found for the requested score.'
-                data: null
 
         '500':
           description: Internal Server Error
