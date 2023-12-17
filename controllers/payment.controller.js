@@ -58,7 +58,31 @@ module.exports = {
         }
       });
 
-      if (!Course) return res.json('Course isnt registered');
+      let account = await prisma.account.findUnique({
+        where: {
+          account_id,
+        }
+      });
+
+      //validasi akun te registrasi atau tidak
+    if (!account) {
+      return res.status(400).json({
+        status: false,
+        message: 'bad request!',
+        err: 'Account isnt registered',
+        data: null,
+      });
+    }
+
+    //validasi course te registrasi atau tidak
+    if (!Course) {
+      return res.status(400).json({
+        status: false,
+        message: 'bad request!',
+        err: 'Course isnt registered',
+        data: null,
+      });
+    }
 
       let payment = await prisma.riwayat_Transaksi.create({
         data: {
@@ -66,19 +90,18 @@ module.exports = {
           course_id,
           tanggal_pembayaran: new Date(Date.now()),
           metode_pembayaran,
-          status: "Menunggu Pembayaran"
         },
       });
       
       //create Notification
-      // let titleNotif = 'Success Registrasi Akun!';
-      // let deskNotif = `Congratulations ${email} on successfully verifying your account!`;
-      // await createNotifAuto(
-      //   activationOtp.account_id,
-      //   titleNotif,
-      //   deskNotif,
-      //   res
-      // );
+      let titleNotif = 'Un-Successful purchase course added by admin!';
+      let deskNotif = `Hii ${account.nama} you have courses that you haven't purchased yet, To get full access to the course, please complete the payment`;
+      await createNotifAuto(
+        account.account_id,
+        titleNotif,
+        deskNotif,
+        res
+      );
 
       res.status(200).json({
         success: true,
@@ -93,15 +116,41 @@ module.exports = {
     try {
       let {riwayat_transaksi_id} = req.params;
       riwayat_transaksi_id = parseInt(riwayat_transaksi_id, 10);
+      
+      let isExist = await prisma.riwayat_Transaksi.findUnique({where:{riwayat_transaksi_id}})
+      
+      //validasi payment
+      if (!isExist) {
+        return res.status(400).json({
+          status: false,
+          message: 'bad request!',
+          err: 'Payment id not found!',
+          data: null,
+        });
+      }
+      
+      let account = await prisma.account.findUnique({where:{account_id:isExist.account_id}})
+      
+
       let payment = await prisma.riwayat_Transaksi.update({
         where:{
           riwayat_transaksi_id,
         },
         data:{
           tanggal_pembayaran: new Date(Date.now()),
-          status: "Sudah Bayar"
+          status: "Paid"
         }
       })
+
+      //create Notification
+      let titleNotif = 'Successful purchase course added by admin!';
+      let deskNotif = `Hii ${account.nama}, Congratulations you have successfully purchased the course and got full access to the course`;
+      await createNotifAuto(
+        account.account_id,
+        titleNotif,
+        deskNotif,
+        res
+      );
 
       res.status(200).json({
         success: true,
@@ -116,8 +165,13 @@ module.exports = {
   getPaymentbyLogin: async (req, res, next) => {
     try {
       let account = req.user;
+      let { limit = 10, page = 1 } = req.query;
+      limit = Number(limit);
+      page = Number(page);
 
       let payment = await prisma.riwayat_Transaksi.findMany({
+        skip: (page - 1) * limit,
+        take: limit,
         where: {
           account_id: account.account_id,
         },
@@ -126,20 +180,38 @@ module.exports = {
           account_id: true,
           Course:{
             select:{
+              Kategori:{
+                select:{
+                  title: true
+                }
+              },
+              Mentor:{
+                select:{
+                  name: true
+                }
+              },
               title: true,
               kode_kelas:true,
               harga: true,
             }
           },
+          
           status: true,
           tanggal_pembayaran: true,
         },
       });
-      if (!payment) return res.json('Payment isnt registered');
+
+      const { _count } = await prisma.riwayat_Transaksi.aggregate({
+        _count: {riwayat_transaksi_id: true },
+        where:{ account_id:account.account_id }
+      });
+
+      let pagination = getPagination(req, _count.riwayat_transaksi_id, page, limit);
+
 
       res.status(200).json({
         success: true,
-        data: payment,
+        data: {pagination, payment},
       });
     } catch (error) {
       next(error);
@@ -175,7 +247,16 @@ module.exports = {
           tanggal_pembayaran: true,
         },
       });
-      if (!payment) return res.json('Payment isnt registered');
+
+      //validasi payment
+      if (!payment) {
+        return res.status(400).json({
+          status: false,
+          message: 'bad request!',
+          err: 'Payment isn\'t registered!',
+          data: null,
+        });
+      }
 
       res.status(200).json({
         success: true,
@@ -190,6 +271,19 @@ module.exports = {
     try {
       let account = req.user
       let { course_id , metode_pembayaran} = req.body;
+
+      let isCourse = await prisma.course.findUnique({where:{course_id}})
+      
+      //validasi course
+      if (!isCourse) {
+        return res.status(400).json({
+          status: false,
+          message: 'bad request!',
+          err: 'Course not found!',
+          data: null,
+        });
+      }
+      
       let payment = await prisma.riwayat_Transaksi.create({
         data: {
           account_id: account.account_id,
@@ -199,7 +293,17 @@ module.exports = {
           status: "Menunggu Pembayaran"
         },
       });
-      if (!payment) return res.json('Payment isnt registered');
+
+      //create Notification
+      let titleNotif = 'Un-Successful purchase course added!';
+      let deskNotif = `Hii ${account.nama} you have courses that you haven't purchased yet, To get full access to the course, please complete the payment`;
+      await createNotifAuto(
+        account.account_id,
+        titleNotif,
+        deskNotif,
+        res
+      );
+
       res.status(200).json({
         success: true,
         data: payment,
@@ -234,9 +338,19 @@ module.exports = {
         },
         data:{
           tanggal_pembayaran: new Date(Date.now()),
-          status: "Sudah Bayar"
+          status: "Paid"
         }
       })
+
+      //create Notification
+      let titleNotif = 'Successful purchase course added!';
+      let deskNotif = `Hii ${account.nama}, Congratulations you have successfully purchased the course and got full access to the course`;
+      await createNotifAuto(
+        account.account_id,
+        titleNotif,
+        deskNotif,
+        res
+      );
 
       res.status(200).json({
         success: true,

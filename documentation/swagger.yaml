@@ -29,6 +29,8 @@ tags:
     description : all about mentor
   - name : Mentor Course
     description : all about mentor-course
+  - name : Notifikasi
+    description : all about notification
 paths:
 # ------------------------------------ AUTH ------------------------------------
   /auth/register:
@@ -2878,8 +2880,57 @@ paths:
 
         '500':
           description: Internal Server Error
-
-
+  /notification:
+    get:
+      tags:
+        - Notifikasi
+      summary: Show all notification
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: success!
+                  err:
+                    type: string
+                    example: null
+                  data:
+                    type: object
+                    properties:
+                      pagination:
+                        type: object
+                        properties:
+                        $ref: '#/components/schemas/pagination'
+                      notification:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            notifikasi_id:
+                              type: integer
+                              example: 42
+                            account_id:
+                              type: integer
+                              example: 42
+                            title:
+                              type: string
+                              example: Success Registrasi Akun!
+                            deskripsi:
+                              type: string
+                              example: Congratulations test@example.com on successfully verifying your account!
+                            is_read:
+                              type: boolean
+                              example: false
+                            
+                      
 components:
   securitySchemes:
     bearerAuth:
@@ -2909,6 +2960,9 @@ components:
         message:
           type: string
           example: 'success'
+        err:
+          type: string
+          example: null
     pagination:
       title: pagination
       type: object

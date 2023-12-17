@@ -170,7 +170,6 @@ module.exports = {
   },
   createNotifAuto: async (account_id, title, deskripsi ,res, next) => {
     try {
-      console.log(account_id);
       await prisma.notifikasi.create({
         data: {
           account_id,

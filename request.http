@@ -14,10 +14,10 @@ Content-Type: application/json
 ### verify otp
 POST http://localhost:3000/auth/verify-otp
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoxLCJlbWFpbCI6IjIwMDQwMTE0MUBzdHVkZW50LnVtcmkuYWMuaWQiLCJpYXQiOjE3MDI1Njk4NjF9.VFHmwbmm6-e-cd4hy8kDDilsLeE257gym35HRlAOW0s
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjozOCwiZW1haWwiOiIyMDA0MDExNDFAc3R1ZGVudC51bXJpLmFjLmlkIiwiaWF0IjoxNzAyNzIwMDExfQ.EstEd6FrwkRXJpGe0ty01LS29UsUhnsawmT_Wf1Wf5I
 
 {
-    "otp":"856015"
+    "otp":"553314"
 }
 
 #### resend otp
@@ -31,7 +31,7 @@ Content-Type: application/json
 
 {
     "email":"200401141@student.umri.ac.id",
-    "password":"aldi123"
+    "password":"password123"
 }
 
 ### RESET PASSWORD
@@ -53,7 +53,7 @@ Content-Type: application/json
 
 ### GET USER BY TOKEN
 GET http://localhost:3000/auth/whoami
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjo0NSwiZW1haWwiOiIyMDA0MDExNDFAc3R1ZGVudC51bXJpLmFjLmlkIiwiaWF0IjoxNzAyNDgwMjEwfQ.bsBSDAnx3uVi8qn3p88SZe9Y1EmZ_10nWet21UUIFDw
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzgsImVtYWlsIjoiMjAwNDAxMTQxQHN0dWRlbnQudW1yaS5hYy5pZCIsImlhdCI6MTcwMjcyMDMyNH0.tdimyWKTyjQLG71vT56kJwqT8GRgqLQgQzSAOSHgNsY
 
 # ------------------------------------ PROFILE ------------------------------------
 
@@ -387,4 +387,42 @@ Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoxLCJlbWFp
 ###------------------------------------ PAYMENT -----------------------------------
 GET http://localhost:3000/payment
 
+### CREATE PAYMENT
+POST http://localhost:3000/payment
+Content-Type: application/json
 
+{
+    "account_id" : 38,
+    "course_id" : 1,
+    "metode_pembayaran" : "Credit card"
+}
+
+### GET PAYMENT BY ID
+GET http://localhost:3000/payment/17
+
+### UPDATE PAYMENT BY ID
+PUT http://localhost:3000/payment/17
+
+### GET PAYMENT BY LOGIN
+GET http://localhost:3000/payment/checkout
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzgsImVtYWlsIjoiMjAwNDAxMTQxQHN0dWRlbnQudW1yaS5hYy5pZCIsImlhdCI6MTcwMjcyMDMyNH0.tdimyWKTyjQLG71vT56kJwqT8GRgqLQgQzSAOSHgNsY
+
+### CREATE PAYMENT BY LOGIN
+POST http://localhost:3000/payment/checkout
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzgsImVtYWlsIjoiMjAwNDAxMTQxQHN0dWRlbnQudW1yaS5hYy5pZCIsImlhdCI6MTcwMjcyMDMyNH0.tdimyWKTyjQLG71vT56kJwqT8GRgqLQgQzSAOSHgNsY
+
+
+{
+    "course_id" : 3,
+    "metode_pembayaran" : "Debit Card"
+}
+
+### UPDATE PAYMENT BY ID
+PUT http://localhost:3000/payment/checkout
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzgsImVtYWlsIjoiMjAwNDAxMTQxQHN0dWRlbnQudW1yaS5hYy5pZCIsImlhdCI6MTcwMjcyMDMyNH0.tdimyWKTyjQLG71vT56kJwqT8GRgqLQgQzSAOSHgNsY
+
+{
+    "course_id" : 3
+}
