@@ -70,6 +70,9 @@ module.exports ={
                                 }
                             },
                             Riwayat_Transaksi:{
+                                where:{
+                                    account_id: account.account_id
+                                },
                                 select:{
                                     status: true,
                                 }

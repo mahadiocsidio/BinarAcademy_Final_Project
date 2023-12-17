@@ -29,6 +29,8 @@ tags:
     description : all about mentor
   - name : Mentor Course
     description : all about mentor-course
+  - name: Dashboard Admin
+    description: api di dashboard admin
 paths:
 # ------------------------------------ AUTH ------------------------------------
   /auth/register:
@@ -1214,7 +1216,7 @@ paths:
       summary: Get all payments
       tags:
         - Payment
-        - Admin
+        - Dashboard Admin
       description: Retrieve a list of payments with pagination.
       parameters:
         - in: query
@@ -1421,8 +1423,12 @@ paths:
                 course_id:
                   type: integer
                   description: ID of the course for which the payment status is updated
+                metode_pembayaran:
+                  type: string
+                  description: Payment method used (e.g., credit card, bank transfer)
               required:
                 - course_id
+                - metode_pembayaran
 
       responses:
         '200':
@@ -1551,7 +1557,7 @@ paths:
       summary: Get all courses
       tags:
         - Course
-        - Admin
+        - Dashboard Admin
       description: Retrieve a list of courses with pagination and optional filtering.
       parameters:
         - in: query
@@ -1631,7 +1637,7 @@ paths:
       summary: Add a new course
       tags:
         - Course
-        - Admin
+        - Dashboard Admin
       description: Add a new course to the system.
       requestBody:
         required: true
@@ -1680,23 +1686,52 @@ paths:
       responses:
         '200':
           description: Successful response
+          $ref: "#/components/responses/courseDetail"
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              example:
+                success: false
+                message: 'Course not found'
+                data: null
+
+        '500':
+          description: Internal Server Error
+  
+  /course/beli:
+    post:
+      summary: Purchase a course
+      security:
+        - bearerAuth: []
+      tags:
+        - Course
+      description: Purchase a course and create transaction history.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              course_id: 1
+
+      responses:
+        '200':
+          description: Successful response
           content:
             application/json:
               example:
                 success: true
                 data:
-                  course_id: 1
-                  title: 'Programming Basics'
-                  kode_kelas: 'P101'
-                  kategori_id: 2
-                  premium: true
-                  harga: 49.99
-                  level: 'Beginner'
-                  Kategori:
-                    title: 'Programming'
-                  Mentor:
-                    name: 'John Doe'
-                # Add other course fields as needed
+                  payment:
+                    riwayat_transaksi_id: 1
+                    account_id: 123
+                    course_id: 1
+                    tanggal_pembayaran: '2023-01-01T12:00:00Z'
+                    metode_pembayaran: 'Credit Card'
+                    status: 'Menunggu Pembayaran'
+                  userCourse:
+                    account_id: 123
+                    course_id: 1
 
         '404':
           description: Not Found
@@ -1704,7 +1739,7 @@ paths:
             application/json:
               example:
                 success: false
-                message: 'Course isnt registered'
+                message: 'Course is not registered'
                 data: null
 
         '500':
@@ -1715,7 +1750,7 @@ paths:
       summary: Get all categories
       tags:
         - Category
-        - Admin
+        - Dashboard Admin
       description: Retrieve a list of categories with pagination.
       parameters:
         - in: query
@@ -2419,6 +2454,7 @@ paths:
       summary: Get all mentor
       tags:
         - Mentor
+        - Dashboard Admin
       description: Retrieve a list of mentor with pagination.
       parameters:
         - in: query
@@ -2879,6 +2915,26 @@ paths:
         '500':
           description: Internal Server Error
 
+  /admin:
+    get:
+      summary: Get the count of active users, active course, and premium course
+      tags:
+        - Dashboard Admin
+      description: menampilkan user aktif, course aktif dan banyaknya course premium
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                success: true
+                data:
+                  activeUsersCount: 9
+                  activeCourseCount: 6
+                  premiumCourseCount: 7  # Replace with the actual count of active users
+
+        '500':
+          description: Internal Server Error
 
 components:
   securitySchemes:
@@ -3679,3 +3735,85 @@ components:
                 example : Frontend developer
             required:
               - mentor_id
+
+  responses:
+    courseDetail:
+      description: Course detail
+      content:
+            application/json:
+              example:
+                success: true
+                data:
+                  course_id: 1
+                  title: "Pengembangan Web 101"
+                  deskripsi: "Pengenalan pengembangan web"
+                  kode_kelas: "WD001"
+                  premium: false
+                  harga: 0
+                  level: "Pemula"
+                  Kategori:
+                    title: "Web Development"
+                  Mentor:
+                    name: "John Doe"
+                  Chapter:
+                    - title: "CHAPTER 1 - PENDAHULUAN"
+                      Video:
+                        - video_id: 1
+                          chapter_id: 1
+                          title: "Tujuan mengikuti kelas Pengembangan Web 101"
+                          deskripsi: "menjelaskan Tujuan mengikuti kelas Pengembangan Web 101"
+                          url_video: "https://youtu.be/ixOd42SEUF0"
+                          is_preview: true
+                        - video_id: 2
+                          chapter_id: 1
+                          title: "Pengenalan Pengembangan Web 101"
+                          deskripsi: "menjelaskan Tujuan mengikuti kelas Pengembangan Web 101"
+                          url_video: "https://youtu.be/DwTkyMJi890"
+                          is_preview: true
+                        - video_id: 3
+                          chapter_id: 1
+                          title: "Contoh dalam Pengembangan Web 101"
+                          deskripsi: "menjelaskan Tujuan mengikuti kelas Pengembangan Web 101"
+                          url_video: "https://youtu.be/rd-590n3H6w"
+                          is_preview: true
+                    - title: "CHAPTER 2 - LANJUTAN"
+                      Video:
+                        - video_id: 4
+                          chapter_id: 2
+                          title: "Dasar Pengembangan Web 101"
+                          deskripsi: "menjelaskan Tujuan mengikuti kelas Pengembangan Web 101"
+                          url_video: "https://youtu.be/HYfG_uCOlhc"
+                          is_preview: true
+                        - video_id: 5
+                          chapter_id: 2
+                          title: "Lanjutan Pengembangan Web 101"
+                          deskripsi: "menjelaskan Tujuan mengikuti kelas Pengembangan Web 101"
+                          url_video: "https://youtu.be/DmxXl1k0X5g"
+                          is_preview: true
+                        - video_id: 6
+                          chapter_id: 2
+                          title: "Penyelesaian Pengembangan Web 101"
+                          deskripsi: "menjelaskan Tujuan mengikuti kelas Pengembangan Web 101"
+                          url_video: "https://youtu.be/1eJzLj9OE0Q"
+                          is_preview: false
+                    - title: "CHAPTER 3 - PENYELESAIAN"
+                      Video:
+                        - video_id: 7
+                          chapter_id: 3
+                          title: "Latihan Dasar Pengembangan Web 101"
+                          deskripsi: "menjelaskan Tujuan mengikuti kelas Pengembangan Web 101"
+                          url_video: "https://youtu.be/6hIUgd6WuFw"
+                          is_preview: false
+                        - video_id: 8
+                          chapter_id: 3
+                          title: "Latihan Lanjutan Pengembangan Web 101"
+                          deskripsi: "menjelaskan Tujuan mengikuti kelas Pengembangan Web 101"
+                          url_video: "https://youtu.be/6hXoBeIQd-o"
+                          is_preview: false
+                        - video_id: 9
+                          chapter_id: 3
+                          title: "Ujian Penyelesaian Pengembangan Web 101"
+                          deskripsi: "menjelaskan Tujuan mengikuti kelas Pengembangan Web 101"
+                          url_video: "https://youtu.be/HVmmrTBdiFY"
+                          is_preview: false
+                  avgRating: 3.6666666666666665

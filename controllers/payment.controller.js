@@ -25,7 +25,11 @@ module.exports = {
             select:{
               title: true,
               kode_kelas:true,
-              harga: true,
+              Kategori:{
+                  select:{
+                      title:true
+                  }
+              }
             }
           },
           status: true,
@@ -201,7 +205,7 @@ module.exports = {
   updatePaymentStatusbyLogin: async(req,res,next)=>{
     try {
       let account = req.user;
-      let {course_id} = req.body;
+      let {course_id, metode_pembayaran} = req.body;
       
       const userTransaction = await prisma.riwayat_Transaksi.findFirst({
         where: {
@@ -223,6 +227,7 @@ module.exports = {
         },
         data:{
           tanggal_pembayaran: new Date(Date.now()),
+          metode_pembayaran,
           status: "Sudah Bayar"
         }
       })
