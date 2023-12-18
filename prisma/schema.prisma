@@ -7,8 +7,8 @@ generator client {
 
 // prisma/schema.prisma
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
 
@@ -156,6 +156,7 @@ model Rating {
 model Promo {
   promo_id        Int      @id @default(autoincrement())
   course_id       Int
+  title           String
   deskripsi       String?
   tanggal_mulai   DateTime
   tanggal_selesai DateTime
@@ -170,7 +171,7 @@ model Riwayat_Transaksi {
   course_id            Int
   metode_pembayaran    String
   tanggal_pembayaran   DateTime
-  status               String   @default("waiting")
+  status               String   @default("Waiting for Payment")
   Account              Account  @relation(fields: [account_id], references: [account_id])
   Course               Course   @relation(fields: [course_id], references: [course_id])
 }
