@@ -401,7 +401,7 @@ Content-Type: application/json
 GET http://localhost:3000/payment/17
 
 ### UPDATE PAYMENT BY ID
-PUT http://localhost:3000/payment/17
+PUT http://localhost:3000/payment/26
 
 ### GET PAYMENT BY LOGIN
 GET http://localhost:3000/payment/checkout
@@ -424,5 +424,6 @@ Content-Type: application/json
 Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzgsImVtYWlsIjoiMjAwNDAxMTQxQHN0dWRlbnQudW1yaS5hYy5pZCIsImlhdCI6MTcwMjcyMDMyNH0.tdimyWKTyjQLG71vT56kJwqT8GRgqLQgQzSAOSHgNsY
 
 {
-    "course_id" : 3
+    "course_id" : 3,
+    "metode_pembayaran" : "Debit Card"
 }

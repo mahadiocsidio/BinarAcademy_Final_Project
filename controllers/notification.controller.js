@@ -137,7 +137,7 @@ module.exports = {
       //filter user yg mau di beri broadcast
       let user = await prisma.account.findMany({
         // CONDITION
-        where: { is_verified: true }, 
+        where: { is_verified: true },
       });
 
       //mendapat id dari tiap filter
@@ -163,13 +163,13 @@ module.exports = {
         status: true,
         message: 'success',
         err: null,
-        data: {blast}
+        data: { blast },
       });
     } catch (err) {
       next(err);
     }
   },
-  createNotifAuto: async (account_id, title, deskripsi ,res, next) => {
+  createNotifAuto: async (account_id, title, deskripsi, res, next) => {
     try {
       await prisma.notifikasi.create({
         data: {
@@ -178,7 +178,6 @@ module.exports = {
           deskripsi,
         },
       });
-
     } catch (err) {
       // next(err);
       console.log(err);
