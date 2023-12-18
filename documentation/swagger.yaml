@@ -1797,7 +1797,22 @@ paths:
       description: Create a new category in the system.
       requestBody:
         required: true
-        $ref: "#/components/requestBodies/createCategory"
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  description: The title of the category.
+                deskripsi:
+                  type: string
+                  description: Description of the category.
+                url_img_preview:
+                  type: string
+                  format: binary
+                  description: Image file representing category preview.
+
       responses:
         '201':
           description: Successful response
@@ -1885,7 +1900,21 @@ paths:
           description: ID of the category to update
       requestBody:
         required: true
-        $ref: "#/components/requestBodies/createCategory"
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  description: The title of the category.
+                deskripsi:
+                  type: string
+                  description: Description of the category.
+                url_img_preview:
+                  type: string
+                  format: binary
+                  description: Image file representing category preview.
       responses:
         '200':
           description: Successful response
@@ -1911,6 +1940,16 @@ paths:
                 status: false
                 message: 'bad request!'
                 err: 'title is already used'
+                data: null
+
+        '404':
+          description: Category Not Found
+          content:
+            application/json:
+              example:
+                status: false
+                message: 'Bad request!'
+                err: 'Category not found'
                 data: null
 
         '500':
