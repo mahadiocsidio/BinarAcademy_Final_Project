@@ -2,7 +2,8 @@ const prisma = require('../libs/prisma');
 const { getPagination } = require('../helper/index');
 let bcrypt = require('bcrypt');
 const { createNotifAuto } = require('./notification.controller');
-
+const imagekit = require('../libs/imagekit');
+const path = require('path');
 
 const getAllAccountProfile = async (req, res, next) => {
   try {
@@ -78,7 +79,7 @@ const getAccountbyId = async (req, res, next) => {
 const updateProfilebyId = async (req, res, next) => {
   try {
     let { account_id } = req.params;
-    let { nama, no_telp, negara, kota } = req.body;
+    let { nama, no_telp, negara, kota, url_image } = req.body;
     account_id = Number(account_id);
 
     let accountExist = await prisma.account.findUnique({
@@ -95,6 +96,18 @@ const updateProfilebyId = async (req, res, next) => {
       });
     }
 
+    let url = url_image; // Menggunakan URL yang disediakan dalam permintaan secara default
+
+    if (req.file) {
+      // Jika ada file yang di-upload
+      let strFile = req.file.buffer.toString('base64');
+      let uploadedFile = await imagekit.upload({
+        fileName: Date.now() + path.extname(req.file.originalname),
+        file: strFile
+      });
+      url = uploadedFile.url; // Ambil URL gambar yang di-upload
+    }
+
     let account = await prisma.account.update({
       where: {
         account_id,
@@ -104,6 +117,7 @@ const updateProfilebyId = async (req, res, next) => {
         no_telp,
         negara,
         kota,
+        url_image : url
       },
     });
 
@@ -314,9 +328,21 @@ const getAccountbyLogin = async (req, res, next) => {
 const updateProfilebyLogin = async (req, res, next) => {
   try {
     let user = req.user;
-    let { nama, no_telp, negara, kota } = req.body;
+    let { nama, no_telp, negara, kota, url_image } = req.body;
 
     // err pencarian account di handle oleh restrict
+
+    let url = url_image; // Menggunakan URL yang disediakan dalam permintaan secara default
+
+    if (req.file) {
+      // Jika ada file yang di-upload
+      let strFile = req.file.buffer.toString('base64');
+      let uploadedFile = await imagekit.upload({
+        fileName: Date.now() + path.extname(req.file.originalname),
+        file: strFile
+      });
+      url = uploadedFile.url; // Ambil URL gambar yang di-upload
+    }
 
     let accountUpdated = await prisma.account.update({
       where: {
@@ -327,6 +353,7 @@ const updateProfilebyLogin = async (req, res, next) => {
         no_telp,
         negara,
         kota,
+        url_image : url
       },
     });
 

@@ -647,22 +647,30 @@ paths:
       requestBody:
         required: true
         content:
-          application/json:
+          multipart/form-data:
             schema:
               type: object
               properties:
                 nama:
                   type: string
+                  description: User's name
                   example: John Doe
                 no_telp:
                   type: string
+                  description: User's phone number
                   example: 0812345678
                 negara:
                   type: string
+                  description: User's country
                   example: Indojaya
                 kota:
                   type: string
+                  description: User's city
                   example: pekanbaru
+                url_image:
+                  type: string
+                  format: binary
+                  description: Image file for the user profile (optional)
         
       responses:
         '200':
@@ -789,7 +797,32 @@ paths:
       security:
         - bearerAuth: []
       requestBody:
-        $ref: "#/components/requestBodies/updateProfile"
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                nama:
+                  type: string
+                  description: User's name
+                  example: John Doe
+                no_telp:
+                  type: string
+                  description: User's phone number
+                  example: 0812345678
+                negara:
+                  type: string
+                  description: User's country
+                  example: Indojaya
+                kota:
+                  type: string
+                  description: User's city
+                  example: pekanbaru
+                url_image:
+                  type: string
+                  format: binary
+                  description: Image file for the user profile (optional)
       responses:
         '200':
           description: Successful response
