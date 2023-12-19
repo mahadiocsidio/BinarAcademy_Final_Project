@@ -7,13 +7,13 @@ const {
   getCourseProgressById,
 } = require('../controllers/course-progres.controller');
 
-router.get('/', getAllCourseProgress);
-router.post('/', createCourseProgress);
+router.get('/', getAllCourseProgress); //DONE
+router.post('/', createCourseProgress); //DONE
 
 // BY LOGIN
-router.get('/myProgres', restrict, getCourseProgressByLogin);
+router.get('/myProgress', restrict, getCourseProgressByLogin); //DONE
 
 // BY ID
-router.get('/:course_progres_id', getCourseProgressById);
+router.get('/:course_progres_id', getCourseProgressById); //DONE
 
 module.exports = router;

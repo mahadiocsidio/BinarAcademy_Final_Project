@@ -3,10 +3,13 @@ const { getPagination } = require('../helper/index');
 
 const getAllCourse = async (req, res, next) => {
     try {
-        let { search, category_ids, sort, order="asc", level } = req.query;
+        let { limit = 10, page = 1, search, category_ids, sort, order="asc", level } = req.query;
+        limit = Number(limit);
+        page = Number(page);
+        
         let conditions = {};
         let orderBy = {};
-
+        
         if (search) {
             conditions.title = {
                 contains: search,
@@ -41,10 +44,6 @@ const getAllCourse = async (req, res, next) => {
             where:conditions,
             _count: { course_id: true },
         });
-
-        let { limit = 10, page = 1 } = req.query;
-        limit = Number(limit);
-        page = Number(page);
 
         let course = await prisma.course.findMany({
             where: conditions,
