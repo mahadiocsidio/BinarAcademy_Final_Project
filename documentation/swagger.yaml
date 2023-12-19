@@ -2716,16 +2716,18 @@ paths:
                   promo:
                     - promo_id: 1
                       course_id: 1
-                      deskripsi: "Promo akhir tahun"
+                      title: "Promo akhir tahun"
+                      deskripsi: "Promo berlaku bagi semua user"
                       tanggal_mulai: "2023-12-01T00:00:00.000Z"
                       tanggal_selesai: "2023-12-10T23:59:59.000Z"
-                      total_promo: 10000
+                      total_promo: 40000
                     - promo_id: 2
                       course_id: 2
-                      deskripsi: "Promo akhir tahun"
-                      tanggal_mulai: "2023-12-01T00:00:00.000Z"
-                      tanggal_selesai: "2023-12-10T23:59:59.000Z"
-                      total_promo: 10000
+                      title: "Promo tahun baru"
+                      deskripsi: "Promo berlaku bagi semua user"
+                      tanggal_mulai: "2024-01-01T00:00:00.000Z"
+                      tanggal_selesai: "2024-01-14T23:59:59.000Z"
+                      total_promo: 40000
 
         '500':
           description: Internal Server Error
@@ -2754,10 +2756,11 @@ paths:
                   promo:
                     promo_id: 1
                     course_id: 1
-                    deskripsi: "Promo akhir tahun"
+                    title: "Promo akhir tahun"
+                    deskripsi: "Promo berlaku bagi semua user"
                     tanggal_mulai: "2023-12-01T00:00:00.000Z"
                     tanggal_selesai: "2023-12-10T23:59:59.000Z"
-                    total_promo: 10000
+                    total_promo: 40000
 
         '404':
           description: Promo not found
@@ -2783,10 +2786,11 @@ paths:
           application/json:
             example:
               course_id: 1
-              deskripsi: "Promo akhir tahun"
+              title: "Promo akhir tahun"
+              deskripsi: "Promo berlaku bagi semua user"
               tanggal_mulai: "2023-12-01T00:00:00.000Z"
               tanggal_selesai: "2023-12-10T23:59:59.000Z"
-              total_promo: 20000
+              total_promo: 40000
       responses:
         '200':
           description: Successful response
@@ -2799,10 +2803,11 @@ paths:
                   newPromo:
                     promo_id: 2
                     course_id: 1
-                    deskripsi: "Promo akhir tahun"
-                    tanggal_mulai: "2023-12-01T00:00:00.000Z"
-                    tanggal_selesai: "2023-12-10T23:59:59.000Z"
-                    total_promo: 20000
+                    title: "Promo akhir tahun"
+                    deskripsi: "Promo berlaku bagi semua user"
+                    tanggal_mulai: "2023-12-17T00:00:00.000Z"
+                    tanggal_selesai: "2023-12-31T23:59:59.000Z"
+                    total_promo: 40000
         '400':
           description: Bad request
           content:
@@ -2833,10 +2838,11 @@ paths:
         content:
           application/json:
             example:
-              deskripsi: 'Promo tahun baru'
-              tanggal_mulai: "2023-12-01T00:00:00.000Z"
-              tanggal_selesai: "2023-12-10T23:59:59.000Z"
-              total_promo: 20000
+              title: "Promo tahun baru"
+              deskripsi: 'Promo berlaku bagi semua user'
+              tanggal_mulai: "2023-12-17T00:00:00.000Z"
+              tanggal_selesai: "2023-12-31T23:59:59.000Z"
+              total_promo: 50000
       responses:
         '201':
           description: Successful response
@@ -2849,10 +2855,11 @@ paths:
                   updatedPromo:
                     promo_id: 1
                     course_id: 1
-                    deskripsi: 'Promo tahun baru'
+                    title: "Promo tahun baru"
+                    deskripsi: 'Promo berlaku bagi semua user'
                     tanggal_mulai: "2023-12-01T00:00:00.000Z"
                     tanggal_selesai: "2023-12-10T23:59:59.000Z"
-                    total_promo: 20000
+                    total_promo: 50000
 
         '404':
           description: Promo not found

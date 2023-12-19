@@ -59,10 +59,10 @@ module.exports = {
 
   addPromo: async (req, res, next) => {
     try {
-      const { course_id, deskripsi, tanggal_mulai, tanggal_selesai, total_promo } = req.body;
+      const { course_id, title, deskripsi, tanggal_mulai, tanggal_selesai, total_promo } = req.body;
 
       // Input validation
-      if ( !course_id || !deskripsi || !tanggal_mulai || !tanggal_selesai || !total_promo ) {
+      if ( !course_id || !title || !deskripsi || !tanggal_mulai || !tanggal_selesai || !total_promo ) {
         return res.status(400).json({
           success: false,
           message: 'Missing required data.',
@@ -72,6 +72,7 @@ module.exports = {
       const newPromo = await prisma.promo.create({
         data: {
           course_id,
+          title,
           deskripsi,
           tanggal_mulai,
           tanggal_selesai,
@@ -92,10 +93,10 @@ module.exports = {
   updatePromo: async (req, res, next) => {
     try {
       const promoId = parseInt(req.params.promo_id);
-      const { deskripsi, tanggal_mulai, tanggal_selesai, total_promo } = req.body;
+      const { deskripsi, title, tanggal_mulai, tanggal_selesai, total_promo } = req.body;
 
       // Input validation
-      if (!deskripsi || !tanggal_mulai || !tanggal_selesai || !total_promo) {
+      if (!deskripsi || !title || !tanggal_mulai || !tanggal_selesai || !total_promo) {
         return res.status(400).json({
           success: false,
           message: 'Missing required data.',
@@ -121,6 +122,7 @@ module.exports = {
           promo_id: promoId,
         },
         data: {
+          title,
           deskripsi,
           tanggal_mulai,
           tanggal_selesai,
