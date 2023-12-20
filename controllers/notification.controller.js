@@ -18,13 +18,21 @@ module.exports = {
         _count: { notifikasi_id: true },
       });
 
+      const notificationsWithType = notification.map((notification) => {
+        const isPromo = notification.title && notification.title.toLowerCase().includes('promo');
+        return {
+          ...notification,
+          notificationType: isPromo ? 'PROMO' : 'NOTIFIKASI',
+        };
+      });
+
       let pagination = getPagination(req, _count.notifikasi_id, page, limit);
 
       res.status(200).json({
         stauts: true,
         message: 'success',
         err: null,
-        data: { pagination, notification },
+        data: { pagination, notificationsWithType },
       });
     } catch (err) {
       next(err);
