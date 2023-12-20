@@ -24,6 +24,7 @@ const mentorCourse = require('./routes/mentor-course.routes');
 const notification = require('./routes/notification.routes');
 const promo = require('./routes/promo.routes')
 const admin = require('./routes/admin.routes')
+const courseProgress = require('./routes/course_progress.routes')
 
 app.use('/auth', userRouter);
 app.use('/profile', profileRouter);
@@ -39,6 +40,7 @@ app.use('/mentor-course', mentorCourse);
 app.use('/notification', notification);
 app.use('/promo', promo)
 app.use('/admin', admin)
+app.use('/course-progress', courseProgress)
 app.use('/', (req, res) => {
   try {
     const welcomeMessage = {

@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const { getPagination } = require('../helper/index');
 const { createNotifAuto } = require('./notification.controller');
 const { autoAddUserCourse } = require('./user_course.controllers');
+const { autoAddCourseProgress } = require('./course-progres.controller');
 
 module.exports = {
   getAllPayment: async (req, res, next) => {
@@ -157,6 +158,9 @@ module.exports = {
 
       //create UserCourse
       await autoAddUserCourse(account.account_id, payment.course_id);
+
+      //create Course-Progress
+      await autoAddCourseProgress(account.account_id, payment.course_id);
 
       res.status(200).json({
         success: true,
@@ -355,6 +359,9 @@ module.exports = {
 
       //create UserCourse
       await autoAddUserCourse(account.account_id, course_id);
+
+      //create Course-Progress
+      await autoAddCourseProgress(account.account_id, course_id);
 
       res.status(200).json({
         success: true,

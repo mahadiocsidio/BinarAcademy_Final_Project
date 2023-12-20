@@ -403,7 +403,7 @@ Content-Type: application/json
 GET http://localhost:3000/payment/17
 
 ### UPDATE PAYMENT BY ID
-PUT http://localhost:3000/payment/26
+PUT http://localhost:3000/payment/24
 
 ### GET PAYMENT BY LOGIN
 GET http://localhost:3000/payment/checkout
@@ -414,18 +414,37 @@ POST http://localhost:3000/payment/checkout
 Content-Type: application/json
 Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzgsImVtYWlsIjoiMjAwNDAxMTQxQHN0dWRlbnQudW1yaS5hYy5pZCIsImlhdCI6MTcwMjcyMDMyNH0.tdimyWKTyjQLG71vT56kJwqT8GRgqLQgQzSAOSHgNsY
 
-
 {
-    "course_id" : 3,
-    "metode_pembayaran" : "Debit Card"
+    "course_id" : 6
 }
 
-### UPDATE PAYMENT BY ID
+### UPDATE PAYMENT BY LOGIN
 PUT http://localhost:3000/payment/checkout
 Content-Type: application/json
 Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzgsImVtYWlsIjoiMjAwNDAxMTQxQHN0dWRlbnQudW1yaS5hYy5pZCIsImlhdCI6MTcwMjcyMDMyNH0.tdimyWKTyjQLG71vT56kJwqT8GRgqLQgQzSAOSHgNsY
 
 {
-    "course_id" : 3,
+    "course_id" : 6,
     "metode_pembayaran" : "Debit Card"
 }
+
+###------------------------------------ COURSE PROGRESS -----------------------------------
+GET http://localhost:3000/course-progress?account_id=38
+
+### CREATE COURSE PROGRESS
+POST http://localhost:3000/course-progress
+Content-Type: application/json
+
+{
+    "account_id" : 38,
+    "course_id" : 2,
+    "video_id" : 2
+}
+
+### GET COURSE PROGRESS BY ID
+GET http://localhost:3000/course-progress/1
+
+### GET COURSE PROGRESS BY LOGIN
+GET http://localhost:3000/course-progress/myProgress
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzgsImVtYWlsIjoiMjAwNDAxMTQxQHN0dWRlbnQudW1yaS5hYy5pZCIsImlhdCI6MTcwMjcyMDMyNH0.tdimyWKTyjQLG71vT56kJwqT8GRgqLQgQzSAOSHgNsY
+
