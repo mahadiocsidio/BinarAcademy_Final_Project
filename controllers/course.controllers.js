@@ -73,6 +73,15 @@ const getAllCourse = async (req, res, next) => {
                         skor: true,
                     },
                 },
+                Chapter: {
+                    select: {
+                      _count: {
+                        select: {
+                          Video: true,
+                        },
+                      },
+                    },
+                },
             },
         });
 
@@ -81,6 +90,11 @@ const getAllCourse = async (req, res, next) => {
             const totalSkor = c.Rating.reduce((acc, rating) => acc + rating.skor, 0);
             const avgSkor = c.Rating.length > 0 ? totalSkor / c.Rating.length : 0;
             c.avgRating = avgSkor;
+
+            c.module = c.Chapter.reduce(
+                (acc, chapter) => acc + chapter._count.Video,
+                0
+            );
         });
 
         // Mengurutkan berdasarkan rating jika diperlukan
@@ -96,6 +110,7 @@ const getAllCourse = async (req, res, next) => {
 
         course.forEach(object=>{
             delete object['Rating']
+            delete object['Chapter']
         })
 
         res.status(200).json({
