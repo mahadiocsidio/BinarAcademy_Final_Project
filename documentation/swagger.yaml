@@ -3727,9 +3727,10 @@ components:
               password:
                 type: string
                 example: password123
+                
     addCourse:
       content:
-          application/json:
+        multipart/form-data:
             schema:
               type: object
               properties:
@@ -3757,6 +3758,10 @@ components:
                 level:
                   type: string
                   description: Level of the new course (e.g., beginner, intermediate, advanced)
+                url_image_preview:
+                  type: string
+                  format: binary
+                  description: Course image file (if applicable)
               required:
                 - title
                 - kategori_id

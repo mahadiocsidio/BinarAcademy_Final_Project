@@ -1,4 +1,5 @@
 const router = require('express').Router();
+const {imageFilter} = require('../libs/multer');
 const { restrict } = require('../middlewares/auth.middlewares');
 const {
   getAllCourse,
@@ -8,7 +9,7 @@ const {
 } = require('../controllers/course.controllers');
 
 router.get('/', getAllCourse);
-router.post('/addCourse', addCourse);
+router.post('/addCourse', imageFilter.single('url_image_preview'), addCourse);
 
 // BY LOGIN
 router.post('/beli', restrict, beliCourse);
