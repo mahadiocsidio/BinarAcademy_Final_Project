@@ -18,6 +18,7 @@ module.exports = {
         _count: { notifikasi_id: true },
       });
 
+      //menambahkan tipe notif apakah promo atau notifikasi biasa
       const notificationsWithType = notification.map((notification) => {
         const isPromo = notification.title && notification.title.toLowerCase().includes('promo');
         return {
@@ -95,13 +96,22 @@ module.exports = {
         where: { account_id },
       });
 
+      //menambahkan tipe notif apakah promo atau notifikasi biasa
+      const notificationsWithType = notifikasi.map((notifikasi) => {
+        const isPromo = notifikasi.title && notifikasi.title.toLowerCase().includes('promo');
+        return {
+          ...notifikasi,
+          notificationType: isPromo ? 'PROMO' : 'NOTIFIKASI',
+        };
+      });
+
       let pagination = getPagination(req, _count.notifikasi_id, page, limit);
 
       return res.status(200).json({
         status: true,
         message: 'success',
         err: null,
-        data: { pagination, notifikasi },
+        data: { pagination, notificationsWithType },
       });
     } catch (err) {
       next(err);
