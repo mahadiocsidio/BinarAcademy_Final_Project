@@ -1,5 +1,7 @@
 const prisma = require('../libs/prisma')
 const { getPagination } = require('../helper/index');
+const imagekit = require('../libs/imagekit');
+const path = require('path');
 
 const getAllCourse = async (req, res, next) => {
     try {
@@ -187,40 +189,61 @@ const getCoursebyId = async(req,res,next)=>{
 
 const addCourse = async(req,res,next)=>{
     try {
-        let {title,deskripsi,kode_kelas,kategori_id,harga,premium,mentor_id,level, course_id} = req.body
+        let { title, deskripsi, kode_kelas, harga, premium, level, name, kategori_id, category_title, mentor_id } = req.body;
+        harga = Number(harga);
+        premium = premium === "true";
+        kategori_id = Number(kategori_id);
+        mentor_id = Number(mentor_id);
+
+        if (req.file) {
+            // Jika ada file yang di-upload
+            let strFile = req.file.buffer.toString('base64');
+            let uploadedFile = await imagekit.upload({
+                fileName: Date.now() + path.extname(req.file.originalname),
+                file: strFile
+            });
+            url = uploadedFile.url; // Ambil URL gambar yang di-upload
+        } else  {
+            // Jika tidak ada file yang di-upload tetapi ada url_img_preview dalam permintaan
+            url = null; 
+        }
+
         let course = await prisma.course.create({
-            data:{
+            data: {
                 title,
-                mentor_id,
                 deskripsi,
                 kode_kelas,
-                kategori_id,
+                url_image_preview: url, // URL gambar preview jika ada
                 harga,
                 premium,
-                level
+                level,
+                kategori_id,
+                mentor_id
             },
-            select:{
+            select: {
                 course_id: true,
                 title: true,
                 harga: true,
-                level:true,
-                premium:true,
-                kode_kelas:true,
-                Kategori:{
-                    select:{
-                        title: true,
+                level: true,
+                premium: true,
+                kode_kelas: true,
+                url_image_preview: true,
+                Mentor: {
+                    select: {
+                        name: true 
+                    }
                 },
-                Mentor:{
-                    select:{
-                        name:true
+                Kategori: {
+                    select: {
+                        title: true 
                     }
                 }
             }
-        }})
+        });
 
         let mentorCourse = await prisma.mentor_course.create({
             data : {
-                mentor_id,
+                mentor_id:1,
                 course_id: course.course_id
             }
         })
@@ -228,8 +251,8 @@ const addCourse = async(req,res,next)=>{
         res.status(200).json({
             success:true,
             data:{course, mentorCourse}
-            
         })
+        
     } catch (error) {
         next(error)
     }
