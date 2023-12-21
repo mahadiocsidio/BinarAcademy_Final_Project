@@ -6,15 +6,26 @@ const { getPagination } = require('../helper/index');
 module.exports = {
   getAllNotif: async (req, res, next) => {
     try {
-      let { limit = 10, page = 1 } = req.query;
+      let { limit = 10, page = 1, type } = req.query;
       limit = Number(limit);
       page = Number(page);
 
+      let conditions = {}
+
+      // if(type){  FILTER NOTIFIKASI
+      //   conditions.deskripsi = {
+      //     contains: type,
+      //     mode: 'insensitive',
+      // };
+      // }
+
       let notification = await prisma.notifikasi.findMany({
+        where:conditions,
         skip: (page - 1) * limit,
         take: limit,
       });
       const { _count } = await prisma.notifikasi.aggregate({
+        where:conditions,
         _count: { notifikasi_id: true },
       });
 
@@ -23,9 +34,10 @@ module.exports = {
         const isPromo = notification.title && notification.title.toLowerCase().includes('promo');
         return {
           ...notification,
-          notificationType: isPromo ? 'PROMO' : 'NOTIFIKASI',
+          type: isPromo ? 'PROMO' : 'NOTIFIKASI',
         };
       });
+      
 
       let pagination = getPagination(req, _count.notifikasi_id, page, limit);
 
