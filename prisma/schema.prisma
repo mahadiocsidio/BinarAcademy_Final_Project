@@ -169,8 +169,8 @@ model Riwayat_Transaksi {
   riwayat_transaksi_id Int      @id @default(autoincrement())
   account_id           Int
   course_id            Int
-  metode_pembayaran    String
-  tanggal_pembayaran   DateTime
+  metode_pembayaran    String  @default("-")
+  tanggal_pembayaran   DateTime?
   status               String   @default("Waiting for Payment")
   Account              Account  @relation(fields: [account_id], references: [account_id])
   Course               Course   @relation(fields: [course_id], references: [course_id])

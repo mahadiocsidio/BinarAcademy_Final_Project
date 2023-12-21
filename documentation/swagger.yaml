@@ -23,6 +23,8 @@ tags:
     description: all about Payment History
   - name: User Course
     description: all about Course that user have
+  - name: Course Progress
+    description: all about Course Progress that user have
   - name: Rating
     description: all about Rating
   - name : Mentor
@@ -1239,6 +1241,265 @@ paths:
                 message: 'No user courses found for the account'
         '500':
           description: Internal Server Error
+
+# --------------------
+  /course-progress:
+    get:
+      summary: Get all user courses Progress with pagination
+      tags:
+        - Course Progress
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: Number of items to return per page
+        - in: query
+          name: page
+          schema:
+            type: integer
+          description: Page number to retrieve
+        - in: query
+          name: account_id
+          schema:
+            type: integer
+          description: filter course progress by user
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: success
+                  data:
+                    type: object
+                    properties:
+                      pagination:
+                        type: object
+                        properties:
+                          links:
+                            type: object
+                            properties:
+                              next:
+                                type: string
+                                example: http://domain.com/course-progress?page=3&limit=10
+                              prev:
+                                type: string
+                                example: http://domain.com/course-progress?page=1&limit=10
+                          total_items:
+                            type: integer
+                            example: 42
+                      course_progress:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            course_progress_id:
+                              type: integer
+                              example: 1
+                            account_id:
+                              type: integer
+                              example: 42
+                            course_id:
+                              type: integer
+                              example: 1
+                            video_id:
+                              type: integer
+                              example: 1
+                            is_done:
+                              type: boolean
+                              example: false
+                            last_access:
+                              type: string
+                              format: date-time
+    post:
+      summary: Create user courses Progress
+      tags:
+        - Course Progress
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                account_id:
+                  type: integer
+                  example: 42
+                course_id:
+                  type: integer
+                  example: 1
+                video_id:
+                  type: integer
+                  example: 1
+      responses:
+        '201':
+          description: success operation
+          content:
+            application/json:
+              example:
+                status: true
+                message: success
+                err: null
+                data: 
+                  progress:
+                    course_progres_id: 1
+                    account_id: 42
+                    course_id: 1
+                    video_id: 1
+                    is_done: false
+                    last_access: 2023-12-21T10:33:20.232Z
+        '400':
+          description: failed acc not found
+          content:
+            application/json:
+              example:
+                status: false
+                message: bad request
+                err: Account not found!
+                data: null
+        '401':
+          description: failed course not found
+          content:
+            application/json:
+              example:
+                status: false
+                message: bad request
+                err: Course not found!
+                data: null
+        '402':
+          description: failed video not found
+          content:
+            application/json:
+              example:
+                status: false
+                message: bad request
+                err: Video not found!
+                data: null
+  /course-progress/{course_progres_id}:
+    get:
+      summary: Get Course Progress details by ID
+      tags:
+        - Course Progress
+      description: Retrieve details of a Course Progress By ID.
+      parameters:
+        - in: path
+          name: course_progres_id
+          required: true
+          description: ID of the course_progres_id for which Course Progress details are requested
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: success operation
+          content:
+            application/json:
+              example:
+                status: true
+                message: success
+                err: null
+                data: 
+                  progress:
+                    course_progres_id: 1
+                    account_id: 42
+                    course_id: 1
+                    video_id: 1
+                    is_done: false
+                    last_access: 2023-12-21T10:33:20.232Z
+        '400':
+          description: failed video not found
+          content:
+            application/json:
+              example:
+                status: false
+                message: bad request
+                err: Course-progress not found!
+                data: null
+  /course-progress/myProgress:
+    get:
+      summary: Get Course Progress list By Login
+      tags:
+        - Course Progress
+      description: Retrieve list of a Course Progress By Login
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Failed response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: success
+                  data:
+                    type: object
+                    properties:
+                      pagination:
+                        type: object
+                        properties:
+                          links:
+                            type: object
+                            properties:
+                              next:
+                                type: string
+                                example: http://domain.com/course-progress?page=3&limit=10
+                              prev:
+                                type: string
+                                example: http://domain.com/course-progress?page=1&limit=10
+                          total_items:
+                            type: integer
+                            example: 42
+                      progress:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            course_progress_id:
+                              type: integer
+                              example: 1
+                            account_id:
+                              type: integer
+                              example: 42
+                            course_id:
+                              type: integer
+                              example: 1
+                            video_id:
+                              type: integer
+                              example: 1
+                            is_done:
+                              type: boolean
+                              example: false
+                            last_access:
+                              format: date-time
+        '401':
+          description: Failed response
+          content:
+            application/json:
+              example:
+                status: false
+                message: Unauthorized
+                error: Token not found
+
+      
+
+
+
+
+
+# --------------------          
 
   /payment:
     get:
