@@ -35,6 +35,7 @@ module.exports = {
               },
             },
           },
+          metode_pembayaran: true,
           status: true,
           tanggal_pembayaran: true,
         },
@@ -175,16 +176,28 @@ module.exports = {
   getPaymentbyLogin: async (req, res, next) => {
     try {
       let account = req.user;
-      let { limit = 10, page = 1 } = req.query;
+      let { limit = 10, page = 1, status, search } = req.query;
       limit = Number(limit);
       page = Number(page);
+
+      let where = {
+        account_id: account.account_id,
+      };
+
+      if (status) {
+        where.status = { contains: status, mode: 'insensitive' };
+      }
+
+      if (search) {
+        where.Course = {
+          title: { contains: search, mode: 'insensitive' },
+        };
+      }
 
       let payment = await prisma.riwayat_Transaksi.findMany({
         skip: (page - 1) * limit,
         take: limit,
-        where: {
-          account_id: account.account_id,
-        },
+        where: where,
         select: {
           riwayat_transaksi_id: true,
           account_id: true,
@@ -205,7 +218,7 @@ module.exports = {
               harga: true,
             },
           },
-
+          metode_pembayaran: true,
           status: true,
           tanggal_pembayaran: true,
         },
@@ -284,7 +297,7 @@ module.exports = {
   createPaymentbyLogin: async (req, res, next) => {
     try {
       let account = req.user;
-      let { course_id, metode_pembayaran = '' } = req.body;
+      let { course_id } = req.body;
 
       let isCourse = await prisma.course.findUnique({ where: { course_id } });
 
@@ -302,8 +315,8 @@ module.exports = {
         data: {
           account_id: account.account_id,
           course_id,
+          metode_pembayaran: 'Credit card',
           tanggal_pembayaran: new Date(Date.now()),
-          metode_pembayaran,
           status: 'Menunggu Pembayaran',
         },
       });
