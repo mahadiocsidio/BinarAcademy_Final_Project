@@ -39,7 +39,7 @@ module.exports = {
       );
 
       res.status(200).json({
-        stauts: true,
+        status: true,
         message: 'success',
         data: { pagination, course_progress },
       });
@@ -84,7 +84,7 @@ module.exports = {
         });
       }
 
-      let Progress = await prisma.course_progress.create({
+      let progress = await prisma.course_progress.create({
         data: {
           account_id,
           course_id,
@@ -96,7 +96,7 @@ module.exports = {
         status: true,
         message: 'success!',
         err: null,
-        data: { Progress },
+        data: { progress },
       });
     } catch (err) {
       next(err);

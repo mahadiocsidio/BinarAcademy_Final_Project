@@ -429,7 +429,7 @@ Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzgsImVtYWlsIjoiMjAw
 }
 
 ###------------------------------------ COURSE PROGRESS -----------------------------------
-GET http://localhost:3000/course-progress?account_id=38
+GET http://localhost:3000/course-progress
 
 ### CREATE COURSE PROGRESS
 POST http://localhost:3000/course-progress
