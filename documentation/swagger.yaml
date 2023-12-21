@@ -1493,13 +1493,7 @@ paths:
                 message: Unauthorized
                 error: Token not found
 
-      
-
-
-
-
-
-# --------------------          
+# --------------------PAYMENT--------------------------------
 
   /payment:
     get:
@@ -1507,6 +1501,8 @@ paths:
       tags:
         - Payment
         - Dashboard Admin
+      security:
+        - bearerAuth: []
       description: Retrieve a list of payments with pagination.
       parameters:
         - in: query
@@ -1546,6 +1542,7 @@ paths:
                         title: 'Programming Basics'
                         kode_kelas: 'P101'
                         harga: 49990
+                      metode_pembayaran: "Credit Card"
                       status: 'Sudah Bayar'
                       tanggal_pembayaran: '2023-01-01T12:00:00Z'
                     # Add more payment entries as needed
@@ -1603,7 +1600,18 @@ paths:
         - Payment
       security:
         - bearerAuth: []
-      description: Retrieve details of payment transactions for the logged-in user.
+      description: Retrieve details of payment transactions for the logged-in user with pagination and optional filtering.
+      parameters:
+        - in: query
+          name: search
+          schema:
+            type: string
+          description: Search term to filter payment by course title (case-insensitive)
+        - in: query
+          name: status
+          schema:
+            type: string
+          description: Search term to filter payment by payment status (case-insensitive)
       responses:
         '200':
           description: Successful response
@@ -1654,13 +1662,10 @@ paths:
               properties:
                 course_id:
                   type: integer
+                  example: 1
                   description: ID of the course for which the payment is made
-                metode_pembayaran:
-                  type: string
-                  description: Payment method used (e.g., credit card, bank transfer)
               required:
                 - course_id
-                - metode_pembayaran
 
       responses:
         '200':
@@ -1671,8 +1676,8 @@ paths:
                 success: true
                 data:
                   riwayat_transaksi_id: 1
-                  account_id: 123
-                  course_id: 456
+                  account_id: 1
+                  course_id: 1
                   tanggal_pembayaran: '2023-01-01T12:00:00Z' # Replace with the actual timestamp
                   metode_pembayaran: 'Credit Card'
                   status: 'Menunggu Pembayaran'

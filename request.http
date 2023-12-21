@@ -387,35 +387,38 @@ Content-Type: application/json
 Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoxLCJlbWFpbCI6IjIxMTA0MDY0QGl0dGVsa29tLXB3dC5hYy5pZCIsImlhdCI6MTcwMjM1Mjc5OH0.v0PMep5KMK_6-jdw2TdGmMxm8XuVljXo_44TEQWqf24
 
 ###------------------------------------ PAYMENT -----------------------------------
+### GET PAYMENT
 GET http://localhost:3000/payment
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiIyMTEwNDA2NEBpdHRlbGtvbS1wd3QuYWMuaWQiLCJpYXQiOjE3MDMxNDI4NzF9.dHgOR1Eh2TfRWZqBxbXIoJV4EpHxRsdzfXuFC9le4XU
 
 ### CREATE PAYMENT
 POST http://localhost:3000/payment
 Content-Type: application/json
 
 {
-    "account_id" : 38,
-    "course_id" : 1,
-    "metode_pembayaran" : "Credit card"
+    "account_id" : 1,
+    "course_id" : 2,
+    "metode_pembayaran": "Credit Card"
 }
 
 ### GET PAYMENT BY ID
-GET http://localhost:3000/payment/17
+GET http://localhost:3000/payment/1
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiIyMTEwNDA2NEBpdHRlbGtvbS1wd3QuYWMuaWQiLCJpYXQiOjE3MDMxNDI4NzF9.dHgOR1Eh2TfRWZqBxbXIoJV4EpHxRsdzfXuFC9le4XU
 
 ### UPDATE PAYMENT BY ID
-PUT http://localhost:3000/payment/24
+PUT http://localhost:3000/payment/47
 
-### GET PAYMENT BY LOGIN
-GET http://localhost:3000/payment/checkout
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzgsImVtYWlsIjoiMjAwNDAxMTQxQHN0dWRlbnQudW1yaS5hYy5pZCIsImlhdCI6MTcwMjcyMDMyNH0.tdimyWKTyjQLG71vT56kJwqT8GRgqLQgQzSAOSHgNsY
+### GET PAYMENT BY LOGIN WITH FILTER SEARCH
+GET http://localhost:3000/payment/checkout?status=menunggu pembayaran&search=web
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJ1c2VyQGV4YW1wbGUuY29tIiwiaWF0IjoxNzAzMTU5NzUwfQ.k6lgvFouCe07iVrY39PHp3PKzPpLwMmVuFQUDeUcR4E
 
 ### CREATE PAYMENT BY LOGIN
 POST http://localhost:3000/payment/checkout
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzgsImVtYWlsIjoiMjAwNDAxMTQxQHN0dWRlbnQudW1yaS5hYy5pZCIsImlhdCI6MTcwMjcyMDMyNH0.tdimyWKTyjQLG71vT56kJwqT8GRgqLQgQzSAOSHgNsY
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJ1c2VyQGV4YW1wbGUuY29tIiwiaWF0IjoxNzAzMTU5NzUwfQ.k6lgvFouCe07iVrY39PHp3PKzPpLwMmVuFQUDeUcR4E
 
 {
-    "course_id" : 6
+    "course_id" : 1
 }
 
 ### UPDATE PAYMENT BY LOGIN
