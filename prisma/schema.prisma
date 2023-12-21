@@ -177,10 +177,11 @@ model Riwayat_Transaksi {
 }
 
 model Notifikasi {
-  notifikasi_id Int     @id @default(autoincrement())
+  notifikasi_id Int      @id @default(autoincrement())
   account_id    Int
   title         String?
   deskripsi     String?
-  is_read       Boolean @default(false)
-  Account       Account @relation(fields: [account_id], references: [account_id])
+  is_read       Boolean  @default(false)
+  created_at    DateTime @default(now())
+  Account       Account  @relation(fields: [account_id], references: [account_id])
 }
