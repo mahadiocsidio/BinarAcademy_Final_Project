@@ -409,9 +409,8 @@ module.exports = {
     })
 
     listCourse.forEach((c)=>{
-      courseId.push(c.course_id)
+      courseId.push({course_id : c.course_id})
     })
-
     return res.status(200).json({
       status: true,
       message: 'OK',
