@@ -174,6 +174,12 @@ module.exports = {
       let pickVideo = [];
       let userProgress = [];
 
+      // VALIDASI DOUBLE CHECK DATA
+      let isExist = await prisma.course_progress.findFirst({where:{account_id, course_id}})
+      if (isExist) {
+        return console.log('Progress anda sudah terdaftar! & progress anda tetap terrsimpan bersama kami');
+      }
+
       //filter chapter yg mau di add berdasar course
       let chapter = await prisma.chapter.findMany({
         where: { course_id },
@@ -202,6 +208,7 @@ module.exports = {
           video_id: v,
         });
       });
+
       // blast data berdasar array userProgress
       await prisma.course_progress.createMany({
         data: userProgress,
