@@ -182,6 +182,6 @@ model Notifikasi {
   title         String?
   deskripsi     String?
   is_read       Boolean  @default(false)
-  created_at    DateTime @default(now())
+  created_at    DateTime? @default(now())
   Account       Account  @relation(fields: [account_id], references: [account_id])
 }

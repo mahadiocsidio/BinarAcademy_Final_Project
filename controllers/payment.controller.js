@@ -9,12 +9,31 @@ const { autoAddCourseProgress } = require('./course-progres.controller');
 module.exports = {
   getAllPayment: async (req, res, next) => {
     try {
-      let { limit = 10, page = 1 } = req.query;
+      let { limit = 10, page = 1, status, search, account_id } = req.query;
       limit = Number(limit);
       page = Number(page);
+      account_id = Number(account_id)
+
+      let conditions = {}
+
+      if (account_id) { //filter by account id
+        conditions.account_id = account_id 
+      }
+
+      if (status) { //filter by status payment
+        conditions.status = { contains: status, mode: 'insensitive' };
+      }
+
+      if (search) { //filter by title course
+        conditions.Course = {
+          title: { contains: search, mode: 'insensitive' },
+        };
+      }
+
       let payment = await prisma.riwayat_Transaksi.findMany({
         skip: (page - 1) * limit,
         take: limit,
+        where: conditions,
         select: {
           riwayat_transaksi_id: true,
           account_id: true,
@@ -28,6 +47,7 @@ module.exports = {
             select: {
               title: true,
               kode_kelas: true,
+              harga: true,
               Kategori: {
                 select: {
                   title: true,
@@ -42,6 +62,7 @@ module.exports = {
       });
       const { _count } = await prisma.riwayat_Transaksi.aggregate({
         _count: { riwayat_transaksi_id: true },
+        where: conditions,
       });
 
       let pagination = getPagination(
@@ -62,7 +83,7 @@ module.exports = {
 
   createPayment: async (req, res, next) => {
     try {
-      let { account_id, course_id, metode_pembayaran } = req.body;
+      let { account_id, course_id } = req.body;
 
       let Course = await prisma.course.findUnique({
         where: {
@@ -95,13 +116,10 @@ module.exports = {
           data: null,
         });
       }
-
       let payment = await prisma.riwayat_Transaksi.create({
         data: {
           account_id,
           course_id,
-          tanggal_pembayaran: new Date(Date.now()),
-          metode_pembayaran,
         },
       });
 
@@ -122,6 +140,7 @@ module.exports = {
   updatePaymentStatusbyId: async (req, res, next) => {
     try {
       let { riwayat_transaksi_id } = req.params;
+      let { metode_pembayaran } = req.body;
       riwayat_transaksi_id = parseInt(riwayat_transaksi_id, 10);
 
       let isExist = await prisma.riwayat_Transaksi.findUnique({
@@ -147,6 +166,7 @@ module.exports = {
           riwayat_transaksi_id,
         },
         data: {
+          metode_pembayaran,
           tanggal_pembayaran: new Date(Date.now()),
           status: 'Sudah Bayar',
         },
@@ -180,16 +200,16 @@ module.exports = {
       limit = Number(limit);
       page = Number(page);
 
-      let where = {
+      let conditions = {
         account_id: account.account_id,
       };
 
       if (status) {
-        where.status = { contains: status, mode: 'insensitive' };
+        conditions.status = { contains: status, mode: 'insensitive' };
       }
 
       if (search) {
-        where.Course = {
+        conditions.Course = {
           title: { contains: search, mode: 'insensitive' },
         };
       }
@@ -197,12 +217,15 @@ module.exports = {
       let payment = await prisma.riwayat_Transaksi.findMany({
         skip: (page - 1) * limit,
         take: limit,
-        where: where,
+        where: conditions,
         select: {
           riwayat_transaksi_id: true,
           account_id: true,
           Course: {
             select: {
+              title: true,
+              kode_kelas: true,
+              harga: true,
               Kategori: {
                 select: {
                   title: true,
@@ -213,9 +236,6 @@ module.exports = {
                   name: true,
                 },
               },
-              title: true,
-              kode_kelas: true,
-              harga: true,
             },
           },
           metode_pembayaran: true,
@@ -226,7 +246,7 @@ module.exports = {
 
       const { _count } = await prisma.riwayat_Transaksi.aggregate({
         _count: { riwayat_transaksi_id: true },
-        where: { account_id: account.account_id },
+        where: conditions,
       });
 
       let pagination = getPagination(
@@ -270,6 +290,7 @@ module.exports = {
               harga: true,
             },
           },
+          metode_pembayaran: true,
           status: true,
           tanggal_pembayaran: true,
         },
@@ -315,9 +336,6 @@ module.exports = {
         data: {
           account_id: account.account_id,
           course_id,
-          metode_pembayaran: 'Credit card',
-          tanggal_pembayaran: new Date(Date.now()),
-          status: 'Menunggu Pembayaran',
         },
       });
 
@@ -343,7 +361,7 @@ module.exports = {
       const userTransaction = await prisma.riwayat_Transaksi.findFirst({
         where: {
           account_id: account.account_id,
-          course_id: course_id,
+          course_id
         },
       });
 
