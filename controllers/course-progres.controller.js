@@ -135,16 +135,49 @@ module.exports = {
   getCourseProgressByLogin: async (req, res, next) => {
     try {
       let { account_id } = req.user;
-      let { limit = 10, page = 1 } = req.query;
+      let { limit = 10, page = 1 ,course_id} = req.query;
+
       limit = Number(limit);
       page = Number(page);
+      let conditions = {}
+      conditions.account_id=account_id
 
+      if(course_id){
+        conditions.course_id =Number(course_id)
+      }
       // all err get user dihandle oleh restrict
+      // let progress = await prisma.course_progress.aggregate({
+      //   where: conditions,
+      //   _count:{
+      //     is_done:true
+      //   }
+      // });
+      const progressByCourse = await prisma.course_progress.groupBy({
+        by: ['course_id'],
+        _count: {
+          is_done: true,
+        },
+        where: conditions
+      });
+      conditions.is_done= true
+      const isDoneCourse = await prisma.course_progress.groupBy({
+        by: ['course_id'],
+        _count: {
+          is_done: true,
+        },
+        where: conditions,
+      });
+      
+      const result = progressByCourse.map(courseProgress => {
+        const totalEntries = courseProgress._count.is_done;
+        const doneEntries = isDoneCourse.length;
 
-      let progress = await prisma.course_progress.findMany({
-        skip: (page - 1) * limit,
-        take: limit,
-        where: { account_id },
+        // Hindari pembagian dengan nol
+        const percentage = totalEntries > 0 ? (doneEntries / totalEntries) * 100 : 0;
+        return {
+          course_id: courseProgress.course_id,
+          percentage,
+        };
       });
 
       const { _count } = await prisma.course_progress.aggregate({
@@ -163,7 +196,7 @@ module.exports = {
         status: true,
         message: 'success!',
         err: null,
-        data: { pagination, progress },
+        data: { pagination, result },
       });
     } catch (err) {
       next(err);

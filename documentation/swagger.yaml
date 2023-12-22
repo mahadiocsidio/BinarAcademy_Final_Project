@@ -1472,6 +1472,25 @@ paths:
       description: Retrieve list of a Course Progress By Login
       security:
         - bearerAuth: []
+      parameters:
+        - in: query
+          name: course_id
+          required: false
+          schema:
+            type: integer
+          description: Optional. Filter course progress by course ID.
+        - in: query
+          name: limit
+          required: false
+          schema:
+            type: integer
+          description: Optional. Limit the number of results per page.
+        - in: query
+          name: page
+          required: false
+          schema:
+            type: integer
+          description: Optional. Specify the page number.
       responses:
         '200':
           description: Failed response
