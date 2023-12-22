@@ -1971,13 +1971,19 @@ paths:
         - Course
       description: Retrieve information about a course based on its ID.
       parameters:
-        - in: path
-          name: course_id
+        - name: course_id
+          in: path
+          description: ID of the course to retrieve
+          required: true
           schema:
             type: integer
-          required: true
-          description: ID of the course to retrieve
-
+            example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              account_id: 123
       responses:
         '200':
           description: Successful response
