@@ -400,12 +400,23 @@ module.exports = {
       next(err);
     }
   },
-  whoami: (req, res, next) => {
+  whoami: async (req, res, next) => {
+    let account = req.user
+    let courseId = []
+
+    let listCourse = await prisma.user_course.findMany({
+      where: {account_id : account.account_id}
+    })
+
+    listCourse.forEach((c)=>{
+      courseId.push(c.course_id)
+    })
+
     return res.status(200).json({
       status: true,
       message: 'OK',
       err: null,
-      data: { user: req.user },
+      data: { user: account, listCourse:courseId},
     });
   },
 };
