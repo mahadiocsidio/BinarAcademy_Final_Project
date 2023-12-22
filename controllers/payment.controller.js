@@ -47,6 +47,7 @@ module.exports = {
             select: {
               title: true,
               kode_kelas: true,
+              harga: true,
               Kategori: {
                 select: {
                   title: true,
@@ -222,6 +223,9 @@ module.exports = {
           account_id: true,
           Course: {
             select: {
+              title: true,
+              kode_kelas: true,
+              harga: true,
               Kategori: {
                 select: {
                   title: true,
@@ -232,9 +236,6 @@ module.exports = {
                   name: true,
                 },
               },
-              title: true,
-              kode_kelas: true,
-              harga: true,
             },
           },
           metode_pembayaran: true,

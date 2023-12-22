@@ -1501,22 +1501,35 @@ paths:
       tags:
         - Payment
         - Dashboard Admin
-      security:
-        - bearerAuth: []
       description: Retrieve a list of payments with pagination.
       parameters:
         - in: query
           name: limit
           schema:
             type: integer
-            default: 10
           description: Number of items to retrieve per page
         - in: query
           name: page
           schema:
             type: integer
-            default: 1
           description: Page number
+        - in: query
+          name: account_id
+          schema:
+            type: integer
+          description: filter by account id
+        - in: query
+          name: search
+          schema:
+            type: string
+            example: javascript
+          description: filter by title course
+        - in: query
+          name: status
+          schema:
+            type: string
+            example: sudah bayar
+          description: filter by status payment (Waiting for Payment / Sudah bayar)
 
       responses:
         '200':
@@ -1527,11 +1540,10 @@ paths:
                 success: true
                 data:
                   pagination:
-                    total_pages: 10   # Replace with the actual total number of pages
                     links:
                       next: "https://binar-academy-final-project.vercel.app/payment/?page=2&limit=10"
                       prev: null
-                  total_items: 100  # Replace with the actual total number of items  
+                    total_items: 100  # Replace with the actual total number of items  
                   payment:
                     - riwayat_transaksi_id: 1
                       account_id: 123
@@ -1542,6 +1554,8 @@ paths:
                         title: 'Programming Basics'
                         kode_kelas: 'P101'
                         harga: 49990
+                        Kategori:
+                          title: Basic Programming
                       metode_pembayaran: "Credit Card"
                       status: 'Sudah Bayar'
                       tanggal_pembayaran: '2023-01-01T12:00:00Z'
@@ -1570,9 +1584,9 @@ paths:
                   riwayat_transaksi_id: 1
                   account_id: 123
                   course_id: 456
-                  tanggal_pembayaran: '2023-01-01T12:00:00Z' # Replace with the actual timestamp
-                  metode_pembayaran: 'Credit Card'
-                  status: 'Menunggu Pembayaran'
+                  tanggal_pembayaran: null # Replace with the actual timestamp
+                  metode_pembayaran: '-'
+                  status: 'Waiting for Payment'
 
         '400':
           description: Bad Request
@@ -1620,20 +1634,38 @@ paths:
               example:
                 success: true
                 data:
-                  - riwayat_transaksi_id: 1
-                    account_id: 123
-                    Course:
-                      title: 'Web Development Fundamentals'
-                      harga: 99.99
-                    status: 'Sudah Bayar'
-                    tanggal_pembayaran: '2023-01-01T12:00:00Z' # Replace with the actual timestamp
-                  - riwayat_transaksi_id: 2
-                    account_id: 123
-                    Course:
-                      title: 'Data Science Basics'
-                      harga: 129.99
-                    status: 'Menunggu Pembayaran'
-                    tanggal_pembayaran: '2023-02-01T12:00:00Z' # Replace with the actual timestamp
+                  pagination:
+                    links:
+                      next: "https://binar-academy-final-project.vercel.app/payment/?page=2&limit=10"
+                      prev: null
+                    total_items: 100  # Replace with the actual total number of items  
+                  payment:
+                    - riwayat_transaksi_id: 1
+                      account_id: 123
+                      Course:
+                        title: 'Web Development Fundamentals'
+                        kode_kelas: WD001
+                        harga: 99.99
+                        Kategori:
+                          title: Web Developtment
+                        Mentor:
+                          name: John Doe
+                      metode_pembayaran: Credit Card
+                      status: 'Sudah Bayar'
+                      tanggal_pembayaran: '2023-01-01T12:00:00Z' # Replace with the actual timestamp
+                    - riwayat_transaksi_id: 2
+                      account_id: 123
+                      Course:
+                        title: 'Web Development Fundamentals'
+                        kode_kelas: WD001
+                        harga: 99.99
+                        Kategori:
+                          title: Web Developtment
+                        Mentor:
+                          name: John Doe
+                      metode_pembayaran: '-'
+                      status: 'Waiting for Payment'
+                      tanggal_pembayaran: null # Replace with the actual timestamp
 
         '404':
           description: Not Found
@@ -1666,7 +1698,6 @@ paths:
                   description: ID of the course for which the payment is made
               required:
                 - course_id
-
       responses:
         '200':
           description: Successful response
@@ -1717,9 +1748,11 @@ paths:
               properties:
                 course_id:
                   type: integer
+                  example: 1
                   description: ID of the course for which the payment status is updated
                 metode_pembayaran:
                   type: string
+                  example: Debit Card
                   description: Payment method used (e.g., credit card, bank transfer)
               required:
                 - course_id
@@ -1783,9 +1816,14 @@ paths:
                 data:
                   riwayat_transaksi_id: 1
                   account_id: 123
+                  Account:
+                    nama: John
+                    email: user@example.com
                   Course:
                     title: 'Web Development Fundamentals'
+                    kode_kelas: WD001
                     harga: 99.99
+                  metode_pembayaran: Debit Card
                   status: 'Sudah Bayar'
                   tanggal_pembayaran: '2023-01-01T12:00:00Z' # Replace with the actual timestamp
 
@@ -1812,6 +1850,16 @@ paths:
           description: ID of the payment transaction to update
           schema:
             type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                metode_pembayaran:
+                  type: string
+                  example: Debit Card
       responses:
         '200':
           description: Successful response
@@ -4081,13 +4129,9 @@ components:
                 course_id:
                   type: integer
                   description: ID of the course for which the payment is made
-                metode_pembayaran:
-                  type: string
-                  description: Payment method used (e.g., credit card, bank transfer)
               required:
                 - account_id
                 - course_id
-                - metode_pembayaran  
     updateProfile:
       content:
           application/json:
