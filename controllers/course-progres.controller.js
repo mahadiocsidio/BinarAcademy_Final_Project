@@ -148,6 +148,7 @@ module.exports = {
       });
 
       const { _count } = await prisma.course_progress.aggregate({
+        where:{account_id},
         _count: { course_progres_id: true },
       });
 
