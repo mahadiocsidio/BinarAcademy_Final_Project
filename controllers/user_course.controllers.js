@@ -49,36 +49,105 @@ module.exports = {
   getUserCoursebyLogin: async (req, res, next) => {
     try {
       let account = req.user;
+      let { limit = 10, page = 1, search, category_ids, sort, order="asc", level } = req.query;
+        limit = Number(limit);
+        page = Number(page);
+        
+        let conditions = {};
+        let orderBy = {};
+        
+        if (search) {
+            conditions.title = {
+                contains: search,
+                mode: 'insensitive',
+            };
+        }
 
-      let userCourse = await prisma.user_course.findMany({
-        where: {
-          account_id: account.account_id,
-        },
+        if (category_ids) {
+            const kategoriIds = Array.isArray(category_ids) ? category_ids.map(id => parseInt(id, 10)) : [parseInt(category_ids, 10)];
+            conditions.kategori_id = {
+                in: kategoriIds.filter(id => !isNaN(id)), // Filter out NaN values
+            };
+        }
+
+        if (level) {
+            const levelList = Array.isArray(level) ? level : [level];
+            conditions.level = {
+                in: levelList,
+            };
+        }
+
+        if (sort && order) {
+            //skip langkah jika ingin mengsorting berdasarkan rating
+            if (sort && order && sort.toLowerCase() === 'rating') {
+                
+            }else{
+                orderBy = sort && order ? { [sort]: order } : undefined;
+            }
+        }
+        if(account){
+          conditions.User_course = {
+            some:{account_id:account.account_id}
+        }
+      }
+        const { _count } = await prisma.course.aggregate({
+            where:conditions,
+            _count: { course_id: true },
+        });
+
+      let userCourse = await prisma.course.findMany({
+        where: conditions,
         select: {
-          user_course_id: true,
-          account_id: true,
           course_id: true,
-          Course: {
-            select: {
-              title: true,
-              harga: true,
-              Kategori: {
-                select: {
+          title: true,
+          kode_kelas: true,
+          kategori_id: true,
+          premium: true,
+          harga: true,
+          level: true,
+          Kategori: {
+              select: {
                   title: true,
+              },
+          },
+          Mentor: {
+              select: {
+                  name: true,
+              },
+          },
+          Rating: {
+              select: {
+                  skor: true,
+              },
+          },
+          Chapter: {
+              select: {
+                _count: {
+                  select: {
+                    Video: true,
+                  },
                 },
               },
-              Riwayat_Transaksi: {
-                where: {
-                  account_id: account.account_id,
-                },
-                select: {
-                  status: true,
-                },
-              },
-            },
           },
         },
       });
+
+      userCourse.forEach((c) => {
+        const totalSkor = c.Rating.reduce((acc, rating) => acc + rating.skor, 0);
+        const avgSkor = c.Rating.length > 0 ? totalSkor / c.Rating.length : 0;
+        c.avgRating = avgSkor;
+
+        c.module = c.Chapter.reduce(
+            (acc, chapter) => acc + chapter._count.Video,
+            0
+        );
+      });
+
+      userCourse.forEach(object=>{
+        delete object['Rating']
+        delete object['Chapter']
+      })
+
       if (!userCourse) return res.json('User Course isnt registered');
 
       res.status(200).json({

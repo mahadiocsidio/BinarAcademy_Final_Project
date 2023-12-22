@@ -1158,6 +1158,48 @@ paths:
         - bearerAuth: []
       tags:
         - User Course
+      parameters:
+        - in: query
+          name: search
+          schema:
+            type: string
+          description: Search term to filter courses by title (case-insensitive)
+        - in: query
+          name: category_ids
+          schema:
+            type: array
+            items:
+              type: integer
+        - in: query
+          name: level
+          description: Comma-separated list of levels to filter courses by (e.g., "beginner", "intermediate").
+          schema:
+            type: array
+            items:
+              type: string
+        - in: query
+          name: sort
+          schema:
+            type: string
+          description: Column to sort by (e.g., 'title', 'harga', 'rating', 'course_id')
+        - in: query
+          name: order
+          schema:
+            type: string
+            enum: ['asc', 'desc']
+          description: Sorting order ('asc' for ascending, 'desc' for descending)
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 10
+          description: Number of items to retrieve per page
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+          description: Page number
       responses:
         '200':
           description: Successful response
