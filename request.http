@@ -458,5 +458,5 @@ GET http://localhost:3000/course/1
 Content-Type: application/json
 
 {
-    "account_id": 43
+    "account_id": 5
 }

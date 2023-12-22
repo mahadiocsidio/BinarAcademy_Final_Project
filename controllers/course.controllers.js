@@ -130,6 +130,13 @@ const getCoursebyId = async(req,res,next)=>{
         let {course_id} = req.params
         //mengubah course_id menjadi tipe number/int
         course_id = parseInt(course_id,10)
+        let{account_id}= req.body
+        let sudahBeli = await prisma.user_course.findMany({
+            where:{account_id,course_id}
+        })
+        sudahBeli= sudahBeli[0] ? true:false
+
+
         let course = await prisma.course.findUnique({ 
             where: {
                 course_id
