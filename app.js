@@ -4,6 +4,10 @@ const app = express();
 const cors = require('cors');
 const { PORT = 3000 } = process.env;
 const morgan = require('morgan');
+const yaml = require('yaml');
+const swaggerUi = require('swagger-ui-express');
+const fs = require('fs');
+const path = require('path');
 
 app.use(morgan('dev'));
 app.use(express.json());
@@ -42,12 +46,17 @@ app.use('/promo', promo)
 app.use('/admin', admin)
 app.use('/course-progress', courseProgress)
 // swagger
-const swaggerUi = require('swagger-ui-express');
-const YAML = require('yaml');
-const fs = require("fs");
-const file = fs.readFileSync('./documentation/swagger.yaml', 'utf8');
-const swaggerDocument = YAML.parse(file);
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+const file = fs.readFileSync(path.join(__dirname, './documentation/swagger.yaml'), 'utf8');
+const swaggerDocument = yaml.parse(file);
+app.use(
+  '/docs',
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerDocument, {
+    customCssUrl: 'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui.min.css',
+    customJs: ['https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui-bundle.js', 'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui-standalone-preset.js'],
+    customSiteTitle: 'CourseHub API Documentation 🚀',
+  })
+);
 
 app.use('/', (req, res) => {
   try {
