@@ -505,6 +505,15 @@ paths:
                         type: object
                         properties:
                         $ref: '#/components/schemas/AccountModel'
+                      listCourse:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            course_id:
+                              type: integer
+                              example: 1
+                          
         '401':
           description: Failed response
           content:
