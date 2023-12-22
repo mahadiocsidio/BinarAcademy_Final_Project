@@ -2,6 +2,7 @@ const prisma = require('../libs/prisma')
 const { getPagination } = require('../helper/index');
 const imagekit = require('../libs/imagekit');
 const path = require('path');
+const { createNotifAuto } = require('./notification.controller');
 
 const getAllCourse = async (req, res, next) => {
     try {
@@ -129,6 +130,13 @@ const getCoursebyId = async(req,res,next)=>{
         let {course_id} = req.params
         //mengubah course_id menjadi tipe number/int
         course_id = parseInt(course_id,10)
+        let{account_id}= req.body
+        let sudahBeli = await prisma.user_course.findMany({
+            where:{account_id,course_id}
+        })
+        sudahBeli= sudahBeli[0] ? true:false
+
+
         let course = await prisma.course.findUnique({ 
             where: {
                 course_id
@@ -180,7 +188,7 @@ const getCoursebyId = async(req,res,next)=>{
 
         res.status(200).json({
         success:true,
-        data:course
+        data:{sudahBeli,course}
         })
     } catch (error) {
         next(error)
@@ -299,17 +307,14 @@ const beliCourse = async(req,res,next)=>{
             },
         });
 
-        // Menambahkan entri di tabel User_course
-        let userCourse = await prisma.user_course.create({
-            data: {
-                account_id: account.account_id,
-                course_id,
-            },
-        });
+        //create Notification
+        let titleNotif = 'Un-Successful purchase course added!';
+        let deskNotif = `Hii ${account.nama} you have courses that you haven't purchased yet, To get full access to the course, please complete the payment`;
+        await createNotifAuto(account.account_id, titleNotif, deskNotif, res);
 
         res.status(200).json({
             success: true,
-            data: { payment, userCourse },
+            data: { payment },
         });
     } catch (error) {
         next(error);

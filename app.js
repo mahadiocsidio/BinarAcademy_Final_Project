@@ -41,6 +41,14 @@ app.use('/notification', notification);
 app.use('/promo', promo)
 app.use('/admin', admin)
 app.use('/course-progress', courseProgress)
+// swagger
+const swaggerUi = require('swagger-ui-express');
+const YAML = require('yaml');
+const fs = require("fs");
+const file = fs.readFileSync('./documentation/swagger.yaml', 'utf8');
+const swaggerDocument = YAML.parse(file);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
 app.use('/', (req, res) => {
   try {
     const welcomeMessage = {
@@ -52,6 +60,7 @@ app.use('/', (req, res) => {
     res.status(500).json({ error: 'Terjadi kesalahan internal server' });
   }
 });
+
 
 app.listen(PORT, () => {
   console.log(`server running at http://localhost:${PORT}`);
