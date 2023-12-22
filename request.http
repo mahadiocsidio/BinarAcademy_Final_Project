@@ -14,16 +14,16 @@ Content-Type: application/json
 ### verify otp
 POST http://localhost:3000/auth/verify-otp
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjozOCwiZW1haWwiOiIyMDA0MDExNDFAc3R1ZGVudC51bXJpLmFjLmlkIiwiaWF0IjoxNzAyNzIwMDExfQ.EstEd6FrwkRXJpGe0ty01LS29UsUhnsawmT_Wf1Wf5I
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoyLCJlbWFpbCI6IjIwMDQwMTE0MUBzdHVkZW50LnVtcmkuYWMuaWQiLCJpYXQiOjE3MDMxODExOTR9.cqc_FzOAZLvBAmZrZAI1gCVIHHgJX493SZ_m4CelNS8
 
 {
-    "otp":"553314"
+    "otp":"483184"
 }
 
 #### resend otp
 POST http://localhost:3000/auth/resend-otp
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDUsImVtYWlsIjoiMjAwNDAxMTQxQHN0dWRlbnQudW1yaS5hYy5pZCIsImlhdCI6MTcwMjQ3ODI2Nn0.UkYmv5sXpOfwJRwoMRQX-TsIXYVjtEAn6hqaQYlSfQM
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoyLCJlbWFpbCI6IjIwMDQwMTE0MUBzdHVkZW50LnVtcmkuYWMuaWQiLCJpYXQiOjE3MDMxODExOTR9.cqc_FzOAZLvBAmZrZAI1gCVIHHgJX493SZ_m4CelNS8
 
 ### login
 POST http://localhost:3000/auth/login
@@ -389,46 +389,48 @@ Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoxLCJlbWFp
 ###------------------------------------ PAYMENT -----------------------------------
 ### GET PAYMENT
 GET http://localhost:3000/payment
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiIyMTEwNDA2NEBpdHRlbGtvbS1wd3QuYWMuaWQiLCJpYXQiOjE3MDMxNDI4NzF9.dHgOR1Eh2TfRWZqBxbXIoJV4EpHxRsdzfXuFC9le4XU
 
 ### CREATE PAYMENT
 POST http://localhost:3000/payment
 Content-Type: application/json
 
 {
-    "account_id" : 1,
-    "course_id" : 2,
-    "metode_pembayaran": "Credit Card"
+    "account_id" : 2,
+    "course_id" : 1
 }
 
 ### GET PAYMENT BY ID
-GET http://localhost:3000/payment/1
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiIyMTEwNDA2NEBpdHRlbGtvbS1wd3QuYWMuaWQiLCJpYXQiOjE3MDMxNDI4NzF9.dHgOR1Eh2TfRWZqBxbXIoJV4EpHxRsdzfXuFC9le4XU
+GET http://localhost:3000/payment/2
 
 ### UPDATE PAYMENT BY ID
-PUT http://localhost:3000/payment/47
+PUT http://localhost:3000/payment/2
+Content-Type: application/json
+
+{
+    "metode_pembayaran" : "Debit Card"
+}
 
 ### GET PAYMENT BY LOGIN WITH FILTER SEARCH
-GET http://localhost:3000/payment/checkout?status=menunggu pembayaran&search=web
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJ1c2VyQGV4YW1wbGUuY29tIiwiaWF0IjoxNzAzMTU5NzUwfQ.k6lgvFouCe07iVrY39PHp3PKzPpLwMmVuFQUDeUcR4E
+GET http://localhost:3000/payment/checkout
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiIyMDA0MDExNDFAc3R1ZGVudC51bXJpLmFjLmlkIiwiaWF0IjoxNzAzMjM4NzA0fQ.l_1KxIG6ghLiUX8QZiJK8R0AhkS_9O3SMZE4vSrkQIY
 
 ### CREATE PAYMENT BY LOGIN
 POST http://localhost:3000/payment/checkout
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJ1c2VyQGV4YW1wbGUuY29tIiwiaWF0IjoxNzAzMTU5NzUwfQ.k6lgvFouCe07iVrY39PHp3PKzPpLwMmVuFQUDeUcR4E
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiIyMDA0MDExNDFAc3R1ZGVudC51bXJpLmFjLmlkIiwiaWF0IjoxNzAzMjM4NzA0fQ.l_1KxIG6ghLiUX8QZiJK8R0AhkS_9O3SMZE4vSrkQIY
 
 {
-    "course_id" : 1
+    "course_id" : 3
 }
 
 ### UPDATE PAYMENT BY LOGIN
 PUT http://localhost:3000/payment/checkout
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzgsImVtYWlsIjoiMjAwNDAxMTQxQHN0dWRlbnQudW1yaS5hYy5pZCIsImlhdCI6MTcwMjcyMDMyNH0.tdimyWKTyjQLG71vT56kJwqT8GRgqLQgQzSAOSHgNsY
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiIyMDA0MDExNDFAc3R1ZGVudC51bXJpLmFjLmlkIiwiaWF0IjoxNzAzMjM4NzA0fQ.l_1KxIG6ghLiUX8QZiJK8R0AhkS_9O3SMZE4vSrkQIY
 
 {
-    "course_id" : 6,
-    "metode_pembayaran" : "Debit Card"
+    "course_id" : 2,
+    "metode_pembayaran" : "ShopeePay Later"
 }
 
 ###------------------------------------ COURSE PROGRESS -----------------------------------

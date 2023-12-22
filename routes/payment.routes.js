@@ -10,7 +10,7 @@ const {
   updatePaymentStatusbyLogin,
 } = require('../controllers/payment.controller');
 
-router.get('/', restrict, getAllPayment);
+router.get('/', getAllPayment);
 router.post('/', createPayment);
 
 // BY LOGIN
