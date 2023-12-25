@@ -135,16 +135,63 @@ module.exports = {
   getCourseProgressByLogin: async (req, res, next) => {
     try {
       let { account_id } = req.user;
-      let { limit = 10, page = 1 } = req.query;
+      let { limit = 10, page = 1 ,course_id} = req.query;
+
       limit = Number(limit);
       page = Number(page);
+      let conditions = {}
+      conditions.account_id=account_id
 
+      if(course_id){
+        conditions.course_id =Number(course_id)
+      }
       // all err get user dihandle oleh restrict
+      // let progress = await prisma.course_progress.aggregate({
+      //   where: conditions,
+      //   _count:{
+      //     is_done:true
+      //   }
+      // });
 
-      let progress = await prisma.course_progress.findMany({
-        skip: (page - 1) * limit,
-        take: limit,
-        where: { account_id },
+      const progressByCourse = await prisma.course_progress.groupBy({
+        by: ['course_id'],
+        _count: {
+          is_done: true,
+        },
+        where: conditions
+      });
+      // conditions.is_done= true;
+      // conditions.account_id = account_id;
+      const isDoneCourse = await prisma.course_progress.groupBy({
+        by: ['course_id'],
+        _count: {
+          is_done: true,
+        },
+        where: {
+          account_id: account_id,
+          is_done: true
+        }
+      });
+      
+      const doneEntriesByCourse = {};
+
+      isDoneCourse.forEach(courseProgress => {
+        doneEntriesByCourse[courseProgress.course_id] = courseProgress._count.is_done;
+      });
+      
+      // console.log(isDoneCourse);
+      // console.log(progressByCourse);
+      
+      const result = progressByCourse.map(courseProgress => {
+        const totalEntries = courseProgress._count.is_done;
+        const doneEntries = doneEntriesByCourse[courseProgress.course_id]
+
+        // Hindari pembagian dengan nol
+        const percentage = totalEntries > 0 ? ((doneEntries / totalEntries) * 100).toFixed(1) : 0;
+        return {
+          course_id: courseProgress.course_id,
+          percentage,
+        };
       });
 
       const { _count } = await prisma.course_progress.aggregate({
@@ -163,12 +210,13 @@ module.exports = {
         status: true,
         message: 'success!',
         err: null,
-        data: { pagination, progress },
+        data: { pagination, result },
       });
     } catch (err) {
       next(err);
     }
   },
+  
   autoAddCourseProgress: async (account_id, course_id, res) => {
     try {
       let pickChapter = [];

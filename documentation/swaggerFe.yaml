@@ -3487,6 +3487,27 @@ paths:
                 message: bad request
                 err: notification doesn't exist
                 data: null
+
+  /admin:
+    get:
+      summary: Get counts of active users and courses
+      tags:
+        - Admin
+      description: Retrieve counts of active users, all courses, and premium courses.
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                success: true
+                data:
+                  activeUsersCount: 100
+                  activeCourseCount: 50
+                  premiumCourseCount: 20
+
+        '500':
+          description: Internal Server Error
 components:
   securitySchemes:
     bearerAuth:
