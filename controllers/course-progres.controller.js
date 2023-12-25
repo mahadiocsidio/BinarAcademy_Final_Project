@@ -152,6 +152,7 @@ module.exports = {
       //     is_done:true
       //   }
       // });
+
       const progressByCourse = await prisma.course_progress.groupBy({
         by: ['course_id'],
         _count: {
@@ -159,21 +160,34 @@ module.exports = {
         },
         where: conditions
       });
-      conditions.is_done= true
+      // conditions.is_done= true;
+      // conditions.account_id = account_id;
       const isDoneCourse = await prisma.course_progress.groupBy({
         by: ['course_id'],
         _count: {
           is_done: true,
         },
-        where: conditions,
+        where: {
+          account_id: account_id,
+          is_done: true
+        }
       });
+      
+      const doneEntriesByCourse = {};
+
+      isDoneCourse.forEach(courseProgress => {
+        doneEntriesByCourse[courseProgress.course_id] = courseProgress._count.is_done;
+      });
+      
+      // console.log(isDoneCourse);
+      // console.log(progressByCourse);
       
       const result = progressByCourse.map(courseProgress => {
         const totalEntries = courseProgress._count.is_done;
-        const doneEntries = isDoneCourse.length;
+        const doneEntries = doneEntriesByCourse[courseProgress.course_id]
 
         // Hindari pembagian dengan nol
-        const percentage = totalEntries > 0 ? (doneEntries / totalEntries) * 100 : 0;
+        const percentage = totalEntries > 0 ? ((doneEntries / totalEntries) * 100).toFixed(1) : 0;
         return {
           course_id: courseProgress.course_id,
           percentage,
@@ -202,6 +216,7 @@ module.exports = {
       next(err);
     }
   },
+  
   autoAddCourseProgress: async (account_id, course_id, res) => {
     try {
       let pickChapter = [];
