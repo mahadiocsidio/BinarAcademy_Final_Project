@@ -187,24 +187,23 @@ module.exports = {
         const doneEntries = doneEntriesByCourse[courseProgress.course_id]
 
         // Hindari pembagian dengan nol
-        const percentage = totalEntries > 0 ? ((doneEntries / totalEntries) * 100).toFixed(1) : 0;
+        let percentage = totalEntries > 0 ? ((doneEntries / totalEntries) * 100).toFixed(1) : 0;
+        if (percentage == "NaN") percentage = 0
+        percentage = +percentage
         return {
           course_id: courseProgress.course_id,
           percentage,
         };
       });
 
-      const { _count } = await prisma.course_progress.aggregate({
-        where:{account_id},
-        _count: { course_progres_id: true },
-      });
-
-      let pagination = getPagination(
-        req,
-        _count.course_progres_id,
-        page,
-        limit
-      );
+      // const { _count } = await prisma.course_progress.aggregate({
+      //   where:{account_id},
+      //   _count: { course_progres_id: true },
+      // });
+      let _count = result.length
+      
+      // let pagination = getPagination(req,_count.course_progres_id,page,limit);
+      let pagination = getPagination(req,_count,page,limit);
 
       res.status(200).json({
         status: true,

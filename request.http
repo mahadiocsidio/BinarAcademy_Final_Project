@@ -333,7 +333,7 @@ GET http://localhost:3000/notification/111
 
 ### GET NOTIFICATION BY LOGIN
 GET http://localhost:3000/notification/myNotifications
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDUsImVtYWlsIjoiMjAwNDAxMTQxQHN0dWRlbnQudW1yaS5hYy5pZCIsImlhdCI6MTcwMjQ3MzY2OH0.oz5tx0YfNYtnMDFFW_dw9iszd_5sdBnCHRZhw5raoNU
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiIyMDA0MDExNDFAc3R1ZGVudC51bXJpLmFjLmlkIiwiaWF0IjoxNzAzNTExODE5fQ.l4-u_qVxIZZlmbQ82jWc_WwE_3HXztCUzUIlBBRb_aU
 
 ### CREATE NOTIF BROADCAST
 POST http://localhost:3000/notification/broadcast
@@ -417,19 +417,19 @@ Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiIyMDA0
 ### CREATE PAYMENT BY LOGIN
 POST http://localhost:3000/payment/checkout
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiIyMDA0MDExNDFAc3R1ZGVudC51bXJpLmFjLmlkIiwiaWF0IjoxNzAzMjM4NzA0fQ.l_1KxIG6ghLiUX8QZiJK8R0AhkS_9O3SMZE4vSrkQIY
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzgsImVtYWlsIjoiMjAwNDAxMTQxQHN0dWRlbnQudW1yaS5hYy5pZCIsImlhdCI6MTcwMjcyMDMyNH0.tdimyWKTyjQLG71vT56kJwqT8GRgqLQgQzSAOSHgNsY
 
 {
-    "course_id" : 3
+    "course_id" : 5
 }
 
 ### UPDATE PAYMENT BY LOGIN
 PUT http://localhost:3000/payment/checkout
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiIyMDA0MDExNDFAc3R1ZGVudC51bXJpLmFjLmlkIiwiaWF0IjoxNzAzMjM4NzA0fQ.l_1KxIG6ghLiUX8QZiJK8R0AhkS_9O3SMZE4vSrkQIY
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzgsImVtYWlsIjoiMjAwNDAxMTQxQHN0dWRlbnQudW1yaS5hYy5pZCIsImlhdCI6MTcwMjcyMDMyNH0.tdimyWKTyjQLG71vT56kJwqT8GRgqLQgQzSAOSHgNsY
 
 {
-    "course_id" : 2,
+    "course_id" : 5,
     "metode_pembayaran" : "ShopeePay Later"
 }
 
