@@ -44,7 +44,15 @@ module.exports = {
       const rating = await prisma.rating.findMany({
         where : conditions,
         skip: (page - 1) * limit,
-        take: limit
+        take: limit,
+        include:{
+          Account:{
+            select:{
+              nama: true,
+              email: true,
+            }
+          },
+        }
       });
 
       const { _count } = await prisma.rating.aggregate({
