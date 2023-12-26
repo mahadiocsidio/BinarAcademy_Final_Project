@@ -87,27 +87,13 @@ module.exports = {
             some:{account_id:account.account_id}
         }
       }
-
-
-      // const result = progressByCourse.map(courseProgress => {
-      //   const totalEntries = courseProgress._count.is_done;
-      //   const doneEntries = doneEntriesByCourse[courseProgress.course_id]
-
-      //   // Hindari pembagian dengan nol
-      //   let percentage = totalEntries > 0 ? ((doneEntries / totalEntries) * 100).toFixed(1) : 0;
-      //   if (percentage == "NaN") percentage = 0
-      //   percentage = +percentage
-      //   return {
-      //     course_id: courseProgress.course_id,
-      //     percentage,
-      //   };
-      // });
-
       const { _count } = await prisma.course.aggregate({
             where:conditions,
             _count: { course_id: true },
         });
       let userCourse = await prisma.course.findMany({
+        skip: (page - 1) * limit,
+        take: limit,
         where: conditions,
         orderBy:{course_id:'asc'},
         select: {
@@ -173,12 +159,13 @@ module.exports = {
         delete object['Chapter']
         delete object['Course_progress']
       })
+      let pagination = getPagination(req, _count.course_id, page, limit);
 
       if (!userCourse) return res.json('User Course isnt registered');
 
       res.status(200).json({
         success: true,
-        data: userCourse,
+        data: {pagination, userCourse},
       });
     } catch (error) {
       next(error);
