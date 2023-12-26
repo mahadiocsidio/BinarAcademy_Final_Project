@@ -1217,26 +1217,41 @@ paths:
               example:
                 success: true
                 data:
-                  - user_course_id: 1
-                    account_id: 101
-                    course_id: 201
-                    Course:
-                      title: 'Introduction to Web Development'
-                      harga: 29.99
-                      Kategori:
-                        title: 'Programming'
-                      Riwayat_Transaksi:
-                        status: 'completed'
-                  - user_course_id: 2
-                    account_id: 101
-                    course_id: 202
-                    Course:
-                      title: 'Data Science Fundamentals'
-                      harga: 19.99
-                      Kategori:
-                        title: 'Data Science'
-                      Riwayat_Transaksi:
-                        status: 'in-progress'
+                  pagination:
+                    links:
+                      next: ""
+                      prev: ""
+                    total_items: 42
+                  userCourse:
+                  - course_id: 1
+                    title: "Pengembangan Web"
+                    kode_kelas: WD001
+                    kategori_id: 3
+                    premium: false
+                    harga: 0
+                    level: pemula
+                    Kategori:
+                      title: Web Developtment
+                    Mentor: 
+                      name: John Doe
+                    avgRating: 4
+                    module: 9
+                    progress: 44.4
+                  - course_id: 2
+                    title: Data Science Fundamentals
+                    kode_kelas: DS001
+                    kategori_id: 3
+                    premium: false
+                    harga: 0
+                    level: Lanjutan
+                    Kategori:
+                      title: Data Science
+                    Mentor: 
+                      name: John Doe
+                    avgRating: 5
+                    module: 9
+                    progress: 33.3
+                    
         '404':
           description: No user courses found for the account
           content:
