@@ -135,8 +135,15 @@ const getCoursebyId = async(req,res,next)=>{
             where:{account_id,course_id}
         })
         sudahBeli= sudahBeli[0] ? true:false
-
-
+        let progress
+        if(sudahBeli){
+            progress = await prisma.course_progress.findMany({
+                where:{
+                    account_id,
+                    course_id
+                }
+            })
+        }
         let course = await prisma.course.findUnique({ 
             where: {
                 course_id
@@ -188,7 +195,7 @@ const getCoursebyId = async(req,res,next)=>{
 
         res.status(200).json({
         success:true,
-        data:{sudahBeli,course}
+        data:{sudahBeli,course, progress}
         })
     } catch (error) {
         next(error)
