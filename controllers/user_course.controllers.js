@@ -62,21 +62,18 @@ module.exports = {
                 mode: 'insensitive',
             };
         }
-
         if (category_ids) {
             const kategoriIds = Array.isArray(category_ids) ? category_ids.map(id => parseInt(id, 10)) : [parseInt(category_ids, 10)];
             conditions.kategori_id = {
                 in: kategoriIds.filter(id => !isNaN(id)), // Filter out NaN values
             };
         }
-
         if (level) {
             const levelList = Array.isArray(level) ? level : [level];
             conditions.level = {
                 in: levelList,
             };
         }
-
         if (sort && order) {
             //skip langkah jika ingin mengsorting berdasarkan rating
             if (sort && order && sort.toLowerCase() === 'rating') {
@@ -90,13 +87,29 @@ module.exports = {
             some:{account_id:account.account_id}
         }
       }
-        const { _count } = await prisma.course.aggregate({
+
+
+      // const result = progressByCourse.map(courseProgress => {
+      //   const totalEntries = courseProgress._count.is_done;
+      //   const doneEntries = doneEntriesByCourse[courseProgress.course_id]
+
+      //   // Hindari pembagian dengan nol
+      //   let percentage = totalEntries > 0 ? ((doneEntries / totalEntries) * 100).toFixed(1) : 0;
+      //   if (percentage == "NaN") percentage = 0
+      //   percentage = +percentage
+      //   return {
+      //     course_id: courseProgress.course_id,
+      //     percentage,
+      //   };
+      // });
+
+      const { _count } = await prisma.course.aggregate({
             where:conditions,
             _count: { course_id: true },
         });
-
       let userCourse = await prisma.course.findMany({
         where: conditions,
+        orderBy:{course_id:'asc'},
         select: {
           course_id: true,
           title: true,
@@ -129,6 +142,13 @@ module.exports = {
                 },
               },
           },
+          Course_progress:{
+            where:{account_id: account.account_id},
+            select:{
+              is_done: true,
+              course_id: true,
+            }
+          }
         },
       });
 
@@ -137,15 +157,21 @@ module.exports = {
         const avgSkor = c.Rating.length > 0 ? totalSkor / c.Rating.length : 0;
         c.avgRating = avgSkor;
 
-        c.module = c.Chapter.reduce(
-            (acc, chapter) => acc + chapter._count.Video,
-            0
-        );
+        c.module = c.Chapter.reduce((acc, chapter) => acc + chapter._count.Video,0); 
+
+        const progressByCourse = c.Course_progress.length
+        const doneByCourse = c.Course_progress.reduce((acc, current) => acc + current.is_done,0)
+
+        let percentage = progressByCourse > 0 ? ((doneByCourse / progressByCourse) * 100).toFixed(1) : 0;
+        percentage = +percentage
+        c.progress = percentage
       });
+
 
       userCourse.forEach(object=>{
         delete object['Rating']
         delete object['Chapter']
+        delete object['Course_progress']
       })
 
       if (!userCourse) return res.json('User Course isnt registered');
