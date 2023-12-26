@@ -131,9 +131,14 @@ const getCoursebyId = async(req,res,next)=>{
         //mengubah course_id menjadi tipe number/int
         course_id = parseInt(course_id,10)
         let{account_id}= req.body
-        const sudahBeli = !!(await prisma.user_course.findFirst({
-            where: { account_id, course_id },
-        }));
+        let sudahBeli
+        if(account_id){
+            sudahBeli = !!(await prisma.user_course.findFirst({
+                where: { account_id, course_id },
+            }));
+        }else{
+            sudahBeli = false
+        }
         console.log(sudahBeli)
         let progress
         if(sudahBeli){
@@ -141,6 +146,9 @@ const getCoursebyId = async(req,res,next)=>{
                 where:{
                     account_id,
                     course_id
+                },
+                orderBy:{
+                    video_id:'asc'
                 }
             })
         }
@@ -168,6 +176,7 @@ const getCoursebyId = async(req,res,next)=>{
                     }
                 },
                 Chapter:{
+                    orderBy:{chapter_id:'asc'},
                     select:{
                         title:true,
                         Video:true

@@ -455,8 +455,3 @@ Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzgsImVtYWlsIjoiMjAw
 
 ###
 GET http://localhost:3000/course/1
-Content-Type: application/json
-
-{
-    "account_id": 14
-}
