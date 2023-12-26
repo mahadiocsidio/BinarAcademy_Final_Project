@@ -454,9 +454,9 @@ GET http://localhost:3000/course-progress/myProgress
 Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzgsImVtYWlsIjoiMjAwNDAxMTQxQHN0dWRlbnQudW1yaS5hYy5pZCIsImlhdCI6MTcwMjcyMDMyNH0.tdimyWKTyjQLG71vT56kJwqT8GRgqLQgQzSAOSHgNsY
 
 ###
-GET http://localhost:3000/course/4
+GET http://localhost:3000/course/1
 Content-Type: application/json
 
 {
-    "account_id": 5
+    "account_id": 14
 }
