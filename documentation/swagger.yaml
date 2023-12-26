@@ -3560,6 +3560,55 @@ paths:
                 status: false
                 message: Unauthorized
                 error: Token not found
+  /notification/myNotifications/{notifikasi_id}:
+    put:
+      tags:
+        - Notifikasi
+      summary: Update status notification user
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: notifikasi_id
+          schema:
+            type: integer
+          required: true
+          description: ID of the notifikasi
+      responses:
+        '200':
+          description: SuccessResponse
+          content:
+            application/json:
+              example:
+                status: true
+                message: Notification has been read!
+                err: null
+                data: 
+                  updated:
+                    notifikasi_id: 1
+                    account_id: 1
+                    title: Success Registrasi Akun!
+                    deskripsi: Congratulations user@example.com on successfully verifying your account!
+                    is_read: true
+                    created_at: 2023-12-21T17:55:52.560Z
+        '400':
+          description: Id Notif Not Found
+          content:
+            application/json:
+              example:
+                status: false
+                message: bad request
+                err: Notificaion Id Not Found!
+                data: null
+        '403':
+          description: Id Notif & Id Account Not Match!
+          content:
+            application/json:
+              example:
+                status: false
+                message: bad request
+                err: Notification Id & Account Id Not Match!
+                data: null
   /notification/{notifikasi_id}:
     get:
       tags:
@@ -3597,6 +3646,72 @@ paths:
                 message: bad request
                 err: notification doesn't exist
                 data: null
+    put:
+      tags:
+        - Notifikasi
+      summary: Update status notification user
+      parameters:
+        - in: path
+          name: notifikasi_id
+          schema:
+            type: integer
+          required: true
+          description: ID of the notifikasi
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                account_id:
+                  type: integer
+                  example: 1
+      responses:
+        '200':
+          description: SuccessResponse
+          content:
+            application/json:
+              example:
+                status: true
+                message: Notification has been read!
+                err: null
+                data: 
+                  updated:
+                    notifikasi_id: 1
+                    account_id: 1
+                    title: Success Registrasi Akun!
+                    deskripsi: Congratulations user@example.com on successfully verifying your account!
+                    is_read: true
+                    created_at: 2023-12-21T17:55:52.560Z
+        '400':
+          description: Id Notif Not Found
+          content:
+            application/json:
+              example:
+                status: false
+                message: bad request
+                err: Notificaion Id Not Found!
+                data: null
+        '402':
+          description: Id Account Not Found
+          content:
+            application/json:
+              example:
+                status: false
+                message: bad request
+                err: Account Id Not Found!
+                data: null
+        '403':
+          description: Id Notif & Id Account Not Match!
+          content:
+            application/json:
+              example:
+                status: false
+                message: bad request
+                err: Notification Id & Account Id Not Match!
+                data: null
+
 components:
   securitySchemes:
     bearerAuth:
