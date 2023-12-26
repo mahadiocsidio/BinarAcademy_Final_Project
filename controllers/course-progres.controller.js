@@ -265,4 +265,36 @@ module.exports = {
       console.log(err);
     }
   },
+
+  updateIsDone:async (req,res,next)=>{
+    try {
+      let {account_id} = req.user
+      let {video_id} = req.body
+
+      let findCourseProgress = await prisma.course_progress.findFirst({
+        where:{
+          account_id,
+          video_id
+        }
+      })
+
+      let updateIsDone = await prisma.course_progress.update({
+        where:{
+          course_progres_id:findCourseProgress.course_progres_id
+        },
+        data:{
+          is_done:true
+        }
+      })
+      res.status(200).json({
+        status: true,
+        message: 'success!',
+        err: null,
+        data: { updateIsDone },
+      });
+
+    } catch (err) {
+      next(err)
+    }
+  }
 };
