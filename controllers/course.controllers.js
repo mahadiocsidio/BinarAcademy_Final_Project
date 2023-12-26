@@ -179,7 +179,9 @@ const getCoursebyId = async(req,res,next)=>{
                     orderBy:{chapter_id:'asc'},
                     select:{
                         title:true,
-                        Video:true
+                        Video:{
+                            orderBy:{video_id:'asc'},
+                        }
                     }
                 }
             }
