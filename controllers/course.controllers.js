@@ -131,10 +131,10 @@ const getCoursebyId = async(req,res,next)=>{
         //mengubah course_id menjadi tipe number/int
         course_id = parseInt(course_id,10)
         let{account_id}= req.body
-        let sudahBeli = await prisma.user_course.findMany({
-            where:{account_id,course_id}
-        })
-        sudahBeli= sudahBeli[0] ? true:false
+        const sudahBeli = !!(await prisma.user_course.findFirst({
+            where: { account_id, course_id },
+        }));
+        console.log(sudahBeli)
         let progress
         if(sudahBeli){
             progress = await prisma.course_progress.findMany({
