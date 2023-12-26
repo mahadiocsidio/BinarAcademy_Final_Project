@@ -1563,6 +1563,60 @@ paths:
                 message: Unauthorized
                 error: Token not found
 
+  /course-progress/progress:
+    put:
+      summary: Update is_done status for a video
+      tags:
+        - Course Progress
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                video_id:
+                  type: integer
+                  description: ID of the video to update is_done status
+              required:
+                - video_id
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successful update of is_done status
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    description: Status of the update operation
+                  message:
+                    type: string
+                    description: Description of the update result
+                  data:
+                    type: object
+                    properties:
+                      updateIsDone:
+                        type: object
+                        description: Details of the updated is_done status
+                        # Include properties of the updated progress object here
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    description: Status of the server error
+                  message:
+                    type: string
+                    description: Description of the server error
+
 # --------------------PAYMENT--------------------------------
 
   /payment:
