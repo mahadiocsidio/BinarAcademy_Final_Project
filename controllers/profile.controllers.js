@@ -238,6 +238,7 @@ const getRiwayatPembayaran = async (req, res, next) => {
         title: true,
         premium: true,
         level:true,
+        url_image_preview:true,
         Kategori:{
             select:{
                 title: true,
