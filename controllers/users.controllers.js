@@ -67,7 +67,7 @@ module.exports = {
           data: null,
         });
       }
-
+      let PictDefault = 'https://cdn.discordapp.com/attachments/1051821717804302357/1189572569590943794/default-avatar.png?ex=659ea6c9&is=658c31c9&hm=6e02132f4471d66da1822b29c3cc1aca509a46f4f4783ac34335c95d7020dd73&'
       let encryptedPassword = await bcrypt.hash(password, 10);
       let user = await prisma.account.create({
         data: {
@@ -76,6 +76,7 @@ module.exports = {
           no_telp,
           password: encryptedPassword,
           role,
+          url_image: PictDefault
         },
       });
 

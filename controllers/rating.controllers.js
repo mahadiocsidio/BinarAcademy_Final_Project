@@ -50,6 +50,7 @@ module.exports = {
             select:{
               nama: true,
               email: true,
+              url_image:true
             }
           },
         }
