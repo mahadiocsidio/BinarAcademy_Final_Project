@@ -19,6 +19,8 @@ tags:
     description: all about Course
   - name: Category
     description: all about Course Category
+  - name: Video
+    description: all about Video
   - name: Payment
     description: all about Payment History
   - name: User Course
@@ -2488,7 +2490,249 @@ paths:
 
         '500':
           description: Internal Server Error
+  /video:
+    get:
+      summary: Get all Video
+      tags:
+        - Video
+      description: Retrieve a list of video with pagination.
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: Number of items to retrieve per page
+        - in: query
+          name: page
+          schema:
+            type: integer
+          description: Page number
 
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                status: true
+                message: success
+                data:
+                  pagination:
+                    links:
+                      next: ""
+                      prev: ""
+                    total_items: 42
+                  video:
+                  - video_id: 1
+                    chapter_id: 1
+                    title: Tujuan mengikuti kelas Pengembangan Web 101
+                    deskripsi: menjelaskan Tujuan mengikuti kelas Pengembangan Web 101
+                    url_video: https://youtu.be/ixOd42SEUF0
+                    is_preview: true
+                  - video_id: 2
+                    chapter_id: 1
+                    title: Pengenalan Pengembangan Web 101
+                    deskripsi: menjelaskan Tujuan mengikuti kelas Pengembangan Web 101
+                    url_video: https://youtu.be/DwTkyMJi890
+                    is_preview: true
+    post:
+      summary: Create new Video
+      tags:
+        - Video
+      description: Retrieve a list of video with pagination.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                chapter_id:
+                  type: integer
+                  example: 42
+                title:
+                  type: string
+                  example: title for video
+                deskripsi:
+                  type: string
+                  example: deskripsi for video
+                url_video:
+                  type: string
+                  example: https:/linkurl.com/id
+                is_preview:
+                  type: boolean
+                  example: false
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                status: true
+                message: success
+                data:
+                  video:
+                    video_id: 1
+                    chapter_id: 1
+                    title: Tujuan mengikuti kelas Pengembangan Web 101
+                    deskripsi: menjelaskan Tujuan mengikuti kelas Pengembangan Web 101
+                    url_video: https://youtu.be/ixOd42SEUF0
+                    is_preview: true
+        '400':
+          description: Chapter Id not Found
+          content:
+            application/json:
+              example:
+                status: false
+                message: bad request
+                err: chapter doesn't exist!, please create one or choose another chapter!
+                data: null
+  /video/{video_id}:
+    get:
+      summary: Get Video by Id
+      tags:
+        - Video
+      description: Retrieve of video with specific id
+      parameters:
+        - in: path
+          name: video_id
+          schema:
+            type: integer
+          required: true
+          description: ID of the video
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                status: true
+                message: success
+                err: null
+                data:
+                  video:
+                    video_id: 1
+                    chapter_id: 1
+                    title: Tujuan mengikuti kelas Pengembangan Web 101
+                    deskripsi: menjelaskan Tujuan mengikuti kelas Pengembangan Web 101
+                    url_video: https://youtu.be/ixOd42SEUF0
+                    is_preview: true
+        '400':
+          description: video Id not Found
+          content:
+            application/json:
+              example:
+                status: false
+                message: bad request
+                err: id not found!
+                data: null
+    put:
+      summary: update Video by Id
+      tags:
+        - Video
+      description: update of video with specific id
+      parameters:
+        - in: path
+          name: video_id
+          schema:
+            type: integer
+          required: true
+          description: ID of the video
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                chapter_id:
+                  type: integer
+                  example: 42
+                title:
+                  type: string
+                  example: title for video
+                deskripsi:
+                  type: string
+                  example: deskripsi for video
+                url_video:
+                  type: string
+                  example: https:/linkurl.com/id
+                is_preview:
+                  type: boolean
+                  example: false
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                status: true
+                message: success
+                err: null
+                data:
+                  video:
+                    video_id: 1
+                    chapter_id: 1
+                    title: Tujuan mengikuti kelas Pengembangan Web 101
+                    deskripsi: menjelaskan Tujuan mengikuti kelas Pengembangan Web 101
+                    url_video: https://youtu.be/ixOd42SEUF0
+                    is_preview: true
+        '400':
+          description: video Id not Found
+          content:
+            application/json:
+              example:
+                status: false
+                message: bad request
+                err: id not found!
+                data: null
+        '402':
+          description: chapter Id not Found
+          content:
+            application/json:
+              example:
+                status: false
+                message: bad request
+                err: chapter doesn't exist!, please create one or choose another chapter!
+                data: null
+    delete:
+      summary: delete Video by Id
+      tags:
+        - Video
+      description: delete of video with specific id
+      parameters:
+        - in: path
+          name: video_id
+          schema:
+            type: integer
+          required: true
+          description: ID of the video
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                status: true
+                message: success!
+                err: null
+                data:
+                  deletedVideo:
+                    video_id: 1
+                    chapter_id: 1
+                    title: Tujuan mengikuti kelas Pengembangan Web 101
+                    deskripsi: menjelaskan Tujuan mengikuti kelas Pengembangan Web 101
+                    url_video: https://youtu.be/ixOd42SEUF0
+                    is_preview: true
+        '400':
+          description: video Id not Found
+          content:
+            application/json:
+              example:
+                status: false
+                message: bad request
+                err: id not found!
+                data: null
   /rating:
     get:
       summary: Get all rating by rating_id or by course_id or by skor
