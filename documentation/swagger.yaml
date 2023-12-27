@@ -19,6 +19,8 @@ tags:
     description: all about Course
   - name: Category
     description: all about Course Category
+  - name: Video
+    description: all about Video
   - name: Payment
     description: all about Payment History
   - name: User Course
@@ -2185,6 +2187,60 @@ paths:
 
         '500':
           description: Internal Server Error
+          
+    put:
+      summary: Update course
+      tags:
+        - Dashboard Admin
+        - Course
+
+      description: Update course to the system.
+      parameters:
+        - in: path
+          name: course_id
+          schema:
+            type: integer
+          required: true
+          description: ID of the course to update
+      requestBody:
+        required: true
+        $ref: "#/components/requestBodies/addCourse"
+
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                success: true
+                data:
+                  course_id: 1
+                  title: 'Web Development Fundamentals'
+                  harga: 99.99
+                  Kategori:
+                    title: 'Programming'
+                  # Add other course fields as needed
+
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              example:
+                success: false
+                message: 'Invalid input. Please provide valid title, kategori_id, harga, and mentor_id.'
+        
+        '404':
+          description: Course Not Found
+          content:
+            application/json:
+              example:
+                status: false
+                message: 'Bad request!'
+                err: 'Course not found'
+                data: null
+
+        '500':
+          description: Internal Server Error
   
   /course/beli:
     post:
@@ -2487,7 +2543,249 @@ paths:
 
         '500':
           description: Internal Server Error
+  /video:
+    get:
+      summary: Get all Video
+      tags:
+        - Video
+      description: Retrieve a list of video with pagination.
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: Number of items to retrieve per page
+        - in: query
+          name: page
+          schema:
+            type: integer
+          description: Page number
 
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                status: true
+                message: success
+                data:
+                  pagination:
+                    links:
+                      next: ""
+                      prev: ""
+                    total_items: 42
+                  video:
+                  - video_id: 1
+                    chapter_id: 1
+                    title: Tujuan mengikuti kelas Pengembangan Web 101
+                    deskripsi: menjelaskan Tujuan mengikuti kelas Pengembangan Web 101
+                    url_video: https://youtu.be/ixOd42SEUF0
+                    is_preview: true
+                  - video_id: 2
+                    chapter_id: 1
+                    title: Pengenalan Pengembangan Web 101
+                    deskripsi: menjelaskan Tujuan mengikuti kelas Pengembangan Web 101
+                    url_video: https://youtu.be/DwTkyMJi890
+                    is_preview: true
+    post:
+      summary: Create new Video
+      tags:
+        - Video
+      description: Retrieve a list of video with pagination.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                chapter_id:
+                  type: integer
+                  example: 42
+                title:
+                  type: string
+                  example: title for video
+                deskripsi:
+                  type: string
+                  example: deskripsi for video
+                url_video:
+                  type: string
+                  example: https:/linkurl.com/id
+                is_preview:
+                  type: boolean
+                  example: false
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                status: true
+                message: success
+                data:
+                  video:
+                    video_id: 1
+                    chapter_id: 1
+                    title: Tujuan mengikuti kelas Pengembangan Web 101
+                    deskripsi: menjelaskan Tujuan mengikuti kelas Pengembangan Web 101
+                    url_video: https://youtu.be/ixOd42SEUF0
+                    is_preview: true
+        '400':
+          description: Chapter Id not Found
+          content:
+            application/json:
+              example:
+                status: false
+                message: bad request
+                err: chapter doesn't exist!, please create one or choose another chapter!
+                data: null
+  /video/{video_id}:
+    get:
+      summary: Get Video by Id
+      tags:
+        - Video
+      description: Retrieve of video with specific id
+      parameters:
+        - in: path
+          name: video_id
+          schema:
+            type: integer
+          required: true
+          description: ID of the video
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                status: true
+                message: success
+                err: null
+                data:
+                  video:
+                    video_id: 1
+                    chapter_id: 1
+                    title: Tujuan mengikuti kelas Pengembangan Web 101
+                    deskripsi: menjelaskan Tujuan mengikuti kelas Pengembangan Web 101
+                    url_video: https://youtu.be/ixOd42SEUF0
+                    is_preview: true
+        '400':
+          description: video Id not Found
+          content:
+            application/json:
+              example:
+                status: false
+                message: bad request
+                err: id not found!
+                data: null
+    put:
+      summary: update Video by Id
+      tags:
+        - Video
+      description: update of video with specific id
+      parameters:
+        - in: path
+          name: video_id
+          schema:
+            type: integer
+          required: true
+          description: ID of the video
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                chapter_id:
+                  type: integer
+                  example: 42
+                title:
+                  type: string
+                  example: title for video
+                deskripsi:
+                  type: string
+                  example: deskripsi for video
+                url_video:
+                  type: string
+                  example: https:/linkurl.com/id
+                is_preview:
+                  type: boolean
+                  example: false
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                status: true
+                message: success
+                err: null
+                data:
+                  video:
+                    video_id: 1
+                    chapter_id: 1
+                    title: Tujuan mengikuti kelas Pengembangan Web 101
+                    deskripsi: menjelaskan Tujuan mengikuti kelas Pengembangan Web 101
+                    url_video: https://youtu.be/ixOd42SEUF0
+                    is_preview: true
+        '400':
+          description: video Id not Found
+          content:
+            application/json:
+              example:
+                status: false
+                message: bad request
+                err: id not found!
+                data: null
+        '402':
+          description: chapter Id not Found
+          content:
+            application/json:
+              example:
+                status: false
+                message: bad request
+                err: chapter doesn't exist!, please create one or choose another chapter!
+                data: null
+    delete:
+      summary: delete Video by Id
+      tags:
+        - Video
+      description: delete of video with specific id
+      parameters:
+        - in: path
+          name: video_id
+          schema:
+            type: integer
+          required: true
+          description: ID of the video
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                status: true
+                message: success!
+                err: null
+                data:
+                  deletedVideo:
+                    video_id: 1
+                    chapter_id: 1
+                    title: Tujuan mengikuti kelas Pengembangan Web 101
+                    deskripsi: menjelaskan Tujuan mengikuti kelas Pengembangan Web 101
+                    url_video: https://youtu.be/ixOd42SEUF0
+                    is_preview: true
+        '400':
+          description: video Id not Found
+          content:
+            application/json:
+              example:
+                status: false
+                message: bad request
+                err: id not found!
+                data: null
   /rating:
     get:
       summary: Get all rating by rating_id or by course_id or by skor
@@ -3559,6 +3857,55 @@ paths:
                 status: false
                 message: Unauthorized
                 error: Token not found
+  /notification/myNotifications/{notifikasi_id}:
+    put:
+      tags:
+        - Notifikasi
+      summary: Update status notification user
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: notifikasi_id
+          schema:
+            type: integer
+          required: true
+          description: ID of the notifikasi
+      responses:
+        '200':
+          description: SuccessResponse
+          content:
+            application/json:
+              example:
+                status: true
+                message: Notification has been read!
+                err: null
+                data: 
+                  updated:
+                    notifikasi_id: 1
+                    account_id: 1
+                    title: Success Registrasi Akun!
+                    deskripsi: Congratulations user@example.com on successfully verifying your account!
+                    is_read: true
+                    created_at: 2023-12-21T17:55:52.560Z
+        '400':
+          description: Id Notif Not Found
+          content:
+            application/json:
+              example:
+                status: false
+                message: bad request
+                err: Notificaion Id Not Found!
+                data: null
+        '403':
+          description: Id Notif & Id Account Not Match!
+          content:
+            application/json:
+              example:
+                status: false
+                message: bad request
+                err: Notification Id & Account Id Not Match!
+                data: null
   /notification/{notifikasi_id}:
     get:
       tags:
@@ -3596,6 +3943,72 @@ paths:
                 message: bad request
                 err: notification doesn't exist
                 data: null
+    put:
+      tags:
+        - Notifikasi
+      summary: Update status notification user
+      parameters:
+        - in: path
+          name: notifikasi_id
+          schema:
+            type: integer
+          required: true
+          description: ID of the notifikasi
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                account_id:
+                  type: integer
+                  example: 1
+      responses:
+        '200':
+          description: SuccessResponse
+          content:
+            application/json:
+              example:
+                status: true
+                message: Notification has been read!
+                err: null
+                data: 
+                  updated:
+                    notifikasi_id: 1
+                    account_id: 1
+                    title: Success Registrasi Akun!
+                    deskripsi: Congratulations user@example.com on successfully verifying your account!
+                    is_read: true
+                    created_at: 2023-12-21T17:55:52.560Z
+        '400':
+          description: Id Notif Not Found
+          content:
+            application/json:
+              example:
+                status: false
+                message: bad request
+                err: Notificaion Id Not Found!
+                data: null
+        '402':
+          description: Id Account Not Found
+          content:
+            application/json:
+              example:
+                status: false
+                message: bad request
+                err: Account Id Not Found!
+                data: null
+        '403':
+          description: Id Notif & Id Account Not Match!
+          content:
+            application/json:
+              example:
+                status: false
+                message: bad request
+                err: Notification Id & Account Id Not Match!
+                data: null
+
 components:
   securitySchemes:
     bearerAuth:

@@ -243,8 +243,8 @@ module.exports = {
 
       res.status(200).json({
         status: true,
-        message: 'success',
-        err: 'Notification has been read!',
+        message: 'Notification has been read!',
+        err: null,
         data: {updated}
       })
       
@@ -285,8 +285,8 @@ module.exports = {
 
       res.status(200).json({
         status: true,
-        message: 'success',
-        err: 'Notification has been read!',
+        message: 'Notification has been read!',
+        err: null,
         data: {updated}
       })
     } catch (err) {

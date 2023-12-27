@@ -341,4 +341,89 @@ const beliCourse = async(req,res,next)=>{
 
 }
 
-module.exports ={getAllCourse,getCoursebyId,addCourse,deleteCoursebyId,beliCourse}
+const updateCourse = async(req,res,next)=>{
+    try {
+        let { title, deskripsi, kode_kelas, harga, premium, level, name, kategori_id, category_title, mentor_id } = req.body;
+        const { course_id } = req.params;
+        harga = Number(harga);
+        premium = premium === "true";
+        kategori_id = Number(kategori_id);
+        mentor_id = Number(mentor_id);
+
+        // Periksa apakah course dengan course_id yang diberikan ada dalam database
+        const existingCourse = await prisma.course.findUnique({
+        where: {
+          course_id: Number(course_id)
+        }
+        });
+  
+        // Validasi apakah course dengan course_id yang diberikan ada
+        if (!existingCourse) {
+            return res.status(404).json({
+            status: false,
+            message: 'Bad request!',
+            err: 'Course not found',
+            data: null,
+            });
+        }
+
+        if (req.file) {
+            // Jika ada file yang di-upload
+            let strFile = req.file.buffer.toString('base64');
+            let uploadedFile = await imagekit.upload({
+                fileName: Date.now() + path.extname(req.file.originalname),
+                file: strFile
+            });
+            url = uploadedFile.url; // Ambil URL gambar yang di-upload
+        } else  {
+            // Jika tidak ada file yang di-upload tetapi ada url_img_preview dalam permintaan
+            url = null; 
+        }
+
+        let course = await prisma.course.update({
+            where: {
+                course_id: Number(course_id)
+            },
+            data: {
+                title,
+                deskripsi,
+                kode_kelas,
+                url_image_preview: url, // URL gambar preview jika ada
+                harga,
+                premium,
+                level,
+                kategori_id,
+                mentor_id
+            },
+            select: {
+                course_id: true,
+                title: true,
+                harga: true,
+                level: true,
+                premium: true,
+                kode_kelas: true,
+                url_image_preview: true,
+                Mentor: {
+                    select: {
+                        name: true 
+                    }
+                },
+                Kategori: {
+                    select: {
+                        title: true 
+                    }
+                }
+            }
+        });
+
+        res.status(200).json({
+            success:true,
+            data:{course}
+        })
+        
+    } catch (error) {
+        next(error)
+    }
+}
+
+module.exports ={getAllCourse,getCoursebyId,addCourse,deleteCoursebyId,beliCourse, updateCourse}
