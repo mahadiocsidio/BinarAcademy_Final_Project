@@ -2167,12 +2167,11 @@ paths:
           schema:
             type: integer
             example: 1
-      requestBody:
-        required: true
-        content:
-          application/json:
-            example:
-              account_id: 123
+        - name: account_id
+          in: query
+          schema:
+            type: integer
+            description: Search term to filter courses by title (case-insensitive)
       responses:
         '200':
           description: Successful response
