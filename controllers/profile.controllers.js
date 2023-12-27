@@ -54,6 +54,7 @@ const getAccountbyId = async (req, res, next) => {
         no_telp: true,
         negara: true,
         kota: true,
+        url_image: true
       },
     });
     //validasi akun te registrasi atau tidak
