@@ -48,6 +48,7 @@ module.exports = {
               title: true,
               kode_kelas: true,
               harga: true,
+              url_image_preview:true,
               Kategori: {
                 select: {
                   title: true,
@@ -226,6 +227,7 @@ module.exports = {
               title: true,
               kode_kelas: true,
               harga: true,
+              url_image_preview:true,
               Kategori: {
                 select: {
                   title: true,

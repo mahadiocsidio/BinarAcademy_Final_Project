@@ -165,6 +165,7 @@ const getCoursebyId = async(req,res,next)=>{
                 url_gc_tele:true,
                 premium: true,
                 harga: true,
+                url_image_preview:true,
                 level:true,
                 Kategori:{
                     select:{
@@ -180,6 +181,7 @@ const getCoursebyId = async(req,res,next)=>{
                     orderBy:{chapter_id:'asc'},
                     select:{
                         title:true,
+                        chapter_id:true,
                         Video:{
                             orderBy:{video_id:'asc'},
                         }
@@ -187,6 +189,24 @@ const getCoursebyId = async(req,res,next)=>{
                 }
             }
         })
+        //make an array consist of chapter_id in course variable
+        let chapter_id = course.Chapter.map(chapter=>chapter.chapter_id)
+        //search in prisma video database how many video consist in all chapter_id
+        let module = await prisma.video.aggregate({
+            select:{
+                _count:{
+                    select:{
+                        video_id:true
+                    }
+                }
+            },
+            where:{
+                chapter_id:{
+                    in: chapter_id
+                }
+            }
+        })
+        console.log(module)
         if(!course) return res.json("Course isnt registered")
         // Mengambil informasi rating dari tabel Rating
         let ratings = await prisma.rating.findMany({
@@ -204,6 +224,7 @@ const getCoursebyId = async(req,res,next)=>{
 
         // Menambahkan informasi rating ke objek course
         course.avgRating = avgSkor;
+        course.module = module._count.video_id
 
         res.status(200).json({
         success:true,
