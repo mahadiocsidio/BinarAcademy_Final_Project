@@ -77,7 +77,15 @@ module.exports = {
     try {
         const { course_id, skor, comment } = req.body;
         let { account_id } = req.user;
-
+        //check all requirement is inputed
+        if (!course_id || !skor || !comment) {
+            return res.status(400).json({
+                status: false,
+                message: 'bad request',
+                err: "Please fill all required field",
+                data: null,
+            });
+        }
         // Check if the course exists
         let isExist = await prisma.course.findUnique({
             where: { course_id },
@@ -88,6 +96,22 @@ module.exports = {
                 status: false,
                 message: 'bad request',
                 err: "Course not found",
+                data: null,
+            });
+        }
+
+        // Check if the rating already exists
+        let existingRating = await prisma.rating.findFirst({
+            where: {
+                course_id,
+                account_id
+            }
+        });
+        if (existingRating) {
+            return res.status(400).json({
+                status: false,
+                message: 'bad request',
+                err: "Rating already exists",
                 data: null,
             });
         }
