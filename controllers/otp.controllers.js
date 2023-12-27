@@ -41,7 +41,10 @@ module.exports = {
             });
             }
             
-
+            // Kirim OTP ke email pengguna
+            const html = `<p>Hi ${nama}, ini adalah OTP Anda: <strong>${otpValue}</strong></p>`;
+            await nodemailer.sendEmail(email, 'One-Time Password (OTP)', html);
+            
             //menghapus otp setelah 5 menit dan belum diverifikasi
             setTimeout(async (req, res, next) => {
                 try {
@@ -72,9 +75,7 @@ module.exports = {
                 }
             }, 300000);
 
-              // Kirim OTP ke email pengguna
-              const html = `<p>Hi ${nama}, ini adalah OTP Anda: <strong>${otpValue}</strong></p>`;
-              await nodemailer.sendEmail(email, 'One-Time Password (OTP)', html);
+
 
             // // Mengembalikan existingOTP dalam respons HTTP 200
             // return res.status(200).json({
