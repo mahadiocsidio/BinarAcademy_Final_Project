@@ -6,22 +6,31 @@ const { getPagination } = require('../helper/index');
 module.exports = {
   getAllVideo: async (req, res, next) => {
     try {
-      let { limit = 10, page = 1 } = req.query;
+      let { limit = 10, page = 1, chapter_id } = req.query;
       limit = Number(limit);
       page = Number(page);
+      chapter_id = Number(chapter_id);
+
+      let conditions = {};
+
+      if (chapter_id) {
+        conditions.chapter_id = chapter_id;
+      }
 
       let video = await prisma.video.findMany({
         skip: (page - 1) * limit,
         take: limit,
+        where: conditions,
       });
       const { _count } = await prisma.video.aggregate({
+        where: conditions,
         _count: { video_id: true },
       });
 
       let pagination = getPagination(req, _count.video_id, page, limit);
 
       res.status(200).json({
-        stauts: true,
+        status: true,
         message: 'success',
         data: { pagination, video },
       });
@@ -101,7 +110,18 @@ module.exports = {
       video_id = Number(video_id);
 
       let isExist = await prisma.video.findUnique({ where: { video_id } });
+      let isChapterExist = await prisma.chapter.findUnique({
+        where: { chapter_id },
+      });
 
+      if (!isChapterExist) {
+        return res.status(400).json({
+          status: false,
+          message: 'bad request',
+          err: "chapter doesn't exist!, please create one or choose another chapter!",
+          data: null,
+        });
+      }
       //validasi id ditemukan apa tidak
       if (!isExist) {
         return res.status(400).json({
@@ -157,42 +177,6 @@ module.exports = {
         message: 'success!',
         err: null,
         data: { deletedVideo: deleteVideo },
-      });
-    } catch (err) {
-      next(err);
-    }
-  },
-  getVideobyChapter: async (req, res, next) => {
-    try {
-      let { chapter_id } = req.params;
-      chapter_id = Number(chapter_id);
-
-      let isExist = await prisma.chapter.findMany({
-        where: { chapter_id },
-        select: {
-          chapter_id: true,
-          title: true,
-          Course: {
-            select: {
-              title: true,
-            },
-          },
-          Video: {
-            select: {
-              title: true,
-              deskripsi: true,
-              url_video: true,
-              is_preview: true,
-            },
-          },
-        },
-      });
-
-      res.status(200).json({
-        status: true,
-        message: 'success!',
-        err: null,
-        data: { detail: isExist },
       });
     } catch (err) {
       next(err);

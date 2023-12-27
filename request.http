@@ -174,9 +174,9 @@ POST http://localhost:3000/video
 Content-Type: application/json
 
 {
-    "chapter_id":2,
-    "title":"UI/UX DESIGN II PART III",
-    "deskripsi":"belajar UI/UX DESIGN II PART III PREM",
+    "chapter_id":14,
+    "title":"UI/UX DESIGN II PART IV",
+    "deskripsi":"belajar UI/UX DESIGN II PART IV PREM",
     "url_video":"https://youtu.be/DwTkyMJi890",
     "is_preview":false
 }
