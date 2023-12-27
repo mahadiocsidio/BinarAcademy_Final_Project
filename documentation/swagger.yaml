@@ -2185,6 +2185,60 @@ paths:
 
         '500':
           description: Internal Server Error
+          
+    put:
+      summary: Update course
+      tags:
+        - Dashboard Admin
+        - Course
+
+      description: Update course to the system.
+      parameters:
+        - in: path
+          name: course_id
+          schema:
+            type: integer
+          required: true
+          description: ID of the course to update
+      requestBody:
+        required: true
+        $ref: "#/components/requestBodies/addCourse"
+
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                success: true
+                data:
+                  course_id: 1
+                  title: 'Web Development Fundamentals'
+                  harga: 99.99
+                  Kategori:
+                    title: 'Programming'
+                  # Add other course fields as needed
+
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              example:
+                success: false
+                message: 'Invalid input. Please provide valid title, kategori_id, harga, and mentor_id.'
+        
+        '404':
+          description: Course Not Found
+          content:
+            application/json:
+              example:
+                status: false
+                message: 'Bad request!'
+                err: 'Course not found'
+                data: null
+
+        '500':
+          description: Internal Server Error
   
   /course/beli:
     post:
