@@ -129,8 +129,9 @@ const getCoursebyId = async(req,res,next)=>{
     try {
         let {course_id} = req.params
         //mengubah course_id menjadi tipe number/int
+        let{account_id}= req.query
         course_id = parseInt(course_id,10)
-        let{account_id}= req.body
+        account_id = parseInt(account_id,10)
         let sudahBeli
         if(account_id){
             sudahBeli = !!(await prisma.user_course.findFirst({
