@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const { register, login, verifyOtp, resendOtp , resetPassword,changePassword,whoami } = require('../controllers/users.controllers');
-const {  restrict } = require('../middlewares/auth.middlewares');
+const { restrict } = require('../middlewares/auth.middlewares');
 
 // REGISTER & LOGIN
 router.post('/register', register);

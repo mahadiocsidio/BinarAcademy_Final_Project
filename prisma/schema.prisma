@@ -166,29 +166,29 @@ model Promo {
 
 // Tabel Riwayat_Transaksi
 model Riwayat_Transaksi {
-  riwayat_transaksi_id Int      @id @default(autoincrement())
+  riwayat_transaksi_id Int       @id @default(autoincrement())
   account_id           Int
   course_id            Int
-  metode_pembayaran    String  @default("-")
+  metode_pembayaran    String    @default("-")
   tanggal_pembayaran   DateTime?
-  status               String   @default("Waiting for Payment")
-  Account              Account  @relation(fields: [account_id], references: [account_id])
-  Course               Course   @relation(fields: [course_id], references: [course_id])
+  status               String    @default("Waiting for Payment")
+  Account              Account   @relation(fields: [account_id], references: [account_id])
+  Course               Course    @relation(fields: [course_id], references: [course_id])
 }
 
 model Notifikasi {
-  notifikasi_id Int      @id @default(autoincrement())
+  notifikasi_id Int       @id @default(autoincrement())
   account_id    Int
   title         String?
   deskripsi     String?
-  is_read       Boolean  @default(false)
+  is_read       Boolean   @default(false)
   created_at    DateTime? @default(now())
-  Account       Account  @relation(fields: [account_id], references: [account_id])
+  Account       Account   @relation(fields: [account_id], references: [account_id])
 }
 
 model Salary {
-  salary_id Int @id @default(autoincrement())
+  salary_id Int     @id @default(autoincrement())
   course_id Int
-  gaji_dn String?
-  gaji_ln String?
+  gaji_dn   String?
+  gaji_ln   String?
 }
