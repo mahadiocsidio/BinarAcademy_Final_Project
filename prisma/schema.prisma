@@ -185,3 +185,10 @@ model Notifikasi {
   created_at    DateTime? @default(now())
   Account       Account  @relation(fields: [account_id], references: [account_id])
 }
+
+model Salary {
+  salary_id Int @id @default(autoincrement())
+  course_id Int
+  gaji_dn Int?
+  gaji_ln Int?
+}
