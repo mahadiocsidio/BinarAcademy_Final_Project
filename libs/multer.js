@@ -6,7 +6,9 @@ module.exports = {
       if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
         cb(null, true);
       } else {
-        cb(new Error('File type is not supported'), false);
+        const err = new Error('File type is not supported')
+        return cb(err.message, false);
+        
       }
     },
     onError: (err, next) => {

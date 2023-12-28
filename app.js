@@ -29,6 +29,7 @@ const notification = require('./routes/notification.routes');
 const promo = require('./routes/promo.routes')
 const admin = require('./routes/admin.routes')
 const courseProgress = require('./routes/course_progress.routes')
+const salary = require('./routes/salary.routes')
 
 app.use('/auth', userRouter);
 app.use('/profile', profileRouter);
@@ -45,6 +46,8 @@ app.use('/notification', notification);
 app.use('/promo', promo)
 app.use('/admin', admin)
 app.use('/course-progress', courseProgress)
+app.use('/salary',salary)
+
 // swagger
 const file = fs.readFileSync(path.join(__dirname, './documentation/swagger.yaml'), 'utf8');
 const swaggerDocument = yaml.parse(file);
