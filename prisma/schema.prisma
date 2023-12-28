@@ -189,6 +189,6 @@ model Notifikasi {
 model Salary {
   salary_id Int @id @default(autoincrement())
   course_id Int
-  gaji_dn Int?
-  gaji_ln Int?
+  gaji_dn String?
+  gaji_ln String?
 }
