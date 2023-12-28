@@ -291,7 +291,7 @@ const addCourse = async(req,res,next)=>{
 
         let mentorCourse = await prisma.mentor_course.create({
             data : {
-                mentor_id:1,
+                mentor_id:mentor_id,
                 course_id: course.course_id
             }
         })
