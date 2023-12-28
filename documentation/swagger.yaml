@@ -15,10 +15,12 @@ tags:
     description: all about creating account or login
   - name: Account
     description: all about accounts profile
-  - name: Course
-    description: all about Course
   - name: Category
     description: all about Course Category
+  - name: Course
+    description: all about Course
+  - name: Chapter
+    description: all about Chapter
   - name: Video
     description: all about Video
   - name: Payment
@@ -35,6 +37,8 @@ tags:
     description : all about mentor-course
   - name : Notifikasi
     description : all about notification
+  - name : Salary
+    description : all about salary
 paths:
 # ------------------------------------ AUTH ------------------------------------
   /auth/register:
@@ -4007,6 +4011,187 @@ paths:
                 status: false
                 message: bad request
                 err: Notification Id & Account Id Not Match!
+                data: null
+  /salary:
+    get:
+      summary: Get all salary can filter with query course_id
+      tags:
+        - Salary
+      description: all abour salary
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: Number of items to return per page
+        - in: query
+          name: page
+          schema:
+            type: integer
+          description: Page number to retrieve
+        - in: query
+          name: course_id
+          schema:
+            type: integer
+          description: course_id to filter
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                status: true
+                message: success
+                err: null
+                data:
+                  pagination:
+                    links:
+                      next: ""
+                      prev: ""
+                    total_items: 42
+                  salary:
+                  - salary_id: 1
+                    course_id: 1
+                    gaji_dn: Rp30.000
+                    gaji_ln: $2
+        '400':
+          description: Id Notif & Id Account Not Match!
+          content:
+            application/json:
+              example:
+                status: false
+                message: bad request
+                err: Notification Id & Account Id Not Match!
+                data: null
+    post:
+      summary: create new salary
+      tags:
+        - Salary
+      description: all abour salary
+      requestBody:
+        description: gaji_dn / gaji_ln can null
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                course_id:
+                  type: integer
+                  example: 1
+                gaji_dn:
+                  type: string
+                  example: Rp75.000
+                gaji_ln:
+                  type: string
+                  example: $5
+      responses:
+        '200':
+          description: bad response
+          content:
+            application/json:
+              example:
+                status: true
+                message: success
+                err: null
+                data:
+                  salary:
+                    salary_id: 1
+                    course_id: 1
+                    gaji_dn: Rp30.000
+                    gaji_ln: $2
+        '400':
+          description: bad response
+          content:
+            application/json:
+              example:
+                status: false
+                message: bad request
+                err: course id not found
+                data: null
+
+  /salary/{salary_id}:
+    get:
+      summary: Get salary by salary id
+      tags:
+        - Salary
+      description: all abour salary
+      parameters:
+      - in: path
+        name: salary_id
+        schema:
+          type: integer
+        required: true
+        description: ID of the salary
+      responses:
+        '200':
+          description: bad response
+          content:
+            application/json:
+              example:
+                status: true
+                message: success
+                err: null
+                data:
+                  salary:
+                    salary_id: 1
+                    course_id: 1
+                    gaji_dn: Rp30.000
+                    gaji_ln: $2
+        '400':
+          description: bad response
+          content:
+            application/json:
+              example:
+                status: false
+                message: bad request
+                err: salary id not found
+                data: null
+  /salary/course/{course_id}:
+    get:
+      summary: Get a salary with specific course id by params
+      tags:
+        - Salary
+      description: all abour salary with specific course by params
+      parameters:
+      - in: path
+        name: course_id
+        schema:
+          type: integer
+        required: true
+        description: ID of the salary
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                status: true
+                message: success
+                err: null
+                data:
+                  salary:
+                    salary_id: 1
+                    course_id: 1
+                    gaji_dn: Rp30.000
+                    gaji_ln: $2
+        '400':
+          description: id course not found in salary
+          content:
+            application/json:
+              example:
+                status: false
+                message: bad request
+                err: data not found
+                data: null
+        '402':
+          description: id course not found in tabel course
+          content:
+            application/json:
+              example:
+                status: false
+                message: bad request
+                err: Course id not found
                 data: null
 
 components:
