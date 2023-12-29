@@ -8,6 +8,7 @@ info:
   version: 1.0.0
 servers:
   - url: https://binar-academy-final-project.vercel.app
+  - url: https://learn-wise-develop.up.railway.app
   - url: http://localhost:3000
 
 tags:
