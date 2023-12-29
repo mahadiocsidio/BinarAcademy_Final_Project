@@ -23,13 +23,13 @@ const category = require('./routes/category.routes');
 const video = require('./routes/video.routes');
 const rating = require('./routes/rating.routes');
 const payment = require('./routes/payment.routes');
-const mentor = require('./routes/mentor.routes')
+const mentor = require('./routes/mentor.routes');
 const mentorCourse = require('./routes/mentor-course.routes');
 const notification = require('./routes/notification.routes');
-const promo = require('./routes/promo.routes')
-const admin = require('./routes/admin.routes')
-const courseProgress = require('./routes/course_progress.routes')
-const salary = require('./routes/salary.routes')
+const promo = require('./routes/promo.routes');
+const admin = require('./routes/admin.routes');
+const courseProgress = require('./routes/course_progress.routes');
+const salary = require('./routes/salary.routes');
 
 app.use('/auth', userRouter);
 app.use('/profile', profileRouter);
@@ -43,21 +43,28 @@ app.use('/payment', payment);
 app.use('/mentor', mentor);
 app.use('/mentor-course', mentorCourse);
 app.use('/notification', notification);
-app.use('/promo', promo)
-app.use('/admin', admin)
-app.use('/course-progress', courseProgress)
-app.use('/salary',salary)
+app.use('/promo', promo);
+app.use('/admin', admin);
+app.use('/course-progress', courseProgress);
+app.use('/salary', salary);
 
 // swagger
-const file = fs.readFileSync(path.join(__dirname, './documentation/swagger.yaml'), 'utf8');
+const file = fs.readFileSync(
+  path.join(__dirname, './documentation/swagger.yaml'),
+  'utf8'
+);
 const swaggerDocument = yaml.parse(file);
 app.use(
   '/docs',
   swaggerUi.serve,
   swaggerUi.setup(swaggerDocument, {
-    customCssUrl: 'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui.min.css',
-    customJs: ['https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui-bundle.js', 'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui-standalone-preset.js'],
-    customSiteTitle: 'CourseHub API Documentation 🚀',
+    customCssUrl:
+      'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui.min.css',
+    customJs: [
+      'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui-bundle.js',
+      'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui-standalone-preset.js',
+    ],
+    customSiteTitle: 'Learn Wise API Documentation 🚀',
   })
 );
 
@@ -72,7 +79,6 @@ app.use('/', (req, res) => {
     res.status(500).json({ error: 'Terjadi kesalahan internal server' });
   }
 });
-
 
 app.listen(PORT, () => {
   console.log(`server running at http://localhost:${PORT}`);
