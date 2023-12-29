@@ -323,10 +323,9 @@ module.exports = {
       }
 
       let token = jwt.sign({ account_id: emailExist.account_id, email: emailExist.email }, JWT_SECRET_KEY);
-      var location = req.headers.origin; //get HOST & PORT
-
+      var location = req.headers.host; //get HOST & PORT
       // let url = `${location}/auth/reset-password?token=${token}`; //send token in link to get user
-      let url = `<p>Hi ${email}, ini adalah token Anda: <strong>${token}</strong></p>`; //send token in link to get user
+      let url = `<p>Hi ${email}, ini adalah token Anda: <strong>${location}/auth/reset-password?token=${token}</strong></p>`; //send token in link to get user
       // const html = await nodemailer.getHtml('reset-password-valid.ejs', {
       //   email,
       //   url,
