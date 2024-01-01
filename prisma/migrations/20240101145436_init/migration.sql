@@ -58,6 +58,7 @@ CREATE TABLE "Course" (
     "harga" DOUBLE PRECISION NOT NULL,
     "url_image_preview" TEXT,
     "url_gc_tele" TEXT,
+    "is_visible" BOOLEAN NOT NULL DEFAULT true,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
@@ -130,6 +131,7 @@ CREATE TABLE "Rating" (
 CREATE TABLE "Promo" (
     "promo_id" SERIAL NOT NULL,
     "course_id" INTEGER NOT NULL,
+    "title" TEXT NOT NULL,
     "deskripsi" TEXT,
     "tanggal_mulai" TIMESTAMP(3) NOT NULL,
     "tanggal_selesai" TIMESTAMP(3) NOT NULL,
@@ -143,9 +145,9 @@ CREATE TABLE "Riwayat_Transaksi" (
     "riwayat_transaksi_id" SERIAL NOT NULL,
     "account_id" INTEGER NOT NULL,
     "course_id" INTEGER NOT NULL,
-    "metode_pembayaran" TEXT NOT NULL,
-    "tanggal_pembayaran" TIMESTAMP(3) NOT NULL,
-    "status" TEXT,
+    "metode_pembayaran" TEXT NOT NULL DEFAULT '-',
+    "tanggal_pembayaran" TIMESTAMP(3),
+    "status" TEXT NOT NULL DEFAULT 'Belum Bayar',
 
     CONSTRAINT "Riwayat_Transaksi_pkey" PRIMARY KEY ("riwayat_transaksi_id")
 );
@@ -157,8 +159,19 @@ CREATE TABLE "Notifikasi" (
     "title" TEXT,
     "deskripsi" TEXT,
     "is_read" BOOLEAN NOT NULL DEFAULT false,
+    "created_at" TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "Notifikasi_pkey" PRIMARY KEY ("notifikasi_id")
+);
+
+-- CreateTable
+CREATE TABLE "Salary" (
+    "salary_id" SERIAL NOT NULL,
+    "course_id" INTEGER NOT NULL,
+    "gaji_dn" TEXT,
+    "gaji_ln" TEXT,
+
+    CONSTRAINT "Salary_pkey" PRIMARY KEY ("salary_id")
 );
 
 -- CreateIndex

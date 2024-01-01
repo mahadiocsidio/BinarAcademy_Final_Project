@@ -76,6 +76,7 @@ model Course {
   harga             Float
   url_image_preview String?
   url_gc_tele       String?
+  is_visible        Boolean             @default(true)
   created_at        DateTime            @default(now())
   updated_at        DateTime            @updatedAt
   Kategori          Kategori            @relation(fields: [kategori_id], references: [kategori_id])
@@ -171,7 +172,7 @@ model Riwayat_Transaksi {
   course_id            Int
   metode_pembayaran    String    @default("-")
   tanggal_pembayaran   DateTime?
-  status               String    @default("Waiting for Payment")
+  status               String    @default("Belum Bayar")
   Account              Account   @relation(fields: [account_id], references: [account_id])
   Course               Course    @relation(fields: [course_id], references: [course_id])
 }

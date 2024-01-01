@@ -1,3 +1,0 @@
--- AlterTable
-ALTER TABLE "Salary" ALTER COLUMN "gaji_dn" SET DATA TYPE TEXT,
-ALTER COLUMN "gaji_ln" SET DATA TYPE TEXT;
