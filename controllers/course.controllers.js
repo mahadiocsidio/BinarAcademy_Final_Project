@@ -447,4 +447,35 @@ const updateCourse = async(req,res,next)=>{
     }
 }
 
-module.exports ={getAllCourse,getCoursebyId,addCourse,deleteCoursebyId,beliCourse, updateCourse}
+const updateStatusCourse = async (req,res,next)=>{
+    try {
+        let { course_id } = req.params
+        
+        let isExist = await prisma.course.findUnique({where:{course_id}})
+        if (!isExist){
+            return res.status(400).json({
+                status:false,
+                message:'bad request!',
+                err:'course id not found!',
+                data: null
+            })
+        }
+
+        let updatedCourse = await prisma.course.update({
+            where:{ course_id },
+            data:{ is_visible: false }
+        })
+
+        res.status(400).json({
+            status:true,
+            message:'success!',
+            err: null,
+            data: { updatedCourse }
+        })
+
+    } catch (err) {
+        next(err)
+    }
+}
+
+module.exports ={getAllCourse,getCoursebyId,addCourse,deleteCoursebyId,beliCourse, updateCourse, updateStatusCourse}
