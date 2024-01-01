@@ -1,6 +1,5 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
-const jwt = require('jsonwebtoken');
 const { getPagination } = require('../helper/index');
 const { createNotifAuto } = require('./notification.controller');
 const { autoAddUserCourse } = require('./user_course.controllers');
