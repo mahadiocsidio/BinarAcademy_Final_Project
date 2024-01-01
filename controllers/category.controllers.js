@@ -1,6 +1,5 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
-const jwt = require('jsonwebtoken');
 const { getPagination } = require('../helper/index');
 const imagekit = require('../libs/imagekit');
 const path = require('path');

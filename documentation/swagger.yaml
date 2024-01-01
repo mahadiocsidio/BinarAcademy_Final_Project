@@ -1668,14 +1668,12 @@ paths:
           name: search
           schema:
             type: string
-            example: javascript
-          description: filter by title course
+          description: filter by title course (javascript, web developtment, dll)
         - in: query
           name: status
           schema:
             type: string
-            example: sudah bayar
-          description: filter by status payment (Waiting for Payment / Sudah bayar)
+          description: filter by status payment (Belum Bayar / Sudah Bayar)
 
       responses:
         '200':

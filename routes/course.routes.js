@@ -6,16 +6,17 @@ const {
   getCoursebyId,
   addCourse,
   beliCourse,
-  updateCourse,
+  updateCourse,updateStatusCourse
 } = require('../controllers/course.controllers');
 
 router.get('/', getAllCourse);
 router.post('/addCourse', imageFilter.single('url_image_preview'), addCourse);
-router.put('/:course_id', imageFilter.single('url_image_preview'), updateCourse);
+router.put('/delete/:course_id', updateStatusCourse);
 // BY LOGIN
 router.post('/beli', restrict, beliCourse);
 
 // BY ID
 router.get('/:course_id', getCoursebyId);
+router.put('/:course_id', imageFilter.single('url_image_preview'), updateCourse);
 
 module.exports = router;
