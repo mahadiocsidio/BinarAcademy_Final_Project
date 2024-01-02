@@ -2,7 +2,6 @@ const prisma = require('../libs/prisma')
 const { getPagination } = require('../helper/index');
 const imagekit = require('../libs/imagekit');
 const path = require('path');
-const { createNotifAuto } = require('./notification.controller');
 
 const getAllCourse = async (req, res, next) => {
     try {
@@ -350,7 +349,13 @@ const beliCourse = async(req,res,next)=>{
         //create Notification
         let titleNotif = 'Un-Successful purchase course added!';
         let deskNotif = `Hii ${account.nama} you have courses that you haven't purchased yet, To get full access to the course, please complete the payment`;
-        await createNotifAuto(account.account_id, titleNotif, deskNotif, res);
+        await prisma.notifikasi.create({
+            data: {
+              account_id: account.account_id,
+              title: titleNotif,
+              deskripsi: deskNotif,
+            },
+          });
 
         res.status(200).json({
             success: true,
