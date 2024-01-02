@@ -8,14 +8,14 @@ const {
   updateIsDone
 } = require('../controllers/course-progres.controller');
 
-router.get('/', getAllCourseProgress); //DONE
-router.post('/', createCourseProgress); //DONE
+router.get('/', getAllCourseProgress);
+router.post('/', createCourseProgress);
 
 // BY LOGIN
-router.get('/myProgress', restrict, getCourseProgressByLogin); //DONE
+router.get('/myProgress', restrict, getCourseProgressByLogin);
 router.put('/progress',restrict, updateIsDone)
 
 // BY ID
-router.get('/:course_progres_id', getCourseProgressById); //DONE
+router.get('/:course_progres_id', getCourseProgressById);
 
 module.exports = router;
