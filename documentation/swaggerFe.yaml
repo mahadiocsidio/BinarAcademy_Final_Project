@@ -12,40 +12,20 @@ servers:
   - url: http://localhost:3000
 
 tags:
-  - name: Start
-    description: all about creating account or login
-  - name: Account
-    description: all about accounts profile
-  - name: Category
-    description: all about Course Category
-  - name: Course
-    description: all about Course
-  - name: Chapter
-    description: all about Chapter
-  - name: Video
-    description: all about Video
-  - name: Payment
-    description: all about Payment History
-  - name: User Course
-    description: all about Course that user have
-  - name: Course Progress
-    description: all about Course Progress that user have
-  - name: Rating
-    description: all about Rating
-  - name : Mentor
-    description : all about mentor
-  - name : Mentor Course
-    description : all about mentor-course
-  - name : Notifikasi
-    description : all about notification
-  - name : Salary
-    description : all about salary
+  - name: No Login User
+    description: Api yang dipake User tanpa login
+  - name: Login User
+    description: Api yang dipake User yang sudah login dan butuh bearerAuth
+  - name: Admin
+    description: Api yang dipake Admin
+  - name: developer
+    description: Api yang dipake developer
 paths:
 # ------------------------------------ AUTH ------------------------------------
   /auth/register:
     post:
       tags:
-        - Start
+        - No Login User
       operationId: create-new-user
       summary: Create a new user
       requestBody:
@@ -124,7 +104,7 @@ paths:
   /auth/verify-otp:
     post:
       tags:
-        - Start
+        - Login User
       operationId: verify-otp
       summary: Verify OTP
       security:
@@ -184,7 +164,7 @@ paths:
   /auth/resend-otp:
     post:
       tags:
-        - Start
+        - Login User
       operationId: resend-otp
       summary: Resend OTP
       security:
@@ -253,7 +233,7 @@ paths:
   /auth/login:
     post:
       tags:
-        - Start
+        - No Login User
       operationId: user-login
       summary: User login
       requestBody:
@@ -329,7 +309,7 @@ paths:
   /auth/reset-password:
     post:
       tags:
-        - Start
+        - No Login User
       operationId: reset-password
       summary: Reset Password
       requestBody:
@@ -388,7 +368,7 @@ paths:
                     example: null
     put:
       tags:
-        - Start
+        - No Login User
       operationId: change-password
       summary: Reset Password
       parameters:
@@ -408,7 +388,7 @@ paths:
                 password:
                   type: string
                   example: password123
-                confirmationPassword:
+                ConfirmationPassword:
                   type: string
                   example: password213
       responses:
@@ -484,7 +464,7 @@ paths:
   /auth/whoami:
     get:
       tags:
-        - Start
+        - Login User
       summary: Get all accounts profile
       security:
         - bearerAuth: []
@@ -545,7 +525,7 @@ paths:
   /profile:
     get:
       tags:
-        - Account
+        - developer
       summary: Get all accounts profile
       parameters:
         - in: query
@@ -605,7 +585,7 @@ paths:
   /profile/{account_id}:
     get:
       tags:
-        - "Account"
+        - developer
       summary: Get user's profile account by id
       parameters:
         - in: path
@@ -653,7 +633,7 @@ paths:
                     example: null
     put:
       tags:
-        - "Account"
+        - developer
       summary: Update user's detail profile account by id
       parameters:
         - in: path
@@ -730,7 +710,7 @@ paths:
   /profile/logout:
     post:
       tags:
-        - Account
+        - Login User
       summary: Logout
       responses:
         '200':
@@ -756,7 +736,7 @@ paths:
   /profile/account:
     get:
       tags:
-        - Account
+        - Login User
       summary: Get the current user's profile account
       security:
         - bearerAuth: []
@@ -810,7 +790,7 @@ paths:
   /profile/updateProfile:
     put:
       tags:
-        - Account
+        - Login User
       summary: Update user profile
       security:
         - bearerAuth: []
@@ -895,7 +875,7 @@ paths:
   /profile/changePassword:
     put:
       tags:
-        - Account
+        - Login User
       summary: Change user password
       security:
         - bearerAuth: []
@@ -998,7 +978,7 @@ paths:
         - bearerAuth: []
       description: Get Account's Transaction History that have login
       tags:
-        - Account
+        - Login User
       parameters:
         - name: limit
           in: query
@@ -1078,7 +1058,7 @@ paths:
     get:
       summary: Get all user courses with pagination
       tags:
-        - User Course
+        - developer
       parameters:
         - in: query
           name: limit
@@ -1135,7 +1115,7 @@ paths:
     post:
       summary: Create user course
       tags:
-        - User Course
+        - developer
       requestBody:
         required: true
         $ref: "#/components/requestBodies/createUserCourse"
@@ -1173,7 +1153,7 @@ paths:
       security:
         - bearerAuth: []
       tags:
-        - User Course
+        - Login User
       parameters:
         - in: query
           name: search
@@ -1273,7 +1253,7 @@ paths:
     get:
       summary: Get user courses by account ID
       tags:
-        - User Course
+        - developer
       parameters:
         - in: path
           name: account_id
@@ -1320,7 +1300,7 @@ paths:
     get:
       summary: Get all user courses Progress with pagination
       tags:
-        - Course Progress
+        - developer
       parameters:
         - in: query
           name: limit
@@ -1395,7 +1375,7 @@ paths:
     post:
       summary: Create user courses Progress
       tags:
-        - Course Progress
+        - developer
       requestBody:
         required: true
         content:
@@ -1460,7 +1440,7 @@ paths:
     get:
       summary: Get Course Progress details by ID
       tags:
-        - Course Progress
+        - developer
       description: Retrieve details of a Course Progress By ID.
       parameters:
         - in: path
@@ -1499,7 +1479,7 @@ paths:
     get:
       summary: Get Course Progress list By Login
       tags:
-        - Course Progress
+        - Login User
       description: Retrieve list of a Course Progress By Login
       security:
         - bearerAuth: []
@@ -1589,7 +1569,7 @@ paths:
     put:
       summary: Update is_done status for a video
       tags:
-        - Course Progress
+        - Login User
       requestBody:
         required: true
         content:
@@ -1645,8 +1625,8 @@ paths:
     get:
       summary: Get all payments
       tags:
-        - Payment
-        - Dashboard Admin
+        - Admin
+        - developer
       description: Retrieve a list of payments with pagination.
       parameters:
         - in: query
@@ -1668,12 +1648,14 @@ paths:
           name: search
           schema:
             type: string
-          description: filter by title course (javascript, web developtment, dll)
+            example: javascript
+          description: filter by title course
         - in: query
           name: status
           schema:
             type: string
-          description: filter by status payment (Belum Bayar / Sudah Bayar)
+            example: sudah bayar
+          description: filter by status payment (Waiting for Payment / Sudah bayar)
 
       responses:
         '200':
@@ -1711,7 +1693,7 @@ paths:
     post:
       summary: Create a new payment
       tags:
-        - Payment
+        - developer
       description: Create a new payment transaction for a course.
       requestBody:
         required: true
@@ -1755,7 +1737,7 @@ paths:
     get:
       summary: Get payment details after user login
       tags:
-        - Payment
+        - developer
       security:
         - bearerAuth: []
       description: Retrieve details of payment transactions for the logged-in user with pagination and optional filtering.
@@ -1825,7 +1807,7 @@ paths:
     post:
       summary: Create a new payment after user login
       tags:
-        - Payment
+        - Login User
       security:
         - bearerAuth: []
       description: Create a new payment transaction for a course after user login.
@@ -1879,7 +1861,7 @@ paths:
     put:
       summary: Update payment status after user login
       tags:
-        - Payment
+        - Login User
       security:
         - bearerAuth: []
       description: Update the status of a payment transaction for a specific course after user login.
@@ -1941,7 +1923,7 @@ paths:
     get:
       summary: Get payment details by ID
       tags:
-        - Payment
+        - developer
       description: Retrieve details of a payment transaction based on the account ID.
       parameters:
         - in: path
@@ -1985,7 +1967,7 @@ paths:
     put:
       summary: Update payment status by ID
       tags:
-        - Payment
+        - developer
       description: Update the status of a payment transaction by its ID from waiting to paid
       parameters:
         - in: path
@@ -2043,8 +2025,9 @@ paths:
     get:
       summary: Get all courses
       tags:
-        - Course
-        - Dashboard Admin
+        - No Login User
+        - Login User
+        - Admin
       description: Retrieve a list of courses with pagination and optional filtering.
       parameters:
         - in: query
@@ -2123,8 +2106,8 @@ paths:
     post:
       summary: Add a new course
       tags:
-        - Course
-        - Dashboard Admin
+        - Admin
+        - developer
       description: Add a new course to the system.
       requestBody:
         required: true
@@ -2158,9 +2141,11 @@ paths:
 
   /course/{course_id}:
     get:
-      summary: Get course by ID
+      summary: Get course detail by ID
       tags:
-        - Course
+        - No Login User
+        - Login User
+        - Admin
       description: Retrieve information about a course based on its ID.
       parameters:
         - name: course_id
@@ -2194,9 +2179,9 @@ paths:
     put:
       summary: Update course
       tags:
-        - Dashboard Admin
+        - Admin
+        - developer
         - Course
-
       description: Update course to the system.
       parameters:
         - in: path
@@ -2251,7 +2236,8 @@ paths:
       security:
         - bearerAuth: []
       tags:
-        - Course
+        - Login User
+        - developer
       description: Purchase a course and create transaction history.
       requestBody:
         required: true
@@ -2295,7 +2281,8 @@ paths:
     get:
       summary: Get all categories
       tags:
-        - Category
+        - No Login User
+        - Login User
         - Dashboard Admin
       description: Retrieve a list of categories with pagination.
       parameters:
@@ -2343,7 +2330,7 @@ paths:
     post:
       summary: Create a new category
       tags:
-        - Category
+        - developer
       description: Create a new category in the system.
       requestBody:
         required: true
@@ -2396,7 +2383,7 @@ paths:
     get:
       summary: Get category by ID
       tags:
-        - Category
+        - developer
       description: Retrieve a category by its ID.
       parameters:
         - in: path
@@ -2439,7 +2426,7 @@ paths:
     put:
       summary: Update category by ID
       tags:
-        - Category
+        - developer
       description: Update a category by its ID.
       parameters:
         - in: path
@@ -2508,7 +2495,7 @@ paths:
     delete:
       summary: Delete category by ID
       tags:
-        - Category
+        - developer
       description: Delete a category by its ID.
       parameters:
         - in: path
@@ -2550,7 +2537,8 @@ paths:
     get:
       summary: Get all Video
       tags:
-        - Video
+        - Admin
+        - developer
       description: Retrieve a list of video with pagination.
       parameters:
         - in: query
@@ -2594,7 +2582,8 @@ paths:
     post:
       summary: Create new Video
       tags:
-        - Video
+        - Admin
+        - developer
       description: Retrieve a list of video with pagination.
       requestBody:
         required: true
@@ -2647,7 +2636,8 @@ paths:
     get:
       summary: Get Video by Id
       tags:
-        - Video
+        - Admin
+        - developer
       description: Retrieve of video with specific id
       parameters:
         - in: path
@@ -2685,7 +2675,8 @@ paths:
     put:
       summary: update Video by Id
       tags:
-        - Video
+        - Admin
+        - developer
       description: update of video with specific id
       parameters:
         - in: path
@@ -2754,7 +2745,8 @@ paths:
     delete:
       summary: delete Video by Id
       tags:
-        - Video
+        - Admin
+        - developer
       description: delete of video with specific id
       parameters:
         - in: path
@@ -2793,7 +2785,8 @@ paths:
     get:
       summary: Get all rating by rating_id or by course_id or by skor
       tags:
-        - Rating
+        - Admin
+        - Developer
       description: |
           Retrieve a list of ratings with the option to filter by rating ID, course ID, or score. Provide any combination of parameters to filter the results. Pagination is supported.
 
@@ -2871,7 +2864,7 @@ paths:
       security:
         - bearerAuth: []
       tags:
-        - Rating
+        - Login User
       description: Retrieve a list of ratings with pagination.
       parameters:
         - in: query
@@ -2923,7 +2916,7 @@ paths:
       security:
         - bearerAuth: []
       tags:
-        - Rating
+        - Login User
       description: Create a new Rating in the system.
       requestBody:
         required: true
@@ -2955,7 +2948,7 @@ paths:
       security:
         - bearerAuth: []
       tags:
-        - Rating
+        - Login User
       description: Update a Rating by its ID.
       parameters:
         - in: path
@@ -2991,7 +2984,7 @@ paths:
       security:
         - bearerAuth: []
       tags:
-        - Rating
+        - Login User
       description: Delete a Rating by its ID.
       parameters:
         - in: path
@@ -3022,7 +3015,7 @@ paths:
   /chapter/:
     get:
       tags:
-        - Chapter
+        - developer
       summary: Get all chapters
       description: "Retrieve a list of chapters with pagination."
       parameters:
@@ -3067,7 +3060,7 @@ paths:
   /chapter/{course_id}:
     get:
       tags:
-        - Chapter
+        - developer
       summary: Get chapters by course_id
       parameters:
         - name: course_id
@@ -3101,7 +3094,8 @@ paths:
       security:
         - bearerAuth: []
       tags:
-        - Chapter
+        - Admin
+        - developer
       summary: Add a new chapter
       requestBody:
         required: true
@@ -3134,7 +3128,8 @@ paths:
       security:
         - bearerAuth: []
       tags:
-        - Chapter
+        - Admin
+        - developer
       summary: Update chapter by chapter_id
       parameters:
         - name: chapter_id
@@ -3174,7 +3169,8 @@ paths:
       security:
         - bearerAuth: []
       tags:
-        - Chapter
+        - Admin
+        - developer
       summary: Delete chapter by chapter_id
       parameters:
         - name: chapter_id
@@ -3678,6 +3674,7 @@ paths:
     get:
       tags:
         - Notifikasi
+        - developer
       summary: Show all notification
       parameters:
         - in: query
@@ -3738,7 +3735,7 @@ paths:
                               example: falsess
     post:
       tags:
-        - Notifikasi
+        - developer
       summary: Show all notification
       requestBody:
         required: true
@@ -3784,7 +3781,7 @@ paths:
   /notification/broadcast:
     post:
       tags:
-        - Notifikasi
+        - developer
       summary: Broadcast notification to all valid user
       requestBody:
         required: true
@@ -3814,7 +3811,7 @@ paths:
   /notification/myNotifications:
     get:
       tags:
-        - Notifikasi
+        - Login User
       summary: Show all notification user
       security:
         - bearerAuth: []
@@ -3860,10 +3857,11 @@ paths:
                 status: false
                 message: Unauthorized
                 error: Token not found
+
   /notification/myNotifications/{notifikasi_id}:
     put:
       tags:
-        - Notifikasi
+        - Login User
       summary: Update status notification user
       security:
         - bearerAuth: []
@@ -3912,7 +3910,7 @@ paths:
   /notification/{notifikasi_id}:
     get:
       tags:
-        - Notifikasi
+        - developer
       summary: Show all notification user
       parameters:
         - in: path
@@ -3948,7 +3946,7 @@ paths:
                 data: null
     put:
       tags:
-        - Notifikasi
+        - developer
       summary: Update status notification user
       parameters:
         - in: path
@@ -4010,187 +4008,6 @@ paths:
                 status: false
                 message: bad request
                 err: Notification Id & Account Id Not Match!
-                data: null
-  /salary:
-    get:
-      summary: Get all salary can filter with query course_id
-      tags:
-        - Salary
-      description: all abour salary
-      parameters:
-        - in: query
-          name: limit
-          schema:
-            type: integer
-          description: Number of items to return per page
-        - in: query
-          name: page
-          schema:
-            type: integer
-          description: Page number to retrieve
-        - in: query
-          name: course_id
-          schema:
-            type: integer
-          description: course_id to filter
-      responses:
-        '200':
-          description: Successful response
-          content:
-            application/json:
-              example:
-                status: true
-                message: success
-                err: null
-                data:
-                  pagination:
-                    links:
-                      next: ""
-                      prev: ""
-                    total_items: 42
-                  salary:
-                  - salary_id: 1
-                    course_id: 1
-                    gaji_dn: Rp30.000
-                    gaji_ln: $2
-        '400':
-          description: Id Notif & Id Account Not Match!
-          content:
-            application/json:
-              example:
-                status: false
-                message: bad request
-                err: Notification Id & Account Id Not Match!
-                data: null
-    post:
-      summary: create new salary
-      tags:
-        - Salary
-      description: all abour salary
-      requestBody:
-        description: gaji_dn / gaji_ln can null
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                course_id:
-                  type: integer
-                  example: 1
-                gaji_dn:
-                  type: string
-                  example: Rp75.000
-                gaji_ln:
-                  type: string
-                  example: $5
-      responses:
-        '200':
-          description: bad response
-          content:
-            application/json:
-              example:
-                status: true
-                message: success
-                err: null
-                data:
-                  salary:
-                    salary_id: 1
-                    course_id: 1
-                    gaji_dn: Rp30.000
-                    gaji_ln: $2
-        '400':
-          description: bad response
-          content:
-            application/json:
-              example:
-                status: false
-                message: bad request
-                err: course id not found
-                data: null
-
-  /salary/{salary_id}:
-    get:
-      summary: Get salary by salary id
-      tags:
-        - Salary
-      description: all abour salary
-      parameters:
-      - in: path
-        name: salary_id
-        schema:
-          type: integer
-        required: true
-        description: ID of the salary
-      responses:
-        '200':
-          description: bad response
-          content:
-            application/json:
-              example:
-                status: true
-                message: success
-                err: null
-                data:
-                  salary:
-                    salary_id: 1
-                    course_id: 1
-                    gaji_dn: Rp30.000
-                    gaji_ln: $2
-        '400':
-          description: bad response
-          content:
-            application/json:
-              example:
-                status: false
-                message: bad request
-                err: salary id not found
-                data: null
-  /salary/course/{course_id}:
-    get:
-      summary: Get a salary with specific course id by params
-      tags:
-        - Salary
-      description: all abour salary with specific course by params
-      parameters:
-      - in: path
-        name: course_id
-        schema:
-          type: integer
-        required: true
-        description: ID of the salary
-      responses:
-        '200':
-          description: Successful response
-          content:
-            application/json:
-              example:
-                status: true
-                message: success
-                err: null
-                data:
-                  salary:
-                    salary_id: 1
-                    course_id: 1
-                    gaji_dn: Rp30.000
-                    gaji_ln: $2
-        '400':
-          description: id course not found in salary
-          content:
-            application/json:
-              example:
-                status: false
-                message: bad request
-                err: data not found
-                data: null
-        '402':
-          description: id course not found in tabel course
-          content:
-            application/json:
-              example:
-                status: false
-                message: bad request
-                err: Course id not found
                 data: null
 
 components:

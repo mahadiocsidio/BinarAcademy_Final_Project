@@ -8,7 +8,7 @@ generator client {
 // prisma/schema.prisma
 datasource db {
   provider  = "postgresql"
-  url  	    = env("DATABASE_URL")
+  url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
 
@@ -56,11 +56,11 @@ model Mentor {
 
 // Tabel Kategori
 model Kategori {
-  kategori_id Int      @id @default(autoincrement())
-  title       String?
-  deskripsi   String?
+  kategori_id     Int      @id @default(autoincrement())
+  title           String?
+  deskripsi       String?
   url_img_preview String?
-  Course      Course[]
+  Course          Course[]
 }
 
 // Tabel Course
@@ -68,6 +68,7 @@ model Course {
   course_id         Int                 @id @default(autoincrement())
   title             String?
   deskripsi         String?
+  kode_kelas        String?
   kategori_id       Int
   premium           Boolean             @default(false)
   mentor_id         Int
@@ -75,6 +76,7 @@ model Course {
   harga             Float
   url_image_preview String?
   url_gc_tele       String?
+  is_visible        Boolean             @default(true)
   created_at        DateTime            @default(now())
   updated_at        DateTime            @updatedAt
   Kategori          Kategori            @relation(fields: [kategori_id], references: [kategori_id])
@@ -155,6 +157,7 @@ model Rating {
 model Promo {
   promo_id        Int      @id @default(autoincrement())
   course_id       Int
+  title           String
   deskripsi       String?
   tanggal_mulai   DateTime
   tanggal_selesai DateTime
@@ -164,21 +167,29 @@ model Promo {
 
 // Tabel Riwayat_Transaksi
 model Riwayat_Transaksi {
-  riwayat_transaksi_id Int      @id @default(autoincrement())
+  riwayat_transaksi_id Int       @id @default(autoincrement())
   account_id           Int
   course_id            Int
-  metode_pembayaran    String
-  tanggal_pembayaran   DateTime
-  status               String?
-  Account              Account  @relation(fields: [account_id], references: [account_id])
-  Course               Course   @relation(fields: [course_id], references: [course_id])
+  metode_pembayaran    String    @default("-")
+  tanggal_pembayaran   DateTime?
+  status               String    @default("Belum Bayar")
+  Account              Account   @relation(fields: [account_id], references: [account_id])
+  Course               Course    @relation(fields: [course_id], references: [course_id])
 }
 
 model Notifikasi {
-  notifikasi_id Int     @id @default(autoincrement())
+  notifikasi_id Int       @id @default(autoincrement())
   account_id    Int
   title         String?
   deskripsi     String?
-  is_read       Boolean @default(false)
-  Account       Account @relation(fields: [account_id], references: [account_id])
+  is_read       Boolean   @default(false)
+  created_at    DateTime? @default(now())
+  Account       Account   @relation(fields: [account_id], references: [account_id])
+}
+
+model Salary {
+  salary_id Int     @id @default(autoincrement())
+  course_id Int
+  gaji_dn   String?
+  gaji_ln   String?
 }
