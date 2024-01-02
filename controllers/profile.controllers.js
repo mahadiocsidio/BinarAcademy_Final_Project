@@ -1,7 +1,6 @@
 const prisma = require('../libs/prisma');
 const { getPagination } = require('../helper/index');
 let bcrypt = require('bcrypt');
-const { createNotifAuto } = require('./notification.controller');
 const imagekit = require('../libs/imagekit');
 const path = require('path');
 
@@ -126,7 +125,13 @@ const updateProfilebyId = async (req, res, next) => {
     let titleNotif = 'SUCCESSFULLY CHANGING YOUR INFO ACCOUNT!';
     let deskNotif = `Congratulations ${accountExist.email} Your account information has been successfully changed by admin!`;
 
-    await createNotifAuto(accountExist.account_id, titleNotif, deskNotif, res);
+    await prisma.notifikasi.create({
+      data: {
+        account_id: accountExist.account_id,
+        title: titleNotif,
+        deskripsi: deskNotif,
+      },
+    });
 
     return res.status(200).json({
       success: true,
@@ -198,7 +203,13 @@ const changePasswordbyLogin = async (req, res, next) => {
     let titleNotif = 'SUCCESSFULLY CHANGING YOUR PASSWORD!';
     let deskNotif = `Congratulations ${isExist.nama} You have successfully changed your password via profile menu!`;
 
-    await createNotifAuto(isExist.account_id, titleNotif, deskNotif, res);
+    await prisma.notifikasi.create({
+      data: {
+        account_id: isExist.account_id,
+        title: titleNotif,
+        deskripsi: deskNotif,
+      },
+    });
 
     res.status(200).json({
       success: true,
@@ -363,7 +374,13 @@ const updateProfilebyLogin = async (req, res, next) => {
     let titleNotif = 'SUCCESSFULLY CHANGING YOUR INFO ACCOUNT!';
     let deskNotif = `Congratulations ${user.email} You have successfully changed your info account!`;
 
-    await createNotifAuto(user.account_id, titleNotif, deskNotif, res);
+    await prisma.notifikasi.create({
+      data: {
+        account_id: user.account_id,
+        title: titleNotif,
+        deskripsi: deskNotif,
+      },
+    });
 
     return res.status(200).json({
       success: true,
