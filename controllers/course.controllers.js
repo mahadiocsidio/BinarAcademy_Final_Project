@@ -455,6 +455,7 @@ const updateCourse = async(req,res,next)=>{
 const updateStatusCourse = async (req,res,next)=>{
     try {
         let { course_id } = req.params
+        course_id = Number(course_id)
         
         let isExist = await prisma.course.findUnique({where:{course_id}})
         if (!isExist){
@@ -471,7 +472,7 @@ const updateStatusCourse = async (req,res,next)=>{
             data:{ is_visible: false }
         })
 
-        res.status(400).json({
+        res.status(200).json({
             status:true,
             message:'success!',
             err: null,
