@@ -140,7 +140,6 @@ const getCoursebyId = async(req,res,next)=>{
         }else{
             sudahBeli = false
         }
-        console.log(sudahBeli)
         let progress
         if(sudahBeli){
             progress = await prisma.course_progress.findMany({
@@ -207,7 +206,6 @@ const getCoursebyId = async(req,res,next)=>{
                 }
             }
         })
-        console.log(module)
         if(!course) return res.json("Course isnt registered")
         // Mengambil informasi rating dari tabel Rating
         let ratings = await prisma.rating.findMany({
