@@ -4,7 +4,6 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const nodemailer = require('../libs/nodemailer');
 const { createUpdateotp } = require('./otp.controllers');
-const { createNotifAuto } = require('./notification.controller');
 
 const { JWT_SECRET_KEY } = process.env;
 
@@ -131,7 +130,7 @@ module.exports = {
           data: null,
         });
       }
-      let activationOtp = await prisma.Otp.findFirst({
+      let activationOtp = await prisma.otp.findFirst({
         where: {
           otp,
         },
@@ -164,12 +163,13 @@ module.exports = {
       //create Notification
       let titleNotif = 'Success Registrasi Akun!';
       let deskNotif = `Congratulations ${email} on successfully verifying your account!`;
-      await createNotifAuto(
-        activationOtp.account_id,
-        titleNotif,
-        deskNotif,
-        res
-      );
+      await prisma.notifikasi.create({
+        data: {
+          account_id: activationOtp.account_id,
+          title: titleNotif,
+          deskripsi: deskNotif,
+        },
+      });
 
       return res.status(200).json({
         status: true,
@@ -337,7 +337,13 @@ module.exports = {
       let titleNotif = 'Request Reset Password Detected!';
       let deskNotif = `Request Password Reset in email ${email} has been detected!, please check your email to proceed to the next step or ignore this message if that's not you`;
 
-      await createNotifAuto(emailExist.account_id, titleNotif, deskNotif, res);
+      await prisma.notifikasi.create({
+        data: {
+          account_id: emailExist.account_id,
+          title: titleNotif,
+          deskripsi: deskNotif,
+        },
+      });
 
       return res.status(200).json({
         status: true,
@@ -381,7 +387,13 @@ module.exports = {
         let titleNotif = 'SUCCESSFULLY CHANGING YOUR PASSWORD!';
         let deskNotif = `Congratulations ${decoded.email} You have successfully changed your password, please log in using your new password!`;
 
-        await createNotifAuto(decoded.account_id, titleNotif, deskNotif, res);
+        await prisma.notifikasi.create({
+          data: {
+            account_id: decoded.account_id,
+            title: titleNotif,
+            deskripsi: deskNotif,
+          },
+        });
         
         res.status(200).json({
           status: true,

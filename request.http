@@ -14,16 +14,16 @@ Content-Type: application/json
 ### verify otp
 POST http://localhost:3000/auth/verify-otp
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoyLCJlbWFpbCI6IjIwMDQwMTE0MUBzdHVkZW50LnVtcmkuYWMuaWQiLCJpYXQiOjE3MDMxODExOTR9.cqc_FzOAZLvBAmZrZAI1gCVIHHgJX493SZ_m4CelNS8
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoxOCwiZW1haWwiOiJhbGRpc2lyb2phdEBnbWFpbC5jb20iLCJpYXQiOjE3MDQxODgxMDl9.-39KpDJLucvEg6x6kGC0vJVzUZo19_EWcXRBAwT4clA
 
 {
-    "otp":"483184"
+    "otp":"546088"
 }
 
 #### resend otp
 POST http://localhost:3000/auth/resend-otp
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoyLCJlbWFpbCI6IjIwMDQwMTE0MUBzdHVkZW50LnVtcmkuYWMuaWQiLCJpYXQiOjE3MDMxODExOTR9.cqc_FzOAZLvBAmZrZAI1gCVIHHgJX493SZ_m4CelNS8
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoxOCwiZW1haWwiOiJhbGRpc2lyb2phdEBnbWFpbC5jb20iLCJpYXQiOjE3MDQxODgxMDl9.-39KpDJLucvEg6x6kGC0vJVzUZo19_EWcXRBAwT4clA
 
 ### login
 POST http://localhost:3000/auth/login
@@ -53,7 +53,7 @@ Content-Type: application/json
 
 ### GET USER BY TOKEN
 GET http://localhost:3000/auth/whoami
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzgsImVtYWlsIjoiMjAwNDAxMTQxQHN0dWRlbnQudW1yaS5hYy5pZCIsImlhdCI6MTcwMjcyMDMyNH0.tdimyWKTyjQLG71vT56kJwqT8GRgqLQgQzSAOSHgNsY
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoxOCwiZW1haWwiOiJhbGRpc2lyb2phdEBnbWFpbC5jb20iLCJpYXQiOjE3MDQxODgxMDl9.-39KpDJLucvEg6x6kGC0vJVzUZo19_EWcXRBAwT4clA
 
 # ------------------------------------ PROFILE ------------------------------------
 
@@ -64,14 +64,12 @@ GET http://localhost:3000/profile
 GET http://localhost:3000/profile/361
 
 ### updateProfilebyId
-PUT http://localhost:3000/profile/45
+PUT http://localhost:3000/profile/18
 Content-Type: application/json
 
 {
-    "nama":"ahmad",
-    "no_telp":"012345678910",
-    "negara": "Indojaya",
-    "kota": "jogya"
+    "negara": "indonesia",
+    "kota": "pekanbaru"
 }
 
 ### Logout
@@ -80,13 +78,13 @@ POST http://localhost:3000/profile/logout
 
 ### GetAccountByLogin
 GET http://localhost:3000/profile/account
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjo0NSwiZW1haWwiOiIyMDA0MDExNDFAc3R1ZGVudC51bXJpLmFjLmlkIiwiaWF0IjoxNzAyNDgwMjEwfQ.bsBSDAnx3uVi8qn3p88SZe9Y1EmZ_10nWet21UUIFDw
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoxOCwiZW1haWwiOiJhbGRpc2lyb2phdEBnbWFpbC5jb20iLCJpYXQiOjE3MDQxODgxMDl9.-39KpDJLucvEg6x6kGC0vJVzUZo19_EWcXRBAwT4clA
 
 
 ### updateProfilebyLogin
 PUT http://localhost:3000/profile/updateProfile
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjo0NSwiZW1haWwiOiIyMDA0MDExNDFAc3R1ZGVudC51bXJpLmFjLmlkIiwiaWF0IjoxNzAyNDgwMjEwfQ.bsBSDAnx3uVi8qn3p88SZe9Y1EmZ_10nWet21UUIFDw
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoxOCwiZW1haWwiOiJhbGRpc2lyb2phdEBnbWFpbC5jb20iLCJpYXQiOjE3MDQxODgxMDl9.-39KpDJLucvEg6x6kGC0vJVzUZo19_EWcXRBAwT4clA
 
 {
     "nama":"ahmad aldi",
@@ -98,7 +96,7 @@ Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjo0NSwiZW1h
 ### Change Password By Login
 PUT http://localhost:3000/profile/changePassword
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjo0NSwiZW1haWwiOiIyMDA0MDExNDFAc3R1ZGVudC51bXJpLmFjLmlkIiwiaWF0IjoxNzAyNDgwMjEwfQ.bsBSDAnx3uVi8qn3p88SZe9Y1EmZ_10nWet21UUIFDw
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoxOCwiZW1haWwiOiJhbGRpc2lyb2phdEBnbWFpbC5jb20iLCJpYXQiOjE3MDQxODgxMDl9.-39KpDJLucvEg6x6kGC0vJVzUZo19_EWcXRBAwT4clA
 
 {
     "password_lama": "aldi123",
@@ -108,7 +106,7 @@ Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjo0NSwiZW1h
 
 ### GetRiwayatPembayaranByLogin
 GET http://localhost:3000/profile/paymentHistory
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDUsImVtYWlsIjoiMjAwNDAxMTQxQHN0dWRlbnQudW1yaS5hYy5pZCIsImlhdCI6MTcwMTg4NTAzMX0.RNs5ArZibeYnG0oHUVikf_-S8fsQB4qOpm0S70iz3fk
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoxOCwiZW1haWwiOiJhbGRpc2lyb2phdEBnbWFpbC5jb20iLCJpYXQiOjE3MDQxODgxMDl9.-39KpDJLucvEg6x6kGC0vJVzUZo19_EWcXRBAwT4clA
 
 # ------------------------------------ CATEGORY ------------------------------------
 ### GET ALL CATEGORY
@@ -213,7 +211,7 @@ GET http://localhost:3000/class
 
 ### Get User Course By login
 GET http://localhost:3000/class/myclass
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NywiZW1haWwiOiJtYWhhZGlvY3NpZGlvQHN0dWRlbnRzLmFtaWtvbS5hYy5pZCIsImlhdCI6MTcwMTk1MTU5Nn0.EOEStpZULcR0KUeKfYpFje071MfwYB4HVFc0JB1Bwco
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoxOCwiZW1haWwiOiJhbGRpc2lyb2phdEBnbWFpbC5jb20iLCJpYXQiOjE3MDQxODgxMDl9.-39KpDJLucvEg6x6kGC0vJVzUZo19_EWcXRBAwT4clA
 
 ### ----------------------------------CHAPTER------------------------------------
 ### GET ALL CHAPTER
@@ -225,7 +223,7 @@ GET http://localhost:3000/chapter/1
 ### ADD CHAPTER
 POST http://localhost:3000/chapter/addChapter
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiIyMTEwNDA2NEBpdHRlbGtvbS1wd3QuYWMuaWQiLCJpYXQiOjE3MDE3NTc3NDh9.adHgBrrqy9R0q6UdXocx0mLWkxIcDK33iU6vo-NUsTw
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoxOCwiZW1haWwiOiJhbGRpc2lyb2phdEBnbWFpbC5jb20iLCJpYXQiOjE3MDQxODgxMDl9.-39KpDJLucvEg6x6kGC0vJVzUZo19_EWcXRBAwT4clA
 
 {
     "chapter_title": "Chapter 3 - Masuk materi kedua",
@@ -236,7 +234,7 @@ Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiIyMTEw
 ### UPDATE CHAPTER BY CHAPTER_ID
 PUT http://localhost:3000/chapter/updateChapter/4
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiIyMTEwNDA2NEBpdHRlbGtvbS1wd3QuYWMuaWQiLCJpYXQiOjE3MDE3NTc3NDh9.adHgBrrqy9R0q6UdXocx0mLWkxIcDK33iU6vo-NUsTw
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoxOCwiZW1haWwiOiJhbGRpc2lyb2phdEBnbWFpbC5jb20iLCJpYXQiOjE3MDQxODgxMDl9.-39KpDJLucvEg6x6kGC0vJVzUZo19_EWcXRBAwT4clA
 
 {
     "chapter_title": "Chapter 2 - Masuk materi yuk!",
@@ -246,13 +244,13 @@ Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiIyMTEw
 
 ### DELETE CHAPTER BY CHAPTER_ID
 DELETE http://localhost:3000/chapter/deleteChapter/9
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiIyMTEwNDA2NEBpdHRlbGtvbS1wd3QuYWMuaWQiLCJpYXQiOjE3MDE3NTc3NDh9.adHgBrrqy9R0q6UdXocx0mLWkxIcDK33iU6vo-NUsTw
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoxOCwiZW1haWwiOiJhbGRpc2lyb2phdEBnbWFpbC5jb20iLCJpYXQiOjE3MDQxODgxMDl9.-39KpDJLucvEg6x6kGC0vJVzUZo19_EWcXRBAwT4clA
 
 ###------------------------------------ RATING -----------------------------------
 
 ###POST create rating
 POST http://localhost:3000/rating/rate
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoxLCJlbWFpbCI6InB1dHJpaW5kcml5YW50aTE5MDIwM0BnbWFpbC5jb20iLCJpYXQiOjE3MDIxMTA4NzB9.AyHnqyuwN4ec689P404lPFPZ0SnMkIAL_qdCreOasSg
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoxOCwiZW1haWwiOiJhbGRpc2lyb2phdEBnbWFpbC5jb20iLCJpYXQiOjE3MDQxODgxMDl9.-39KpDJLucvEg6x6kGC0vJVzUZo19_EWcXRBAwT4clA
 Content-Type: application/json
 
 {
@@ -279,12 +277,12 @@ GET http://localhost:3000/rating?course_id=1&skor=3
 
 ###GET all rating by login
 GET http://localhost:3000/rating/myRates
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoxLCJlbWFpbCI6InB1dHJpaW5kcml5YW50aTE5MDIwM0BnbWFpbC5jb20iLCJpYXQiOjE3MDIxMTA4NzB9.AyHnqyuwN4ec689P404lPFPZ0SnMkIAL_qdCreOasSg
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoxOCwiZW1haWwiOiJhbGRpc2lyb2phdEBnbWFpbC5jb20iLCJpYXQiOjE3MDQxODgxMDl9.-39KpDJLucvEg6x6kGC0vJVzUZo19_EWcXRBAwT4clA
 
 
 ### PUT UPDATE RATING
 PUT http://localhost:3000/rating/2
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoxLCJlbWFpbCI6InB1dHJpaW5kcml5YW50aTE5MDIwM0BnbWFpbC5jb20iLCJpYXQiOjE3MDIxMTA4NzB9.AyHnqyuwN4ec689P404lPFPZ0SnMkIAL_qdCreOasSg
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoxOCwiZW1haWwiOiJhbGRpc2lyb2phdEBnbWFpbC5jb20iLCJpYXQiOjE3MDQxODgxMDl9.-39KpDJLucvEg6x6kGC0vJVzUZo19_EWcXRBAwT4clA
 Content-Type: application/json
 
 {
@@ -295,7 +293,7 @@ Content-Type: application/json
 
 ### DELETE  RATING
 DELETE  http://localhost:3000/rating/1
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoxLCJlbWFpbCI6InB1dHJpaW5kcml5YW50aTE5MDIwM0BnbWFpbC5jb20iLCJpYXQiOjE3MDIxMTA4NzB9.AyHnqyuwN4ec689P404lPFPZ0SnMkIAL_qdCreOasSg
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoxOCwiZW1haWwiOiJhbGRpc2lyb2phdEBnbWFpbC5jb20iLCJpYXQiOjE3MDQxODgxMDl9.-39KpDJLucvEg6x6kGC0vJVzUZo19_EWcXRBAwT4clA
 
 ###--------------------------------MENTOR--------------------------------------
 
@@ -333,7 +331,7 @@ GET http://localhost:3000/notification/111
 
 ### GET NOTIFICATION BY LOGIN
 GET http://localhost:3000/notification/myNotifications
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiIyMDA0MDExNDFAc3R1ZGVudC51bXJpLmFjLmlkIiwiaWF0IjoxNzAzNTExODE5fQ.l4-u_qVxIZZlmbQ82jWc_WwE_3HXztCUzUIlBBRb_aU
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoxOCwiZW1haWwiOiJhbGRpc2lyb2phdEBnbWFpbC5jb20iLCJpYXQiOjE3MDQxODgxMDl9.-39KpDJLucvEg6x6kGC0vJVzUZo19_EWcXRBAwT4clA
 
 ### CREATE NOTIF BROADCAST
 POST http://localhost:3000/notification/broadcast
@@ -355,7 +353,7 @@ GET http://localhost:3000/promo/3
 ### ADD PROMO
 POST http://localhost:3000/promo/addPromo
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoxLCJlbWFpbCI6IjIxMTA0MDY0QGl0dGVsa29tLXB3dC5hYy5pZCIsImlhdCI6MTcwMjM1Mjc5OH0.v0PMep5KMK_6-jdw2TdGmMxm8XuVljXo_44TEQWqf24
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoxOCwiZW1haWwiOiJhbGRpc2lyb2phdEBnbWFpbC5jb20iLCJpYXQiOjE3MDQxODgxMDl9.-39KpDJLucvEg6x6kGC0vJVzUZo19_EWcXRBAwT4clA
 
 {
     "course_id": 1,
@@ -371,7 +369,7 @@ Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoxLCJlbWFp
 ### UPDATE PROMO
 PUT http://localhost:3000/promo/updatePromo/1
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoxLCJlbWFpbCI6IjIxMTA0MDY0QGl0dGVsa29tLXB3dC5hYy5pZCIsImlhdCI6MTcwMjM1Mjc5OH0.v0PMep5KMK_6-jdw2TdGmMxm8XuVljXo_44TEQWqf24
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoxOCwiZW1haWwiOiJhbGRpc2lyb2phdEBnbWFpbC5jb20iLCJpYXQiOjE3MDQxODgxMDl9.-39KpDJLucvEg6x6kGC0vJVzUZo19_EWcXRBAwT4clA
 
 {
     "title": "Promo tahun baru",
@@ -384,7 +382,7 @@ Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoxLCJlbWFp
 ### DELETE PROMO
 DELETE  http://localhost:3000/promo/deletePromo/2
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoxLCJlbWFpbCI6IjIxMTA0MDY0QGl0dGVsa29tLXB3dC5hYy5pZCIsImlhdCI6MTcwMjM1Mjc5OH0.v0PMep5KMK_6-jdw2TdGmMxm8XuVljXo_44TEQWqf24
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoxOCwiZW1haWwiOiJhbGRpc2lyb2phdEBnbWFpbC5jb20iLCJpYXQiOjE3MDQxODgxMDl9.-39KpDJLucvEg6x6kGC0vJVzUZo19_EWcXRBAwT4clA
 
 ###------------------------------------ PAYMENT -----------------------------------
 ### GET PAYMENT
@@ -412,12 +410,12 @@ Content-Type: application/json
 
 ### GET PAYMENT BY LOGIN WITH FILTER SEARCH
 GET http://localhost:3000/payment/checkout
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiIyMDA0MDExNDFAc3R1ZGVudC51bXJpLmFjLmlkIiwiaWF0IjoxNzAzMjM4NzA0fQ.l_1KxIG6ghLiUX8QZiJK8R0AhkS_9O3SMZE4vSrkQIY
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoxOCwiZW1haWwiOiJhbGRpc2lyb2phdEBnbWFpbC5jb20iLCJpYXQiOjE3MDQxODgxMDl9.-39KpDJLucvEg6x6kGC0vJVzUZo19_EWcXRBAwT4clA
 
 ### CREATE PAYMENT BY LOGIN
 POST http://localhost:3000/payment/checkout
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzgsImVtYWlsIjoiMjAwNDAxMTQxQHN0dWRlbnQudW1yaS5hYy5pZCIsImlhdCI6MTcwMjcyMDMyNH0.tdimyWKTyjQLG71vT56kJwqT8GRgqLQgQzSAOSHgNsY
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoxOCwiZW1haWwiOiJhbGRpc2lyb2phdEBnbWFpbC5jb20iLCJpYXQiOjE3MDQxODgxMDl9.-39KpDJLucvEg6x6kGC0vJVzUZo19_EWcXRBAwT4clA
 
 {
     "course_id" : 5
@@ -426,7 +424,7 @@ Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzgsImVtYWlsIjoiMjAw
 ### UPDATE PAYMENT BY LOGIN
 PUT http://localhost:3000/payment/checkout
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzgsImVtYWlsIjoiMjAwNDAxMTQxQHN0dWRlbnQudW1yaS5hYy5pZCIsImlhdCI6MTcwMjcyMDMyNH0.tdimyWKTyjQLG71vT56kJwqT8GRgqLQgQzSAOSHgNsY
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoxOCwiZW1haWwiOiJhbGRpc2lyb2phdEBnbWFpbC5jb20iLCJpYXQiOjE3MDQxODgxMDl9.-39KpDJLucvEg6x6kGC0vJVzUZo19_EWcXRBAwT4clA
 
 {
     "course_id" : 5,
@@ -451,7 +449,7 @@ GET http://localhost:3000/course-progress/1
 
 ### GET COURSE PROGRESS BY LOGIN
 GET http://localhost:3000/course-progress/myProgress
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzgsImVtYWlsIjoiMjAwNDAxMTQxQHN0dWRlbnQudW1yaS5hYy5pZCIsImlhdCI6MTcwMjcyMDMyNH0.tdimyWKTyjQLG71vT56kJwqT8GRgqLQgQzSAOSHgNsY
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoxOCwiZW1haWwiOiJhbGRpc2lyb2phdEBnbWFpbC5jb20iLCJpYXQiOjE3MDQxODgxMDl9.-39KpDJLucvEg6x6kGC0vJVzUZo19_EWcXRBAwT4clA
 
 ###
 GET https://binar-academy-final-project.vercel.app/course/1

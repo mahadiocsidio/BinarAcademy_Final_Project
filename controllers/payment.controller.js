@@ -1,7 +1,6 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const { getPagination } = require('../helper/index');
-const { createNotifAuto } = require('./notification.controller');
 const { autoAddUserCourse } = require('./user_course.controllers');
 const { autoAddCourseProgress } = require('./course-progres.controller');
 
@@ -126,7 +125,14 @@ module.exports = {
       //create Notification
       let titleNotif = 'Un-Successful purchase course added by admin!';
       let deskNotif = `Hii ${account.nama} you have courses that you haven't purchased yet, To get full access to the course, please complete the payment`;
-      await createNotifAuto(account.account_id, titleNotif, deskNotif, res);
+      
+      await prisma.notifikasi.create({
+        data: {
+          account_id: account.account_id,
+          title: titleNotif,
+          deskripsi: deskNotif,
+        },
+      });
 
       res.status(200).json({
         success: true,
@@ -175,7 +181,14 @@ module.exports = {
       //create Notification
       let titleNotif = 'Successful purchase course added by admin!';
       let deskNotif = `Hii ${account.nama}, Congratulations you have successfully purchased the course and got full access to the course`;
-      await createNotifAuto(account.account_id, titleNotif, deskNotif, res);
+      
+      await prisma.notifikasi.create({
+        data: {
+          account_id: account.account_id,
+          title: titleNotif,
+          deskripsi: deskNotif,
+        },
+      });
 
       //create UserCourse
       await autoAddUserCourse(account.account_id, payment.course_id);
@@ -343,7 +356,14 @@ module.exports = {
       //create Notification
       let titleNotif = 'Un-Successful purchase course added!';
       let deskNotif = `Hii ${account.nama} you have courses that you haven't purchased yet, To get full access to the course, please complete the payment`;
-      await createNotifAuto(account.account_id, titleNotif, deskNotif, res);
+
+      await prisma.notifikasi.create({
+        data: {
+          account_id: account.account_id,
+          title: titleNotif,
+          deskripsi: deskNotif,
+        },
+      });
 
       res.status(200).json({
         success: true,
@@ -387,7 +407,14 @@ module.exports = {
       //create Notification
       let titleNotif = 'Successful purchase course added!';
       let deskNotif = `Hii ${account.nama}, Congratulations you have successfully purchased the course and got full access to the course`;
-      await createNotifAuto(account.account_id, titleNotif, deskNotif, res);
+
+      await prisma.notifikasi.create({
+        data: {
+          account_id: account.account_id,
+          title: titleNotif,
+          deskripsi: deskNotif,
+        },
+      });
 
       //create UserCourse
       await autoAddUserCourse(account.account_id, course_id);

@@ -408,7 +408,7 @@ paths:
                 password:
                   type: string
                   example: password123
-                ConfirmationPassword:
+                confirmationPassword:
                   type: string
                   example: password213
       responses:
