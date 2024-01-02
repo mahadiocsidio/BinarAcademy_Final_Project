@@ -60,6 +60,7 @@ const getAllCourse = async (req, res, next) => {
                 premium: true,
                 harga: true,
                 level: true,
+                is_visible: true,
                 Kategori: {
                     select: {
                         title: true,
@@ -164,6 +165,7 @@ const getCoursebyId = async(req,res,next)=>{
                 url_gc_tele:true,
                 premium: true,
                 harga: true,
+                is_visible:true,
                 url_image_preview:true,
                 level:true,
                 Kategori:{
