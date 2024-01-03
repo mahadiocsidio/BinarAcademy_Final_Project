@@ -21,7 +21,7 @@ module.exports = {
         return res.status(400).json({
           status: false,
           message: 'Bad Request',
-          err: 'akun anda sudah terdaftar',
+          error: 'akun anda sudah terdaftar',
           data: null,
         });
       }
