@@ -280,7 +280,7 @@ module.exports = {
         createUpdateotp(user.account_id, user.nama, user.email, res);
         return res.status(401).json({
           status: false,
-          err: 'lakukan verifikasi terlebih dahulu',
+          error: 'lakukan verifikasi terlebih dahulu',
           message: 'harap periksa email anda untuk mendapat otp',
           data: { email: user.email, is_verified: user.is_verified },
         });
